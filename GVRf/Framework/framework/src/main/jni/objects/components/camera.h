@@ -26,6 +26,7 @@
 #include "glm/glm.hpp"
 
 #include "objects/components/component.h"
+#include "util/gvr_log.h"
 
 namespace gvr {
 class PostEffectData;
@@ -86,9 +87,8 @@ public:
     glm::mat4 getCenterViewMatrix();
 
     static long long getComponentType() {
-        return (long long) & getComponentType;
+        return COMPONENT_TYPE_CAMERA;
     }
-
 
 private:
     Camera(const Camera& camera);

@@ -17,7 +17,7 @@
 #include "jni_utils.h"
 #include "util/gvr_log.h"
 
-static const char* app_settings_name = "org/gearvrf/utility/VrAppSettings";
+static const char* app_settings_name = "org/gearvrf/OvrVrAppSettings";
 
 namespace gvr {
 
@@ -213,7 +213,7 @@ void ConfigurationHelper::getSceneViewport(JNIEnv& env, int& viewport_x, int& vi
     LOGV("ConfigurationHelper: --- viewport configuration ---");
     int x, y, width, height;
 
-    jfieldID fid = env.GetFieldID(vrAppSettingsClass_, "sceneParams", "Lorg/gearvrf/utility/VrAppSettings$SceneParams;");
+    jfieldID fid = env.GetFieldID(vrAppSettingsClass_, "sceneParams", "Lorg/gearvrf/OvrVrAppSettings$SceneParams;");
     jobject parms = env.GetObjectField(vrAppSettings_, fid);
     jclass parmsClass = env.GetObjectClass(parms);
 

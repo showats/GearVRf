@@ -26,7 +26,7 @@
 
 
 static const char* activityClassName = "org/gearvrf/GVRActivity";
-static const char* activityHandlerRenderingCallbacksClassName = "org/gearvrf/ActivityHandlerRenderingCallbacks";
+static const char* activityHandlerRenderingCallbacksClassName = "org/gearvrf/OvrActivityHandlerRenderingCallbacks";
 
 namespace gvr {
 
@@ -104,7 +104,7 @@ bool GVRActivity::updateSensoredScene() {
 }
 
 void GVRActivity::setCameraRig(jlong cameraRig) {
-    cameraRig_ = reinterpret_cast<CameraRig*>(cameraRig);
+    cameraRig_ = reinterpret_cast<OvrCameraRig*>(cameraRig);
     sensoredSceneUpdated_ = false;
 }
 

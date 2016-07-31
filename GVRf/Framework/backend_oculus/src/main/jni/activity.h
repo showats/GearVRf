@@ -19,13 +19,15 @@
 
 #include "view_manager.h"
 #include "framebufferobject.h"
-#include "../objects/components/camera.h"
-#include "../objects/components/camera_rig.h"
-#include "../util/configuration_helper.h"
+#include "objects/components/camera.h"
+#include "objects/components/camera_rig.h"
+#include "util/configuration_helper.h"
 #include "head_rotation_provider.h"
 #include "VrApi_Types.h"
 
 namespace gvr {
+
+class OvrCameraRig;
 
 class GVRActivity
 {
@@ -39,7 +41,7 @@ public:
     GVRViewManager viewManager_;
 
     Camera* camera = nullptr;
-    CameraRig* cameraRig_ = nullptr;   // this needs a global ref on the java object; todo
+    OvrCameraRig* cameraRig_ = nullptr;   // this needs a global ref on the java object; todo
     bool sensoredSceneUpdated_ = false;
     HeadRotationProvider headRotationProvider_;
 

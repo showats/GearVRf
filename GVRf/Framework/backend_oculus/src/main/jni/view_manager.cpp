@@ -24,7 +24,7 @@ namespace gvr {
 
 extern "C" {
 
-void Java_org_gearvrf_GVRViewManager_cull(JNIEnv * jni, jclass clazz,
+void Java_org_gearvrf_OvrViewManagerImpl_cull(JNIEnv * jni, jclass clazz,
         jlong jscene, jlong jcamera, jlong jshader_manager) {
     Scene* scene = reinterpret_cast<Scene*>(jscene);
     Camera* camera = reinterpret_cast<Camera*>(jcamera);
@@ -33,7 +33,7 @@ void Java_org_gearvrf_GVRViewManager_cull(JNIEnv * jni, jclass clazz,
 }
 
 
-void Java_org_gearvrf_GVRViewManager_makeShadowMaps(JNIEnv * jni, jclass clazz,
+void Java_org_gearvrf_OvrViewManagerImpl_makeShadowMaps(JNIEnv * jni, jclass clazz,
         jlong jscene, jlong jshader_manager, jint width, jint height) {
     Scene* scene = reinterpret_cast<Scene*>(jscene);
 
@@ -41,7 +41,7 @@ void Java_org_gearvrf_GVRViewManager_makeShadowMaps(JNIEnv * jni, jclass clazz,
     Renderer::makeShadowMaps(scene, shader_manager, width, height);
 }
 
-void Java_org_gearvrf_GVRViewManager_renderCamera(JNIEnv * jni, jclass clazz,
+void Java_org_gearvrf_OvrViewManagerImpl_renderCamera(JNIEnv * jni, jclass clazz,
         jlong appPtr, jlong jscene, jlong jcamera, jlong jshader_manager,
         jlong jpost_effect_shader_manager, jlong jpost_effect_render_texture_a,
         jlong jpost_effect_render_texture_b) {
@@ -63,7 +63,7 @@ void Java_org_gearvrf_GVRViewManager_renderCamera(JNIEnv * jni, jclass clazz,
             post_effect_render_texture_a, post_effect_render_texture_b);
 }
 
-void Java_org_gearvrf_GVRViewManager_readRenderResultNative(JNIEnv * jni,
+void Java_org_gearvrf_OvrViewManagerImpl_readRenderResultNative(JNIEnv * jni,
         jclass clazz, jlong jrender_texture, jobject jreadback_buffer) {
 
     uint8_t *pReadbackBuffer = (uint8_t *) jni->GetDirectBufferAddress(

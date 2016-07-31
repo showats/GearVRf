@@ -132,7 +132,7 @@ public abstract class GVRScript implements IScriptEvents, IScriptable, IEventRec
      * <li><b>Call your {@code onStep()} handler</b>.
      * </ul>
      * 
-     * After these steps, {@link GVRViewManager} does stereo rendering and
+     * After these steps, {@link OvrViewManagerImpl} does stereo rendering and
      * applies the lens distortion.
      */
     @Override

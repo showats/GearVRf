@@ -17,6 +17,7 @@
 #include "component.h"
 #include "util/gvr_jni.h"
 #include "util/gvr_log.h"
+#include "objects/scene_object.h"
 
 namespace gvr {
 extern "C" {

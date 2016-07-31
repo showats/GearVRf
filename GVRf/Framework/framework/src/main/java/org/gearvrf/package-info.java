@@ -27,7 +27,7 @@
  * that instance to {@link 
  * org.gearvrf.GVRActivity#setScript(GVRScript, String)} 
  * (or to {@link 
- * org.gearvrf.GVRActivity#setScript(GVRScript, String, GVRSurfaceViewRenderer)}.
+ * org.gearvrf.GVRActivity#setScript(GVRScript, String, OvrSurfaceViewRenderer)}.
  * 
  * A {@linkplain org.gearvrf.GVRScene scene graph} contains any 
  * number of {@linkplain org.gearvrf.GVRSceneObject scene 

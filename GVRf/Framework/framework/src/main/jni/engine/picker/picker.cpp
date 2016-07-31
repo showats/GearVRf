@@ -48,6 +48,10 @@ Picker::~Picker() {
  */
 void Picker::pickScene(Scene* scene, std::vector<ColliderData>& picklist, Transform* t,
          float ox, float oy, float oz, float dx, float dy, float dz) {
+    if (nullptr == t) {
+        return;
+    }
+
     glm::vec3 ray_start(ox, oy, oz);
     glm::vec3 ray_dir(dx, dy, dz);
     const std::vector<Component*>& colliders = scene->lockColliders();
@@ -73,7 +77,6 @@ void Picker::pickScene(Scene* scene, std::vector<ColliderData>& picklist, Transf
 
 void Picker::pickScene(Scene* scene, std::vector<ColliderData>& pickList) {
     Transform* t = scene->main_camera_rig()->getHeadTransform();
-
     pickScene(scene, pickList, t, 0, 0, 0, 0, 0, -1.0f);
 }
 

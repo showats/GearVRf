@@ -23,6 +23,8 @@
 #include <memory>
 
 #include "objects/hybrid_object.h"
+#include "util/gvr_log.h"
+#include "component_types.h"
 
 namespace gvr {
 class SceneObject;
