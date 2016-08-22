@@ -83,7 +83,7 @@ import android.view.MotionEvent;
  * {@link #onRotationSensor(long, float, float, float, float, float, float, float)
  * onRotationSensor()} to draw the scene graph properly.
  */
-class GVRViewManager extends GVRContext implements RotationSensorListener {
+class GVRViewManager extends GVRViewManagerBase implements RotationSensorListener {
 
     private static final String TAG = Log.tag(GVRViewManager.class);
 
@@ -95,14 +95,8 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
     protected GVRScript mScript;
     protected RotationSensor mRotationSensor;
 
-    protected SplashScreen mSplashScreen;
-
     protected GVRLensInfo mLensInfo;
     protected GVRRenderBundle mRenderBundle = null;
-    protected GVRScene mMainScene = null;
-    protected GVRScene mNextMainScene = null;
-    protected Runnable mOnSwitchMainScene = null;
-    protected GVRScene mSensoredScene = null;
 
     protected long mPreviousTimeNanos = 0l;
     protected float mFrameTime = 0.0f;
@@ -117,8 +111,6 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
     private GVRScreenshot3DCallback mScreenshot3DCallback = null;
     ByteBuffer mReadbackBuffer = null;
     int mReadbackBufferWidth = 0, mReadbackBufferHeight = 0;
-    private final GVRInputManagerImpl mInputManager;
-    private final GVREventManager mEventManager;
     private final GVRScriptManager mScriptManager;
 
     private native void cull(long scene, long camera, long shader_manager);
@@ -203,9 +195,6 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
         // GVRPerspectiveCamera.setDefaultAspectRatio(mLensInfo
         // .getRealScreenWidthMeters()
         // / mLensInfo.getRealScreenHeightMeters());
-        mInputManager = new GVRInputManagerImpl(this, vrAppSettings.useGazeCursorController());
-
-        mEventManager = new GVREventManager(this);
         mScriptManager = new GVRScriptManager(this);
 
         // Debug statistics
@@ -241,7 +230,9 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
      * Implementations of this method must be very quick because the next
      * activity will not be resumed until this method returns.
      */
+    @Override
     void onPause() {
+        super.onPause();
         Log.v(TAG, "onPause");
         mRotationSensor.onPause();
     }
@@ -252,6 +243,7 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
      * going to it.
      */
     void onResume() {
+        super.onDestroy();
         Log.v(TAG, "onResume");
         mRotationSensor.onResume();
     }
@@ -262,15 +254,7 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
     void onDestroy() {
         Log.v(TAG, "onDestroy");
         mRotationSensor.onDestroy();
-        mInputManager.close();
-    }
-
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return mInputManager.dispatchKeyEvent(event);
-    }
-
-    public boolean dispatchMotionEvent(MotionEvent event) {
-        return mInputManager.dispatchMotionEvent(event);
+        super.onDestroy();
     }
 
     /*
@@ -880,12 +864,6 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
 
     protected FrameHandler mFrameHandler = firstFrame;
 
-    void closeSplashScreen() {
-        if (mSplashScreen != null) {
-            mSplashScreen.closeSplashScreen();
-        }
-    }
-
     /*
      * GVRF APIs
      */
@@ -924,24 +902,6 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
         }
     }
 
-    boolean updateSensoredScene() {
-        if (mSensoredScene != null && mMainScene.equals(mSensoredScene)) {
-            return true;
-        }
-
-        if (null != mMainScene) {
-            final GVRCameraRig cameraRig = mMainScene.getMainCameraRig();
-
-            if (null != cameraRig && (mSensoredScene == null || !mMainScene.equals(mSensoredScene))) {
-                Log.i(TAG, "camera rig yaw reset");
-                cameraRig.resetYaw();
-                mSensoredScene = mMainScene;
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Called when a key was pressed down and not handled by any of the views
      * inside of the activity.
@@ -962,24 +922,6 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
     @Override
     public GVRScene getMainScene() {
         return mMainScene;
-    }
-
-    @Override
-    public synchronized void setMainScene(GVRScene scene) {
-        mMainScene = scene;
-        NativeScene.setMainScene(mMainScene.getNative());
-
-        if (mNextMainScene == scene) {
-            mNextMainScene = null;
-            if (mOnSwitchMainScene != null) {
-                mOnSwitchMainScene.run();
-                mOnSwitchMainScene = null;
-            }
-        }
-        if (null != mMainScene) {
-            getActivity().setCameraRig(mMainScene.getMainCameraRig());
-            mInputManager.setScene(mMainScene);
-        }
     }
 
     @Override
@@ -1033,16 +975,6 @@ class GVRViewManager extends GVRContext implements RotationSensorListener {
     @Override
     GVRRenderBundle getRenderBundle() {
         return mRenderBundle;
-    }
-
-    @Override
-    public GVRInputManager getInputManager() {
-        return mInputManager;
-    }
-
-    @Override
-    public GVREventManager getEventManager() {
-        return mEventManager;
     }
 
     @Override

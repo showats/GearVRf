@@ -16,7 +16,6 @@
 package org.gearvrf;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -30,17 +29,15 @@ import org.gearvrf.utility.GrowBeforeQueueThreadPoolExecutor;
 import org.gearvrf.utility.Log;
 import org.gearvrf.utility.Threads;
 import org.gearvrf.utility.VrAppSettings;
-import org.joml.Vector2f;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -69,7 +66,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     public static final int KEY_EVENT_UP = 5;
     public static final int KEY_EVENT_MAX = 6;
 
-    private GVRViewManager mViewManager;
+    private GVRViewManagerBase mViewManager;
     private GVRScript mGVRScript;
     private GVRMain mGVRMain;
     private VrAppSettings mAppSettings;
@@ -155,7 +152,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         return mAppSettings;
     }
 
-    final GVRViewManager getViewManager() {
+    final GVRViewManagerBase getViewManager() {
         return mViewManager;
     }
 
@@ -203,7 +200,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     protected void onDestroy() {
         android.util.Log.i(TAG, "onDestroy " + Integer.toHexString(hashCode()));
         if (mViewManager != null) {
-            mViewManager.onDestroy();
+            mActivityNative.onDestroy();
 
             mViewManager.getEventManager().sendEventWithMask(
                     SEND_EVENT_MASK,
@@ -633,11 +630,11 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         boolean onKeyLongPress(int keyCode, KeyEvent event);
 
         void setScript(GVRScript gvrScript, String dataFileName);
-        void setViewManager(GVRViewManager viewManager);
+        void setViewManager(GVRViewManagerBase viewManager);
         void onInitAppSettings(VrAppSettings appSettings);
 
         GVRActivityNative getActivityNative();
-        GVRViewManager makeViewManager(final GVRXMLParser xmlParser);
+        GVRViewManagerBase makeViewManager(final GVRXMLParser xmlParser);
         GVRMonoscopicViewManager makeMonoscopicViewManager(final GVRXMLParser xmlParser);
     }
 }

@@ -18,6 +18,7 @@ package org.gearvrf;
 import android.content.res.Configuration;
 import android.view.KeyEvent;
 
+import org.gearvrf.scene_objects.view.GVRView;
 import org.gearvrf.utility.Log;
 import org.gearvrf.utility.VrAppSettings;
 
@@ -50,7 +51,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
-    public GVRViewManager makeViewManager(final GVRXMLParser xmlParser) {
+    public GVRViewManagerBase makeViewManager(final GVRXMLParser xmlParser) {
         if(!mUseFallback) {
             return new GVRViewManager(mThiz, mThiz.getScript(), xmlParser);
         }else{
@@ -91,8 +92,8 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
-    public void setViewManager(GVRViewManager viewManager) {
-        mActiveViewManager = viewManager;
+    public void setViewManager(GVRViewManagerBase viewManager) {
+        mActiveViewManager = (GVRViewManager)viewManager;
     }
 
     @Override
