@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
+import org.gearvrf.utility.OculusVrAppSettings;
 import org.gearvrf.utility.VrAppSettings;
 import org.gearvrf.utility.VrAppSettings.EyeBufferParams.ColorFormat;
 import org.gearvrf.utility.VrAppSettings.EyeBufferParams.DepthFormat;
@@ -46,7 +47,9 @@ class GVRXMLParser {
      * @param fileName
      *            the distortion file name under assets folder
      */
-    GVRXMLParser(AssetManager assets, String fileName, VrAppSettings settings) {
+    GVRXMLParser(AssetManager assets, String fileName, VrAppSettings baseSettings) {
+        final OculusVrAppSettings settings = (OculusVrAppSettings)baseSettings;
+
         try {
             StringBuilder buf = new StringBuilder();
             InputStream is = assets.open(fileName);
@@ -85,12 +88,12 @@ class GVRXMLParser {
                         if (tagName.equals("mono-mode-parms")
                                 || "mono-mode-parms".equals(tagName)) {
                             if (attributeName.equals("monoFullScreen")) {
-                                settings.monoscopicModeParams
+                                settings.getMonoscopicModeParams()
                                         .setMonoFullScreenMode(Boolean
                                                 .parseBoolean(xpp
                                                         .getAttributeValue(i)));
                             } else if (attributeName.equals("monoMode")) {
-                                settings.monoscopicModeParams
+                                settings.getMonoscopicModeParams()
                                         .setMonoscopicMode(Boolean
                                                 .parseBoolean(xpp
                                                         .getAttributeValue(i)));
@@ -157,73 +160,73 @@ class GVRXMLParser {
                                                 .getAttributeValue(i)));
                             } else if (attributeName.equals("depthFormat")) {
                                 if (attributeValue.equals("DEPTH_0")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setDepthFormat(DepthFormat.DEPTH_0);
                                 } else if (attributeValue.equals("DEPTH_16")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setDepthFormat(DepthFormat.DEPTH_16);
                                 } else if (attributeValue.equals("DEPTH_24")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setDepthFormat(DepthFormat.DEPTH_24);
                                 } else if (attributeValue
                                         .equals("DEPTH_24_STENCIL_8")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setDepthFormat(DepthFormat.DEPTH_24_STENCIL_8);
                                 }
                             } else if (attributeName.equals("colorFormat")) {
                                 if (attributeValue.equals("COLOR_565")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setColorFormat(ColorFormat.COLOR_565);
                                 } else if (attributeValue.equals("COLOR_5551")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setColorFormat(ColorFormat.COLOR_5551);
                                 } else if (attributeValue.equals("COLOR_4444")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setColorFormat(ColorFormat.COLOR_4444);
                                 } else if (attributeValue.equals("COLOR_8888")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setColorFormat(ColorFormat.COLOR_8888);
                                 } else if (attributeValue
                                         .equals("COLOR_8888_sRGB")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setColorFormat(ColorFormat.COLOR_8888_sRGB);
                                 } else if (attributeValue
                                         .equals("COLOR_RGBA16F")) {
-                                    settings.eyeBufferParams
+                                    settings.getEyeBufferParams()
                                             .setColorFormat(ColorFormat.COLOR_RGBA16F);
                                 }
                             } else if (attributeName.equals("multiSamples")) {
-                                settings.eyeBufferParams.setMultiSamples(Integer
+                                settings.getEyeBufferParams().setMultiSamples(Integer
                                         .parseInt(attributeValue));
                             } else if (attributeName.equals("resolveDepth")) {
-                                settings.eyeBufferParams.enableResolveDepth(Boolean
+                                settings.getEyeBufferParams().enableResolveDepth(Boolean
                                         .parseBoolean(attributeValue));
                             } else if (attributeName.equals("resolutionWidth")) {
                                 int resolutionWidth = Integer
                                         .parseInt(attributeValue);
-                                settings.eyeBufferParams
+                                settings.getEyeBufferParams()
                                         .setResolutionWidth(resolutionWidth);
                             } else if (attributeName.equals("resolutionHeight")) {
                                 int resolutionHeight = Integer
                                         .parseInt(attributeValue);
-                                settings.eyeBufferParams
+                                settings.getEyeBufferParams()
                                         .setResolutionHeight(resolutionHeight);
                             }
                         } else if (tagName.equals("head-model-parms")
                                 || "head-model-params".equals(tagName)) {
                             if (attributeName.equals("interpupillaryDistance")) {
-                                settings.headModelParams
+                                settings.getHeadModelParams()
                                         .setInterpupillaryDistance(Float
                                                 .parseFloat(xpp
                                                         .getAttributeValue(i)));
                             } else if (attributeName.equals("eyeHeight")) {
-                                settings.headModelParams.setEyeHeight(Float
+                                settings.getHeadModelParams().setEyeHeight(Float
                                         .parseFloat(xpp.getAttributeValue(i)));
                             } else if (attributeName.equals("headModelDepth")) {
-                                settings.headModelParams.setHeadModelDepth(Float
+                                settings.getHeadModelParams().setHeadModelDepth(Float
                                         .parseFloat(xpp.getAttributeValue(i)));
                             } else if (attributeName.equals("headModelHeight")) {
-                                settings.headModelParams
+                                settings.getHeadModelParams()
                                         .setHeadModelHeight(Float
                                                 .parseFloat(xpp
                                                         .getAttributeValue(i)));
@@ -231,16 +234,16 @@ class GVRXMLParser {
                         } else if (tagName.equals("scene-parms")
                                 || "scene-params".equals(tagName)) {
                             if (attributeName.equals("viewportX")) {
-                                settings.sceneParams.viewportX =
+                                settings.getSceneParams().viewportX =
                                         Integer.parseInt(xpp.getAttributeValue(i));
                             } else if (attributeName.equals("viewportY")) {
-                                settings.sceneParams.viewportY =
+                                settings.getSceneParams().viewportY =
                                         Integer.parseInt(xpp.getAttributeValue(i));
                             } else if (attributeName.equals("viewportWidth")) {
-                                settings.sceneParams.viewportWidth =
+                                settings.getSceneParams().viewportWidth =
                                         Integer.parseInt(xpp.getAttributeValue(i));
                             } else if (attributeName.equals("viewportHeight")) {
-                                settings.sceneParams.viewportHeight =
+                                settings.getSceneParams().viewportHeight =
                                         Integer.parseInt(xpp.getAttributeValue(i));
                             }
                         }

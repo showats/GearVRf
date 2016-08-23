@@ -18,8 +18,8 @@ package org.gearvrf;
 import android.content.res.Configuration;
 import android.view.KeyEvent;
 
-import org.gearvrf.scene_objects.view.GVRView;
 import org.gearvrf.utility.Log;
+import org.gearvrf.utility.OculusVrAppSettings;
 import org.gearvrf.utility.VrAppSettings;
 
 /**
@@ -103,6 +103,11 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
             // the check in GVRActivityBase.
             GVRConfigurationManager.getInstance().setDockListenerRequired(false);
         }
+    }
+
+    @Override
+    public VrAppSettings makeVrAppSettings() {
+        return new OculusVrAppSettings();
     }
 
     @Override

@@ -88,7 +88,6 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     protected void onCreate(Bundle savedInstanceState) {
         android.util.Log.i(TAG, "onCreate " + Integer.toHexString(hashCode()));
         super.onCreate(savedInstanceState);
-        mAppSettings = new VrAppSettings(); //needs to happen early
 
         final InputStream inputStream = getResources().openRawResource(R.raw.backends);
         final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -97,6 +96,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
             line = reader.readLine();
             final Class<?> aClass = Class.forName(line);
             mDelegate = (GVRActivityDelegate) aClass.newInstance();
+            mAppSettings = mDelegate.makeVrAppSettings();
         } catch (final Exception e) {
             Log.e(TAG, "fatal error:", e);
             finish();
@@ -350,7 +350,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
      */
     @Deprecated
     public void setForceMonoscopic(boolean force) {
-        mAppSettings.monoscopicModeParams.setMonoscopicMode(force);
+        mAppSettings.getMonoscopicModeParams().setMonoscopicMode(force);
     }
 
     /**
@@ -362,7 +362,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
      */
     @Deprecated
     public final boolean getForceMonoscopic() {
-        return mAppSettings.monoscopicModeParams.isMonoscopicMode();
+        return mAppSettings.getMonoscopicModeParams().isMonoscopicMode();
     }
 
     final long getNative() {
@@ -633,6 +633,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         void setViewManager(GVRViewManagerBase viewManager);
         void onInitAppSettings(VrAppSettings appSettings);
 
+        VrAppSettings makeVrAppSettings();
         GVRActivityNative getActivityNative();
         GVRViewManagerBase makeViewManager(final GVRXMLParser xmlParser);
         GVRMonoscopicViewManager makeMonoscopicViewManager(final GVRXMLParser xmlParser);

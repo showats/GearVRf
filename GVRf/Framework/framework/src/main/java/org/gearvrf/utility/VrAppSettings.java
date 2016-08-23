@@ -451,7 +451,7 @@ public class VrAppSettings {
 
         /**
          * Set if current app is mono scopic.
-         * 
+         *
          * @param isMono
          *            if current app is mono scopic
          */
@@ -555,23 +555,6 @@ public class VrAppSettings {
         }
     }
 
-    public static class SceneParams {
-        public int viewportX;
-
-        public int viewportY;
-
-        public int viewportWidth;
-
-        public int viewportHeight;
-
-        public SceneParams() {
-            viewportX = 0;
-            viewportY = 0;
-            viewportWidth = 0;
-            viewportHeight = 0;
-        }
-    }
-
     public static int DEFAULT_FBO_RESOLUTION = 1024;
 
     // If it will show loading icon in the vr app.
@@ -591,34 +574,18 @@ public class VrAppSettings {
     // Current frame buffer's pixels height.
     public int framebufferPixelsHigh;
 
-    // If it is going to show ovrSettings' content after Configure.
-    // Just for debug purpose, not configuration for app context.
-    // Not going to become part of xml content.
-    public static boolean isShowDebugLog = false;
-
     // Use this flag to enable the gaze cursor controller whenever
     // the phone is docked.
     boolean useGazeCursorController;
 
     // Use multiview feature
     boolean useMultiview;
-    
-    public ModeParams modeParams;
-    public EyeBufferParams eyeBufferParams;
-    public HeadModelParams headModelParams;
-    public MonoscopicModeParams monoscopicModeParams;
-    public PerformanceParams performanceParams;
-    public SceneParams sceneParams;
 
-    /**
-     * Set if current app prints information from ovrAppSettings
-     * 
-     * @param showDebugLog
-     *            if current app prints information from ovrAppSettings.
-     */
-    public static void setShowDebugLog(boolean showDebugLog) {
-        isShowDebugLog = showDebugLog;
-    }
+    public final ModeParams modeParams;
+    public final EyeBufferParams eyeBufferParams;
+    public final HeadModelParams headModelParams;
+    public final MonoscopicModeParams monoscopicModeParams;
+    public final PerformanceParams performanceParams;
 
     /**
      * Set if user wants to use multiview or not
@@ -636,14 +603,6 @@ public class VrAppSettings {
      */
     public boolean isMultiviewSet() {
         return useMultiview;
-    }  
-    /**
-     * Get if current app prints information from ovrAppSettings
-     * 
-     * @return if current app prints information from ovrAppSettings.
-     */
-    public static boolean isShowDebugLog() {
-        return isShowDebugLog;
     }
 
     /**
@@ -695,7 +654,7 @@ public class VrAppSettings {
 
     /**
      * Set if current app is using the gaze cursor controller
-     * 
+     *
      * @param useGazeCursorController
      *            if current app is using the gaze cursor controller
      */
@@ -770,32 +729,12 @@ public class VrAppSettings {
     }
 
     /**
-     * Set overall Mode Parameters.
-     * 
-     * @param modeParams
-     *            New overall Mode Parameters.
-     */
-    public void setModeParams(ModeParams modeParams) {
-        this.modeParams = modeParams;
-    }
-
-    /**
      * Get current overall eye buffer parameters.
      * 
      * @return Current overall eye buffer parameters.
      */
     public EyeBufferParams getEyeBufferParams() {
         return eyeBufferParams;
-    }
-
-    /**
-     * Set overall eye buffer parameters.
-     * 
-     * @param eyeBufferParams
-     *            New overall eye buffer parameters.
-     */
-    public void setEyeBufferParams(EyeBufferParams eyeBufferParams) {
-        this.eyeBufferParams = eyeBufferParams;
     }
 
     /**
@@ -808,16 +747,6 @@ public class VrAppSettings {
     }
 
     /**
-     * Set overall head mode parameters.
-     * 
-     * @param headModelParams
-     *            New overall head mode parameters.
-     */
-    public void setHeadModelParams(HeadModelParams headModelParams) {
-        this.headModelParams = headModelParams;
-    }
-
-    /**
      * Get current overall mono scopic mode parameters.
      * 
      * @return Current overall mono scopic mode parameters.
@@ -827,32 +756,12 @@ public class VrAppSettings {
     }
 
     /**
-     * Set overall mono scopic mode parameters.
-     * 
-     * @param monoscopicModeParams
-     *            New overall mono scopic mode parameters.
-     */
-    public void setMonoscopicModeParams(MonoscopicModeParams monoscopicModeParams) {
-        this.monoscopicModeParams = monoscopicModeParams;
-    }
-
-    /**
      * Get overall performance parameters.
      * 
      * @return Current overall performance parameters.
      */
     public PerformanceParams getPerformanceParams() {
         return performanceParams;
-    }
-
-    /**
-     * Set overall performance parameters.
-     * 
-     * @param performanceParams
-     *            New overall performance parameters.
-     */
-    public void setPerformanceParams(PerformanceParams performanceParams) {
-        this.performanceParams = performanceParams;
     }
 
     public VrAppSettings() {
@@ -867,7 +776,6 @@ public class VrAppSettings {
         headModelParams = new HeadModelParams();
         monoscopicModeParams = new MonoscopicModeParams();
         performanceParams = new PerformanceParams();
-        sceneParams = new SceneParams();
     }
 
     public String toString() {
