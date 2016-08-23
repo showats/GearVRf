@@ -19,7 +19,7 @@ import static org.gearvrf.utility.Assert.*;
 
 import org.gearvrf.utility.Log;
 
-abstract class GVRCameraRigBase extends GVRComponent implements PrettyPrint {
+abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     private GVRSceneObject headTransformObject;
 
     private GVRCamera leftCamera, rightCamera;
@@ -63,11 +63,18 @@ abstract class GVRCameraRigBase extends GVRComponent implements PrettyPrint {
     }
 
     /** Constructs a camera rig without cameras attached. */
-    protected GVRCameraRigBase(GVRContext gvrContext) {
+    public static GVRCameraRig makeInstance(GVRContext gvrContext) {
+        final GVRCameraRig result = gvrContext.getActivity().getDelegate().makeCameraRig(gvrContext);
+        result.init(gvrContext);
+        return result;
+    }
+
+    /** Constructs a camera rig without cameras attached. */
+    protected GVRCameraRig(GVRContext gvrContext) {
         super(gvrContext, NativeCameraRigBase.ctor());
     }
 
-    protected GVRCameraRigBase(GVRContext gvrContext, long ptr) {
+    protected GVRCameraRig(GVRContext gvrContext, long ptr) {
         super(gvrContext, ptr);
     }
 
@@ -570,7 +577,7 @@ abstract class GVRCameraRigBase extends GVRComponent implements PrettyPrint {
     }
 
     /**
-     * Prints the {@link GVRCameraRig} object with indentation.
+     * Prints the {@link GVRCameraRigImpl} object with indentation.
      *
      * @param sb
      *         The {@code StringBuffer} object to receive the output.

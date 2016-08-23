@@ -17,13 +17,12 @@ package org.gearvrf;
 
 import android.os.Environment;
 
-import org.gearvrf.GVRCameraRigBase.GVRCameraRigType;
+import org.gearvrf.GVRCameraRig.GVRCameraRigType;
 import org.gearvrf.GVRRenderData.GVRRenderMaskBit;
 import org.gearvrf.debug.GVRConsole;
 import org.gearvrf.script.GVRScriptBehavior;
 import org.gearvrf.script.IScriptable;
 import org.gearvrf.utility.Log;
-import org.gearvrf.script.GVRScriptBehavior;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -137,7 +136,7 @@ public class GVRScene extends GVRHybridObject implements PrettyPrint, IScriptabl
      * Remove all scene objects.
      */
     public void removeAllSceneObjects() {
-    	GVRCameraRig rig = getMainCameraRig();
+    	GVRCameraRigImpl rig = getMainCameraRig();
         GVRSceneObject head = rig.getOwnerObject();
         rig.removeAllChildren();
         head.getParent().removeChildObject(head);
@@ -191,19 +190,19 @@ public class GVRScene extends GVRHybridObject implements PrettyPrint, IScriptabl
     }
 
     /**
-     * @return The {@link GVRCameraRig camera rig} used for rendering the scene
+     * @return The {@link GVRCameraRigImpl camera rig} used for rendering the scene
      *         on the screen.
      */
-    public GVRCameraRig getMainCameraRig() {
+    public GVRCameraRigImpl getMainCameraRig() {
         return mMainCameraRig;
     }
 
     /**
-     * Set the {@link GVRCameraRig camera rig} used for rendering the scene on
+     * Set the {@link GVRCameraRigImpl camera rig} used for rendering the scene on
      * the screen.
      * 
      * @param cameraRig
-     *            The {@link GVRCameraRig camera rig} to render with.
+     *            The {@link GVRCameraRigImpl camera rig} to render with.
      */
     public void setMainCameraRig(GVRCameraRig cameraRig) {
         mMainCameraRig = cameraRig;

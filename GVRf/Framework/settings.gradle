@@ -1,1 +1,3 @@
 include ':framework'
+include ':gvr-eyepicking'
+project(':gvr-eyepicking').projectDir=new File('/home/mmarinov/git/vrtop_public/GearVRf-Demos/gvr-eyepicking/app')

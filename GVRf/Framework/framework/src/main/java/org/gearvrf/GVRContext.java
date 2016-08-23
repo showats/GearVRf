@@ -2287,7 +2287,7 @@ public abstract class GVRContext implements IEventReceiver {
     /**
      * Get the current {@link GVRScene}, which contains the scene graph (a
      * hierarchy of {@linkplain GVRSceneObject scene objects}) and the
-     * {@linkplain GVRCameraRig camera rig}
+     * {@linkplain GVRCameraRigImpl camera rig}
      * 
      * @return A {@link GVRScene} instance, containing scene and camera
      *         information
@@ -2820,7 +2820,7 @@ public abstract class GVRContext implements IEventReceiver {
         rd.setRenderingOrder(2 * GVRRenderData.GVRRenderingOrder.OVERLAY);
         rd.setDepthTest(false);
 
-        final GVRCameraRig rig = getMainScene().getMainCameraRig();
+        final GVRCameraRigImpl rig = getMainScene().getMainCameraRig();
         rig.addChildObject(toastSceneObject);
 
         final GVRMaterialAnimation fadeOut = new GVRMaterialAnimation(rd.getMaterial(), duration / 4.0f) {

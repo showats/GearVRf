@@ -23,13 +23,6 @@ import org.gearvrf.utility.Log;
 public class GVRCameraRig extends GVRCameraRigBase {
 
     /** Constructs a camera rig without cameras attached. */
-    public static GVRCameraRig makeInstance(GVRContext gvrContext) {
-        final GVRCameraRig result = new GVRCameraRig(gvrContext);
-        result.init(gvrContext);
-        return result;
-    }
-
-    /** Constructs a camera rig without cameras attached. */
     private GVRCameraRig(GVRContext gvrContext) {
         super(gvrContext, NativeCameraRigBase.ctor());
     }

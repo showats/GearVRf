@@ -372,7 +372,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         return mActivityNative;
     }
 
-    final void setCameraRig(GVRCameraRig cameraRig) {
+    final void setCameraRig(GVRCameraRigImpl cameraRig) {
         mActivityNative.setCameraRig(cameraRig);
     }
 
@@ -618,6 +618,10 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
 
     private GVRActivityDelegate mDelegate;
 
+    GVRActivityDelegate getDelegate() {
+        return mDelegate;
+    }
+
     public interface GVRActivityDelegate {
         void onCreate(GVRActivity activity);
         void onPause();
@@ -636,5 +640,6 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         GVRActivityNative getActivityNative();
         GVRViewManagerBase makeViewManager(AssetManager assetManager, String dataFilename);
         GVRMonoscopicViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename);
+        GVRCameraRig makeCameraRig(GVRContext context);
     }
 }

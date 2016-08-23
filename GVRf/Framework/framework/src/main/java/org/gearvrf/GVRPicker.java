@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.gearvrf.utility.Log;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 /**
@@ -361,14 +360,14 @@ public class GVRPicker extends GVRBehavior {
      *            The {@link GVRSceneObject} to be tested.
      * 
      * @param cameraRig
-     *            The {@link GVRCameraRig} to use for ray testing.
+     *            The {@link GVRCameraRigImpl} to use for ray testing.
      * 
      * @return the distance from the camera rig. It returns positive infinity if
      *         the cameraRig is not pointing to the sceneObject.
      * 
      */
     public static final float pickSceneObject(GVRSceneObject sceneObject,
-            GVRCameraRig cameraRig) {
+            GVRCameraRigImpl cameraRig) {
         return NativePicker.pickSceneObject(sceneObject.getNative(),
                 cameraRig.getNative());
     }
