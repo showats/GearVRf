@@ -15,6 +15,7 @@
 
 package org.gearvrf;
 
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.view.KeyEvent;
 
@@ -26,19 +27,19 @@ import org.gearvrf.utility.VrAppSettings;
  * {@inheritDoc}
  */
 final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
-    private GVRActivity mThiz;
+    private GVRActivity mActivity;
     private GVRViewManager mActiveViewManager;
     private GVRActivityNative mActivityNative;
     private boolean mUseFallback;
 
     @Override
-    public void onCreate(GVRActivity thiz) {
-        mThiz = thiz;
+    public void onCreate(GVRActivity activity) {
+        mActivity = activity;
 
-        mActivityNative = new GVRActivityNative(mThiz, mThiz.getAppSettings(), mRenderingCallbacks);
+        mActivityNative = new GVRActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
 
         try {
-            mActivityHandler = new VrapiActivityHandler(thiz, mActivityNative, mRenderingCallbacks);
+            mActivityHandler = new VrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
         } catch (final Exception ignored) {
             // GVRf will fallback to GoogleVR in this case.
             mUseFallback = true;
@@ -51,17 +52,19 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
-    public GVRViewManagerBase makeViewManager(final GVRXMLParser xmlParser) {
-        if(!mUseFallback) {
-            return new GVRViewManager(mThiz, mThiz.getScript(), xmlParser);
-        }else{
-            return new GoogleVRViewManager(mThiz, mThiz.getScript(), xmlParser);
+    public GVRViewManagerBase makeViewManager(AssetManager assetManager, String dataFilename) {
+        final GVRXMLParser xmlParser = new GVRXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
+        if (!mUseFallback) {
+            return new GVRViewManager(mActivity, mActivity.getScript(), xmlParser);
+        } else {
+            return new GoogleVRViewManager(mActivity, mActivity.getScript(), xmlParser);
         }
     }
 
     @Override
-    public GVRMonoscopicViewManager makeMonoscopicViewManager(final GVRXMLParser xmlParser) {
-        return new GVRMonoscopicViewManager(mThiz, mThiz.getScript(), xmlParser);
+    public GVRMonoscopicViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename) {
+        final GVRXMLParser xmlParser = new GVRXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
+        return new GVRMonoscopicViewManager(mActivity, mActivity.getScript(), xmlParser);
     }
 
     @Override
@@ -121,7 +124,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (!mThiz.isPaused() && KeyEvent.KEYCODE_BACK == keyCode) {
+        if (!mActivity.isPaused() && KeyEvent.KEYCODE_BACK == keyCode) {
             if (null != mActivityHandler) {
                 return mActivityHandler.onBack();
             }

@@ -55,6 +55,41 @@ public class GVRRenderTexture extends GVRTexture {
         mHeight = height;
     }
 
+    /**
+     * Constructs a GVRRenderTexture for a frame buffer of the specified size,
+     * with MSAA enabled at the specified sample count, and with specified color
+     * format, depth format, resolution depth and texture parameters.
+     *
+     * @param gvrContext
+     *            Current gvrContext
+     * @param width
+     *            Width of the frame buffer.
+     * @param height
+     *            Height of the frame buffer.
+     * @param sampleCount
+     *            MSAA sample count.
+     * @param colorFormat
+     *            GVR color format. See {@linkplain org.gearvrf.utility.
+     *            VrAppSettings.EyeBufferParams.ColorFormat ColorFormat}.
+     * @param depthFormat
+     *            Depth format. See {@linkplain org.gearvrf.utility.
+     *            VrAppSettings.EyeBufferParams.DepthFormat DepthFormat}.
+     * @param resolveDepth
+     *            If true, resolves the depth buffer into a texture.
+     * @param parameters
+     *            Texture parameters. See {@link GVRTextureParameters}.
+     *
+     */
+    public GVRRenderTexture(GVRContext gvrContext, int width, int height,
+            int sampleCount, int colorFormat, int depthFormat,
+            boolean resolveDepth, GVRTextureParameters parameters) {
+        super(gvrContext, NativeRenderTexture.ctorWithParameters(width, height,
+                sampleCount, colorFormat, depthFormat, resolveDepth,
+                parameters.getCurrentValuesArray()));
+        mWidth = width;
+        mHeight = height;
+    }
+
     GVRRenderTexture(GVRContext gvrContext, long ptr) {
         super(gvrContext, ptr);
     }
@@ -71,6 +106,14 @@ public class GVRRenderTexture extends GVRTexture {
      */
     public int getHeight() {
         return mHeight;
+    }
+
+    void beginRendering() {
+        NativeRenderTexture.beginRendering(getNative());
+    }
+
+    void endRendering() {
+        NativeRenderTexture.endRendering(getNative());
     }
 
     /**
@@ -103,6 +146,14 @@ class NativeRenderTexture {
     static native long ctor(int width, int height);
 
     static native long ctorMSAA(int width, int height, int sampleCount);
+
+    static native long ctorWithParameters(int width, int height,
+            int sampleCount, int colorFormat, int depthFormat,
+            boolean resolveDepth, int[] parameters);
+
+    static native void beginRendering(long ptr);
+
+    static native void endRendering(long ptr);
 
     static native boolean readRenderResult(long ptr, int[] readbackBuffer);
 

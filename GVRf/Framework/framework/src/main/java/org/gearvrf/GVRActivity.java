@@ -32,6 +32,7 @@ import org.gearvrf.utility.VrAppSettings;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -235,16 +236,14 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     public void setScript(GVRScript gvrScript, String dataFileName) {
         this.mGVRScript = gvrScript;
         if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            GVRXMLParser xmlParser = new GVRXMLParser(getAssets(),
-                    dataFileName, mAppSettings);
             onConfigure();
             mDelegate.setScript(gvrScript, dataFileName);
 
             boolean isMonoscopicMode = mAppSettings.getMonoscopicModeParams().isMonoscopicMode();
             if (!isMonoscopicMode) {
-                mViewManager = mDelegate.makeViewManager(xmlParser);
+                mViewManager = mDelegate.makeViewManager(getAssets(), dataFileName);
             } else {
-                mViewManager = mDelegate.makeMonoscopicViewManager(xmlParser);
+                mViewManager = mDelegate.makeMonoscopicViewManager(getAssets(), dataFileName);
             }
             mDelegate.setViewManager(mViewManager);
 
@@ -620,7 +619,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     private GVRActivityDelegate mDelegate;
 
     public interface GVRActivityDelegate {
-        void onCreate(GVRActivity thiz);
+        void onCreate(GVRActivity activity);
         void onPause();
         void onResume();
         void onConfigurationChanged(final Configuration newConfig);
@@ -635,7 +634,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
 
         VrAppSettings makeVrAppSettings();
         GVRActivityNative getActivityNative();
-        GVRViewManagerBase makeViewManager(final GVRXMLParser xmlParser);
-        GVRMonoscopicViewManager makeMonoscopicViewManager(final GVRXMLParser xmlParser);
+        GVRViewManagerBase makeViewManager(AssetManager assetManager, String dataFilename);
+        GVRMonoscopicViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename);
     }
 }

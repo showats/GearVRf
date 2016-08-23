@@ -973,8 +973,13 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
     }
 
     @Override
-    GVRRenderBundle getRenderBundle() {
-        return mRenderBundle;
+    public GVRMaterialShaderManager getMaterialShaderManager() {
+        return mRenderBundle.getMaterialShaderManager();
+    }
+
+    @Override
+    public GVRPostEffectShaderManager getPostEffectShaderManager() {
+        return mRenderBundle.getPostEffectShaderManager();
     }
 
     @Override
