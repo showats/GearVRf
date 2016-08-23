@@ -61,7 +61,7 @@ public abstract class GVRViewManagerBase extends GVRContext {
         }
 
         if (null != mMainScene) {
-            final GVRCameraRigImpl cameraRig = mMainScene.getMainCameraRig();
+            final GVRCameraRig cameraRig = mMainScene.getMainCameraRig();
 
             if (null != cameraRig && (mSensoredScene == null || !mMainScene.equals(mSensoredScene))) {
                 Log.i(TAG, "camera rig yaw reset");

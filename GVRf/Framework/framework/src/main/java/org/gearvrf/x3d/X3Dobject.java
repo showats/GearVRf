@@ -15,80 +15,67 @@
 
 package org.gearvrf.x3d;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import java.util.concurrent.Future;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+
+import org.gearvrf.GVRAndroidResource;
+import org.gearvrf.GVRAssetLoader;
+import org.gearvrf.GVRCamera;
+import org.gearvrf.GVRCameraRig;
+import org.gearvrf.GVRContext;
+import org.gearvrf.GVRDirectLight;
+import org.gearvrf.GVRMaterial;
+import org.gearvrf.GVRMesh;
+import org.gearvrf.GVRPerspectiveCamera;
+import org.gearvrf.GVRPhongShader;
+import org.gearvrf.GVRPointLight;
+import org.gearvrf.GVRRenderData;
+import org.gearvrf.GVRRenderData.GVRRenderMaskBit;
+import org.gearvrf.GVRRenderData.GVRRenderingOrder;
+import org.gearvrf.GVRRenderPass.GVRCullFaceEnum;
+import org.gearvrf.GVRSceneObject;
+import org.gearvrf.GVRSphereCollider;
+import org.gearvrf.GVRSpotLight;
+import org.gearvrf.GVRTexture;
+import org.gearvrf.GVRTextureParameters;
+import org.gearvrf.GVRTextureParameters.TextureWrapType;
+import org.gearvrf.GVRTransform;
+import org.gearvrf.ISensorEvents;
+import org.gearvrf.SensorEvent;
+import org.gearvrf.animation.GVRAnimation;
+import org.gearvrf.animation.GVROnFinish;
+import org.gearvrf.animation.GVRRepeatMode;
+import org.gearvrf.animation.keyframe.GVRAnimationBehavior;
+import org.gearvrf.animation.keyframe.GVRAnimationChannel;
+import org.gearvrf.animation.keyframe.GVRKeyFrameAnimation;
+import org.gearvrf.scene_objects.GVRCubeSceneObject;
+import org.gearvrf.scene_objects.GVRCylinderSceneObject;
+import org.gearvrf.scene_objects.GVRModelSceneObject;
+import org.gearvrf.scene_objects.GVRSphereSceneObject;
+import org.gearvrf.scene_objects.GVRTextViewSceneObject;
+import org.joml.AxisAngle4f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.Future;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import org.gearvrf.GVRCameraRigImpl;
-import org.gearvrf.ISensorEvents;
-import org.gearvrf.SensorEvent;
-import org.gearvrf.animation.GVROnFinish;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import org.gearvrf.GVRAndroidResource;
-import org.gearvrf.GVRAssetLoader;
-import org.gearvrf.GVRCamera;
-import org.gearvrf.GVRContext;
-import org.gearvrf.GVRDirectLight;
-import org.gearvrf.GVRMaterial;
-import org.gearvrf.GVRMesh;
-
-import org.gearvrf.GVRPerspectiveCamera;
-import org.gearvrf.GVRPhongShader;
-import org.gearvrf.GVRPointLight;
-import org.gearvrf.GVRRenderData;
-import org.gearvrf.GVRSceneObject;
-
-import org.gearvrf.GVRSphereCollider;
-import org.gearvrf.GVRSpotLight;
-import org.gearvrf.GVRTexture;
-import org.gearvrf.GVRTextureParameters;
-import org.gearvrf.GVRTransform;
-
-import org.gearvrf.GVRRenderData.GVRRenderMaskBit;
-import org.gearvrf.GVRRenderData.GVRRenderingOrder;
-import org.gearvrf.animation.GVRAnimation;
-
-import org.gearvrf.animation.GVRRepeatMode;
-import org.gearvrf.animation.keyframe.GVRAnimationBehavior;
-import org.gearvrf.animation.keyframe.GVRAnimationChannel;
-import org.gearvrf.animation.keyframe.GVRKeyFrameAnimation;
-
-import org.gearvrf.GVRRenderPass.GVRCullFaceEnum;
-import org.gearvrf.GVRTextureParameters.TextureWrapType;
-
-import org.gearvrf.scene_objects.GVRCubeSceneObject;
-import org.gearvrf.scene_objects.GVRCylinderSceneObject;
-import org.gearvrf.scene_objects.GVRSphereSceneObject;
-import org.gearvrf.scene_objects.GVRModelSceneObject;
-import org.gearvrf.scene_objects.GVRTextViewSceneObject;
-
-
-import org.joml.Vector3f;
-
-
-import org.joml.AxisAngle4f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 
 public class X3Dobject
@@ -253,7 +240,7 @@ public class X3Dobject
   private GVRTextViewSceneObject gvrTextViewSceneObject = null;
 
   private LODmanager lodManager = null;
-  private GVRCameraRigImpl cameraRigAtRoot = null;
+  private GVRCameraRig cameraRigAtRoot = null;
 
 
   /**
@@ -291,7 +278,7 @@ public class X3Dobject
           .setRenderMask(GVRRenderMaskBit.Left | GVRRenderMaskBit.Right);
       this.mainCamera = new GVRSceneObject(gvrContext);
       this.mainCamera.setName("MainCamera");
-      cameraRigAtRoot = GVRCameraRigImpl.makeInstance(gvrContext);
+      cameraRigAtRoot = GVRCameraRig.makeInstance(gvrContext);
       this.mainCamera.attachComponent(cameraRigAtRoot);
       cameraRigAtRoot.setOwnerObject(this.mainCamera);
 

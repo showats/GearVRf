@@ -372,7 +372,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         return mActivityNative;
     }
 
-    final void setCameraRig(GVRCameraRigImpl cameraRig) {
+    final void setCameraRig(GVRCameraRig cameraRig) {
         mActivityNative.setCameraRig(cameraRig);
     }
 

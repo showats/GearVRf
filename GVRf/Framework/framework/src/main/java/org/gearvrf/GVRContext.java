@@ -2820,7 +2820,7 @@ public abstract class GVRContext implements IEventReceiver {
         rd.setRenderingOrder(2 * GVRRenderData.GVRRenderingOrder.OVERLAY);
         rd.setDepthTest(false);
 
-        final GVRCameraRigImpl rig = getMainScene().getMainCameraRig();
+        final GVRCameraRig rig = getMainScene().getMainCameraRig();
         rig.addChildObject(toastSceneObject);
 
         final GVRMaterialAnimation fadeOut = new GVRMaterialAnimation(rd.getMaterial(), duration / 4.0f) {

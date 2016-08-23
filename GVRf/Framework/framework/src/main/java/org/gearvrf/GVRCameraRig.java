@@ -19,7 +19,7 @@ import static org.gearvrf.utility.Assert.*;
 
 import org.gearvrf.utility.Log;
 
-abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
+public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     private GVRSceneObject headTransformObject;
 
     private GVRCamera leftCamera, rightCamera;

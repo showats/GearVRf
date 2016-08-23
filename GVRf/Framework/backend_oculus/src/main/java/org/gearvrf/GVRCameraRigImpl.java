@@ -15,15 +15,11 @@
 
 package org.gearvrf;
 
-import static org.gearvrf.utility.Assert.*;
-
-import org.gearvrf.utility.Log;
-
 /** Holds the GVRCameras. */
-public class GVRCameraRig extends GVRCameraRigBase {
+class GVRCameraRigImpl extends GVRCameraRig {
 
     /** Constructs a camera rig without cameras attached. */
-    private GVRCameraRig(GVRContext gvrContext) {
+    GVRCameraRigImpl(GVRContext gvrContext) {
         super(gvrContext, NativeCameraRigBase.ctor());
     }
 

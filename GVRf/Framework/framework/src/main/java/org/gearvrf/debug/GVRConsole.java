@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
 
 import org.gearvrf.GVRBitmapTexture;
 import org.gearvrf.GVRCamera;
-import org.gearvrf.GVRCameraRigImpl;
+import org.gearvrf.GVRCameraRig;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRCustomPostEffectShaderId;
 import org.gearvrf.GVRPostEffect;
@@ -234,7 +234,7 @@ public class GVRConsole extends GVRPostEffect {
         setEyeMode(newMode, getGVRContext().getMainScene().getMainCameraRig());
     }
 
-    private void setEyeMode(EyeMode newMode, GVRCameraRigImpl cameraRig) {
+    private void setEyeMode(EyeMode newMode, GVRCameraRig cameraRig) {
         eyeMode = newMode;
 
         GVRCamera leftCamera = cameraRig.getLeftCamera();

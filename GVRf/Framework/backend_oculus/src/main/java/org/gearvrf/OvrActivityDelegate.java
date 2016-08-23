@@ -68,6 +68,11 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
+    public GVRCameraRig makeCameraRig(GVRContext context) {
+        return new GVRCameraRigImpl(context);
+    }
+
+    @Override
     public void onPause() {
         if (null != mActivityHandler) {
             mActivityHandler.onPause();
