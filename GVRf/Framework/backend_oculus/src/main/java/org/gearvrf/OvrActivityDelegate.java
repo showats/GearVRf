@@ -28,14 +28,14 @@ import org.gearvrf.utility.VrAppSettings;
 final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     private GVRActivity mActivity;
     private OvrViewManagerImpl mActiveViewManager;
-    private OVrActivityNative mActivityNative;
+    private OvrActivityNative mActivityNative;
     private boolean mUseFallback;
 
     @Override
     public void onCreate(GVRActivity activity) {
         mActivity = activity;
 
-        mActivityNative = new OVrActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
+        mActivityNative = new OvrActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
 
         try {
             mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
@@ -46,7 +46,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
-    public OVrActivityNative getActivityNative() {
+    public OvrActivityNative getActivityNative() {
         return mActivityNative;
     }
 

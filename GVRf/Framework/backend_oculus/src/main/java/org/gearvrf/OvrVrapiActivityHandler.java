@@ -54,7 +54,7 @@ class OvrVrapiActivityHandler implements OvrActivityHandler {
     private EGLSurface mMainSurface;
     boolean mVrApiInitialized;
 
-    OvrVrapiActivityHandler(final GVRActivity activity, final OVrActivityNative activityNative,
+    OvrVrapiActivityHandler(final GVRActivity activity, final OvrActivityNative activityNative,
                             final OvrActivityHandlerRenderingCallbacks callbacks) throws VrapiNotAvailableException {
         if (null == callbacks || null == activity) {
             throw new IllegalArgumentException();

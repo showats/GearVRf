@@ -26,10 +26,6 @@
 namespace gvr {
 extern "C" {
     JNIEXPORT jlong JNICALL
-    Java_org_gearvrf_NativeCameraRig_ctor(JNIEnv * env,
-            jobject obj);
-
-    JNIEXPORT jlong JNICALL
     Java_org_gearvrf_NativeCameraRig_getComponentType(JNIEnv * env, jobject obj);
 
     JNIEXPORT jint JNICALL

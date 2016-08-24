@@ -56,6 +56,9 @@ import android.view.WindowManager;
  */
 public class GVRActivity extends Activity implements IEventReceiver, IScriptable {
 
+    static {
+        System.loadLibrary("gvrf");
+    }
     protected static final String TAG = "GVRActivity";
 
     private GVRViewManager mViewManager;

@@ -59,7 +59,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     };
 
     static public long getComponentType() {
-        return NativeCameraRigBase.getComponentType();
+        return NativeCameraRig.getComponentType();
     }
 
     /** Constructs a camera rig without cameras attached. */
@@ -67,11 +67,6 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
         final GVRCameraRig result = gvrContext.getActivity().getDelegate().makeCameraRig(gvrContext);
         result.init(gvrContext);
         return result;
-    }
-
-    /** Constructs a camera rig without cameras attached. */
-    protected GVRCameraRig(GVRContext gvrContext) {
-        super(gvrContext, NativeCameraRigBase.ctor());
     }
 
     protected GVRCameraRig(GVRContext gvrContext, long ptr) {
@@ -116,7 +111,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
 
     /** @return The {@link GVRCameraRigType type} of the camera rig. */
     public int getCameraRigType() {
-        return NativeCameraRigBase.getCameraRigType(getNative());
+        return NativeCameraRig.getCameraRigType(getNative());
     }
 
     /**
@@ -126,7 +121,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *            The rig {@link GVRCameraRigType type}.
      */
     public void setCameraRigType(int cameraRigType) {
-        NativeCameraRigBase.setCameraRigType(getNative(), cameraRigType);
+        NativeCameraRig.setCameraRigType(getNative(), cameraRigType);
     }
 
     /**
@@ -161,7 +156,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *         cameras.
      */
     public static float getDefaultCameraSeparationDistance() {
-        return NativeCameraRigBase.getDefaultCameraSeparationDistance();
+        return NativeCameraRig.getDefaultCameraSeparationDistance();
     }
 
     /**
@@ -171,7 +166,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *            Global default separation.
      */
     public static void setDefaultCameraSeparationDistance(float distance) {
-        NativeCameraRigBase.setDefaultCameraSeparationDistance(distance);
+        NativeCameraRig.setDefaultCameraSeparationDistance(distance);
     }
 
     /**
@@ -179,7 +174,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *         rig.
      */
     public float getCameraSeparationDistance() {
-        return NativeCameraRigBase.getCameraSeparationDistance(getNative());
+        return NativeCameraRig.getCameraSeparationDistance(getNative());
     }
 
     /**
@@ -189,7 +184,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *            Separation distance.
      */
     public void setCameraSeparationDistance(float distance) {
-        NativeCameraRigBase.setCameraSeparationDistance(getNative(), distance);
+        NativeCameraRig.setCameraSeparationDistance(getNative(), distance);
     }
 
     /**
@@ -198,7 +193,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      * @return The {@code float} value associated with {@code key}.
      */
     public float getFloat(String key) {
-        return NativeCameraRigBase.getFloat(getNative(), key);
+        return NativeCameraRig.getFloat(getNative(), key);
     }
 
     /**
@@ -212,7 +207,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     public void setFloat(String key, float value) {
         checkStringNotNullOrEmpty("key", key);
         checkFloatNotNaNOrInfinity("value", value);
-        NativeCameraRigBase.setFloat(getNative(), key, value);
+        NativeCameraRig.setFloat(getNative(), key, value);
     }
 
     /**
@@ -222,7 +217,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *         {@code key}.
      */
     public float[] getVec2(String key) {
-        return NativeCameraRigBase.getVec2(getNative(), key);
+        return NativeCameraRig.getVec2(getNative(), key);
     }
 
     /**
@@ -237,7 +232,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      */
     public void setVec2(String key, float x, float y) {
         checkStringNotNullOrEmpty("key", key);
-        NativeCameraRigBase.setVec2(getNative(), key, x, y);
+        NativeCameraRig.setVec2(getNative(), key, x, y);
     }
 
     /**
@@ -247,7 +242,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *         {@code key}.
      */
     public float[] getVec3(String key) {
-        return NativeCameraRigBase.getVec3(getNative(), key);
+        return NativeCameraRig.getVec3(getNative(), key);
     }
 
     /**
@@ -264,7 +259,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      */
     public void setVec3(String key, float x, float y, float z) {
         checkStringNotNullOrEmpty("key", key);
-        NativeCameraRigBase.setVec3(getNative(), key, x, y, z);
+        NativeCameraRig.setVec3(getNative(), key, x, y, z);
     }
 
     /**
@@ -274,7 +269,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *         {@code key} .
      */
     public float[] getVec4(String key) {
-        return NativeCameraRigBase.getVec4(getNative(), key);
+        return NativeCameraRig.getVec4(getNative(), key);
     }
 
     /**
@@ -293,7 +288,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      */
     public void setVec4(String key, float x, float y, float z, float w) {
         checkStringNotNullOrEmpty("key", key);
-        NativeCameraRigBase.setVec4(getNative(), key, x, y, z, w);
+        NativeCameraRig.setVec4(getNative(), key, x, y, z, w);
     }
 
     /**
@@ -309,7 +304,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
 
         leftCameraObject.attachCamera(camera);
         leftCamera = camera;
-        NativeCameraRigBase.attachLeftCamera(getNative(), camera.getNative());
+        NativeCameraRig.attachLeftCamera(getNative(), camera.getNative());
     }
 
     /**
@@ -325,7 +320,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
 
         rightCameraObject.attachCamera(camera);
         rightCamera = camera;
-        NativeCameraRigBase.attachRightCamera(getNative(), camera.getNative());
+        NativeCameraRig.attachRightCamera(getNative(), camera.getNative());
     }
 
     /**
@@ -341,7 +336,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
 
         centerCameraObject.attachCamera(camera);
         centerCamera = camera;
-        NativeCameraRigBase.attachCenterCamera(getNative(), camera.getNative());
+        NativeCameraRig.attachCenterCamera(getNative(), camera.getNative());
     }
 
     public void attachToParent(GVRSceneObject parentObject) {
@@ -360,7 +355,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      * {@link #resetYawPitch()}.
      */
     public void reset() {
-        NativeCameraRigBase.reset(getNative());
+        NativeCameraRig.reset(getNative());
     }
 
     /**
@@ -371,7 +366,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      * {@link #resetYawPitch()}.
      */
     public void resetYaw() {
-        NativeCameraRigBase.resetYaw(getNative());
+        NativeCameraRig.resetYaw(getNative());
     }
 
     /**
@@ -382,7 +377,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      * {@link #resetYaw()}.
      */
     public void resetYawPitch() {
-        NativeCameraRigBase.resetYawPitch(getNative());
+        NativeCameraRig.resetYawPitch(getNative());
     }
 
     /**
@@ -410,7 +405,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      */
     void setRotationSensorData(long timeStamp, float w, float x, float y,
             float z, float gyroX, float gyroY, float gyroZ) {
-        NativeCameraRigBase.setRotationSensorData(getNative(), timeStamp, w, x, y,
+        NativeCameraRig.setRotationSensorData(getNative(), timeStamp, w, x, y,
                 z, gyroX, gyroY, gyroZ);
     }
 
@@ -422,7 +417,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
      *         vector. ([0] : x, [1] : y, [2] : z)
      */
     public float[] getLookAt() {
-        return NativeCameraRigBase.getLookAt(getNative());
+        return NativeCameraRig.getLookAt(getNative());
     }
 
     /**
@@ -634,9 +629,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     }
 }
 
-class NativeCameraRigBase {
-    static native long ctor();
-
+class NativeCameraRig {
     static native int getCameraRigType(long cameraRig);
 
     static native void setCameraRigType(long cameraRig, int cameraRigType);

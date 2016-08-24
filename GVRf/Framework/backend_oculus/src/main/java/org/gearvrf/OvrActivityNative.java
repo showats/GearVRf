@@ -19,14 +19,14 @@ import org.gearvrf.utility.VrAppSettings;
 
 import android.app.Activity;
 
-class OVrActivityNative implements IActivityNative {
+class OvrActivityNative implements IActivityNative {
     static {
-        System.loadLibrary("gvrf");
+        System.loadLibrary("gvrf-oculus");
     }
 
     private final long mPtr;
 
-    OVrActivityNative(Activity act, VrAppSettings vrAppSettings, OvrActivityHandlerRenderingCallbacks callbacks) {
+    OvrActivityNative(Activity act, VrAppSettings vrAppSettings, OvrActivityHandlerRenderingCallbacks callbacks) {
         mPtr = onCreate(act, vrAppSettings, callbacks);
     }
 

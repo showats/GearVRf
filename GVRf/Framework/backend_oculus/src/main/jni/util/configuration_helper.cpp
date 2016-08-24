@@ -17,15 +17,18 @@
 #include "jni_utils.h"
 #include "util/gvr_log.h"
 
-static const char* app_settings_name = "org/gearvrf/utility/OculusVrAppSettings";
+static const char* app_settings_name = "org/gearvrf/OvrVrAppSettings";
 
 namespace gvr {
 
 ConfigurationHelper::ConfigurationHelper(JNIEnv& env, jobject vrAppSettings)
     : env_(env), vrAppSettings_(vrAppSettings)
 {
+    LOGI("mmarinov aaa");
     vrAppSettings_ = env.NewGlobalRef(vrAppSettings);
+    LOGI("mmarinov bbb");
     vrAppSettingsClass_ = GetGlobalClassReference(env, app_settings_name);
+    LOGI("mmarinov ccc");
 }
 
 ConfigurationHelper::~ConfigurationHelper() {
@@ -213,7 +216,7 @@ void ConfigurationHelper::getSceneViewport(JNIEnv& env, int& viewport_x, int& vi
     LOGV("ConfigurationHelper: --- viewport configuration ---");
     int x, y, width, height;
 
-    jfieldID fid = env.GetFieldID(vrAppSettingsClass_, "sceneParams", "Lorg/gearvrf/utility/OculusVrAppSettings$SceneParams;");
+    jfieldID fid = env.GetFieldID(vrAppSettingsClass_, "sceneParams", "Lorg/gearvrf/OvrVrAppSettings$SceneParams;");
     jobject parms = env.GetObjectField(vrAppSettings_, fid);
     jclass parmsClass = env.GetObjectClass(parms);
 

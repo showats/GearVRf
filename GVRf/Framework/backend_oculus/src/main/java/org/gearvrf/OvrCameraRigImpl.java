@@ -20,7 +20,7 @@ class OvrCameraRigImpl extends GVRCameraRig {
 
     /** Constructs a camera rig without cameras attached. */
     OvrCameraRigImpl(GVRContext gvrContext) {
-        super(gvrContext, NativeCameraRigBase.ctor());
+        super(gvrContext, OvrNativeCameraRig.ctor());
     }
 
     @Override
@@ -43,10 +43,11 @@ class OvrCameraRigImpl extends GVRCameraRig {
      *      float, float)
      */
     void predict(float time) {
-        NativeCameraRig.predict(getNative(), time);
+        OvrNativeCameraRig.predict(getNative(), time);
     }
 }
 
-class NativeCameraRig {
+class OvrNativeCameraRig {
+    static native long ctor();
     static native void predict(long cameraRig, float time);
 }

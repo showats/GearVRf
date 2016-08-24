@@ -22,14 +22,14 @@
 
 namespace gvr {
 extern "C" {
-    JNIEXPORT void JNICALL Java_org_gearvrf_NativeCameraRig_predict(
+    JNIEXPORT void JNICALL Java_org_gearvrf_OvrNativeCameraRig_predict(
         JNIEnv * env, jobject obj, jlong jcamera_rig, jfloat time)
     {
         OvrCameraRig* camera_rig = reinterpret_cast<OvrCameraRig*>(jcamera_rig);
         camera_rig->predict(time);
     }
 
-    JNIEXPORT jlong JNICALL Java_org_gearvrf_NativeCameraRig_ctor(JNIEnv* env, jobject obj) {
+    JNIEXPORT jlong JNICALL Java_org_gearvrf_OvrNativeCameraRig_ctor(JNIEnv* env, jobject obj) {
         return reinterpret_cast<jlong>(new OvrCameraRig());
     }
 }; // extern "C"
