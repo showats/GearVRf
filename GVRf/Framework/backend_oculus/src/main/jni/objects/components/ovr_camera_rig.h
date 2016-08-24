@@ -18,34 +18,30 @@
  * Holds left, right cameras and reacts to the rotation sensor.
  ***************************************************************************/
 
-#include "camera_rig.h"
-#include "objects/scene_object.h"
-#include "glm/gtc/quaternion.hpp"
+#ifndef OVR_CAMERA_RIG_H_
+#define OVR_CAMERA_RIG_H_
+
+#include "objects/components/camera_rig.h"
 
 namespace gvr {
 
-CameraRig::CameraRig() :
-        CameraRigBase(CameraRigBase::getComponentType()) {
-}
+class OvrCameraRig: public CameraRig {
+public:
+    OvrCameraRig();
+    virtual ~OvrCameraRig();
 
-CameraRig::~CameraRig() {
-}
+    void predict(float time);
+    void predict(float time, const RotationSensorData& rotationSensorData);
+    void setPosition(const glm::vec3& transform_position);
 
-void CameraRig::predict(float time) {
-    return predict(time, rotation_sensor_data_);
-}
+    virtual Transform* getHeadTransform() const;
 
-void CameraRig::predict(float time, const RotationSensorData& rotationSensorData) {
-    setRotation(complementary_rotation_*rotationSensorData.quaternion());
-}
-
-void CameraRig::setPosition(const glm::vec3& transform_position) {
-    Transform* transform = getHeadTransform();
-    transform->set_position(transform_position);
-}
-
-/*virtual*/ Transform* CameraRig::getHeadTransform() const {
-    return owner_object()->getChildByIndex(0)->transform();
-}
+private:
+    OvrCameraRig(const OvrCameraRig& camera_rig);
+    OvrCameraRig(OvrCameraRig&& camera_rig);
+    OvrCameraRig& operator=(const OvrCameraRig& camera_rig);
+    OvrCameraRig& operator=(OvrCameraRig&& camera_rig);
+};
 
 }
+#endif

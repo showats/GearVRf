@@ -18,7 +18,7 @@
  * Holds left, right cameras and reacts to the rotation sensor.
  ***************************************************************************/
 
-#include "camera_rig_base.h"
+#include "camera_rig.h"
 
 #include "glm/gtc/quaternion.hpp"
 
@@ -29,9 +29,9 @@
 
 namespace gvr {
 
-float CameraRigBase::default_camera_separation_distance_ = 0.062f;
+float CameraRig::default_camera_separation_distance_ = 0.062f;
 
-CameraRigBase::CameraRigBase(long long componentType) :
+CameraRig::CameraRig(long long componentType) :
         Component(componentType),
         camera_rig_type_(DEFAULT_CAMERA_RIG_TYPE),
         left_camera_(),
@@ -46,10 +46,10 @@ CameraRigBase::CameraRigBase(long long componentType) :
         rotation_sensor_data_() {
 }
 
-CameraRigBase::~CameraRigBase() {
+CameraRig::~CameraRig() {
 }
 
-void CameraRigBase::attachLeftCamera(Camera* const left_camera) {
+void CameraRig::attachLeftCamera(Camera* const left_camera) {
     Transform* const t = left_camera->owner_object()->transform();
     if (nullptr == t) {
         LOGE("attachLeftCamera error: no transform");
@@ -59,7 +59,7 @@ void CameraRigBase::attachLeftCamera(Camera* const left_camera) {
     left_camera_ = left_camera;
 }
 
-void CameraRigBase::attachRightCamera(Camera* const right_camera) {
+void CameraRig::attachRightCamera(Camera* const right_camera) {
     Transform* const t = right_camera->owner_object()->transform();
     if (nullptr == t) {
         LOGE("attachRightCamera error: no transform");
@@ -102,7 +102,7 @@ void CameraRigBase::attachRightCamera(Camera* const right_camera) {
  * adjacent = opposite * 1/tan(theta)
  * z = ipd/2 * 1/tan(fov_y/2)
  */
-void CameraRigBase::attachCenterCamera(PerspectiveCamera* const center_camera) {
+void CameraRig::attachCenterCamera(PerspectiveCamera* const center_camera) {
     Transform* const t = center_camera->owner_object()->transform();
     if (nullptr == t) {
         LOGE("attachCenterCamera error: no transform");
@@ -117,18 +117,18 @@ void CameraRigBase::attachCenterCamera(PerspectiveCamera* const center_camera) {
     center_camera_ = center_camera;
 }
 
-void CameraRigBase::reset() {
+void CameraRig::reset() {
     complementary_rotation_ = glm::inverse(rotation_sensor_data_.quaternion());
 }
 
-void CameraRigBase::resetYaw() {
+void CameraRig::resetYaw() {
     glm::vec3 look_at = glm::rotate(rotation_sensor_data_.quaternion(),
             glm::vec3(0.0f, 0.0f, -1.0f));
     float yaw = atan2f(-look_at.x, -look_at.z);
     complementary_rotation_ = glm::angleAxis(-yaw, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-void CameraRigBase::resetYawPitch() {
+void CameraRig::resetYawPitch() {
     glm::vec3 look_at = glm::rotate(rotation_sensor_data_.quaternion(),
             glm::vec3(0.0f, 0.0f, -1.0f));
     float pitch = atan2f(look_at.y,
@@ -139,12 +139,12 @@ void CameraRigBase::resetYawPitch() {
     complementary_rotation_ = glm::inverse(quat);
 }
 
-void CameraRigBase::setRotationSensorData(long long time_stamp, float w, float x,
+void CameraRig::setRotationSensorData(long long time_stamp, float w, float x,
         float y, float z, float gyro_x, float gyro_y, float gyro_z) {
     rotation_sensor_data_.update(time_stamp, w, x, y, z, gyro_x, gyro_y, gyro_z);
 }
 
-void CameraRigBase::setRotation(const glm::quat& transform_rotation) {
+void CameraRig::setRotation(const glm::quat& transform_rotation) {
     // Get head transform (a child of camera rig object)
     Transform* transform = getHeadTransform();
 
@@ -178,7 +178,7 @@ void CameraRigBase::setRotation(const glm::quat& transform_rotation) {
     }
 }
 
-glm::vec3 CameraRigBase::getLookAt() const {
+glm::vec3 CameraRig::getLookAt() const {
     glm::mat4 model_matrix = getHeadTransform()->getModelMatrix();
     float x0 = model_matrix[3][0];
     float y0 = model_matrix[3][1];

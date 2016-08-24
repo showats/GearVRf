@@ -17,19 +17,22 @@
  * JNI
  ***************************************************************************/
 
-#include "objects/components/camera_rig.h"
+#include "objects/components/ovr_camera_rig.h"
 #include "util/gvr_jni.h"
 
 namespace gvr {
 extern "C" {
-    JNIEXPORT void JNICALL
-    Java_org_gearvrf_NativeCameraRig_predict(JNIEnv * env, jobject obj, jlong jcamera_rig, jfloat time);
+    JNIEXPORT void JNICALL Java_org_gearvrf_NativeCameraRig_predict(
+        JNIEnv * env, jobject obj, jlong jcamera_rig, jfloat time)
+    {
+        OvrCameraRig* camera_rig = reinterpret_cast<OvrCameraRig*>(jcamera_rig);
+        camera_rig->predict(time);
+    }
+
+    JNIEXPORT jlong JNICALL Java_org_gearvrf_NativeCameraRig_ctor(JNIEnv* env, jobject obj) {
+        return reinterpret_cast<jlong>(new OvrCameraRig());
+    }
 }; // extern "C"
 
-JNIEXPORT void JNICALL
-Java_org_gearvrf_NativeCameraRig_predict(JNIEnv * env, jobject obj, jlong jcamera_rig, jfloat time) {
-    CameraRig* camera_rig = reinterpret_cast<CameraRig*>(jcamera_rig);
-    camera_rig->predict(time);
-}
 
 }

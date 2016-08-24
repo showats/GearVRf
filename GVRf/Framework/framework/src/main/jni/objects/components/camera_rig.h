@@ -18,8 +18,8 @@
  * Holds left, right cameras and reacts to the rotation sensor.
  ***************************************************************************/
 
-#ifndef CAMERA_RIG_BASE_H_
-#define CAMERA_RIG_BASE_H_
+#ifndef CAMERA_RIG_H_
+#define CAMERA_RIG_H_
 
 #include <map>
 #include <string>
@@ -35,7 +35,7 @@ namespace gvr {
 class Camera;
 class PerspectiveCamera;
 
-class CameraRigBase: public Component {
+class CameraRig: public Component {
 public:
     enum CameraRigType {
         FREE = 0, YAW_ONLY = 1, ROLL_FREEZE = 2, FREEZE = 3, ORBIT_PIVOT = 4,
@@ -46,8 +46,8 @@ public:
     }
 
 protected:
-    CameraRigBase(long long componentType);
-    ~CameraRigBase();
+    CameraRig(long long componentType);
+    ~CameraRig();
 
 public:
     CameraRigType camera_rig_type() const {
@@ -154,10 +154,10 @@ public:
     void setRotation(const glm::quat& transform_rotation);
 
 private:
-    CameraRigBase(const CameraRigBase& camera_rig);
-    CameraRigBase(CameraRigBase&& camera_rig);
-    CameraRigBase& operator=(const CameraRigBase& camera_rig);
-    CameraRigBase& operator=(CameraRigBase&& camera_rig);
+    CameraRig(const CameraRig& camera_rig);
+    CameraRig(CameraRig&& camera_rig);
+    CameraRig& operator=(const CameraRig& camera_rig);
+    CameraRig& operator=(CameraRig&& camera_rig);
 
 private:
     static const CameraRigType DEFAULT_CAMERA_RIG_TYPE = FREE;
