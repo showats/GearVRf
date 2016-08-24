@@ -19,9 +19,9 @@
 
 #include "view_manager.h"
 #include "framebufferobject.h"
-#include "../objects/components/camera.h"
-#include "../objects/components/camera_rig.h"
-#include "../util/configuration_helper.h"
+#include "objects/components/camera.h"
+#include "objects/components/camera_rig.h"
+#include "util/configuration_helper.h"
 #include "head_rotation_provider.h"
 #include "VrApi_Types.h"
 
