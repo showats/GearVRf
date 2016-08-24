@@ -16,7 +16,7 @@
 package org.gearvrf;
 
 /** A container for various services and pieces of data required for rendering. */
-class GVRRenderBundle {
+class OvrRenderBundle {
     private final GVRContext mGVRContext;
     private final GVRLensInfo mData;
     private final GVRMaterialShaderManager mMaterialShaderManager;
@@ -24,7 +24,7 @@ class GVRRenderBundle {
     private GVRRenderTexture mPostEffectRenderTextureA = null;
     private GVRRenderTexture mPostEffectRenderTextureB = null;
 
-    GVRRenderBundle(GVRContext gvrContext, GVRLensInfo data) {
+    OvrRenderBundle(GVRContext gvrContext, GVRLensInfo data) {
         mGVRContext = gvrContext;
         mData = data;
         mMaterialShaderManager = new GVRMaterialShaderManager(gvrContext);

@@ -53,16 +53,16 @@ import android.util.DisplayMetrics;
  * {@link #onRotationSensor(long, float, float, float, float, float, float, float)
  * onRotationSensor()} to draw the scene graph properly.
  */
-class GVRMonoscopicViewManager extends GVRViewManager {
+class OvrMonoscopicViewManager extends OvrViewManagerImpl {
 
     // private static final String TAG =
-    // Log.tag(GVRMonoscopicViewManager.class);
+    // Log.tag(OvrMonoscopicViewManager.class);
 
-    private GVRSurfaceView mView;
+    private OvrSurfaceView mView;
     private int mViewportX, mViewportY, mViewportWidth, mViewportHeight;
 
     /**
-     * Constructs GVRMonoscopicViewManager object with GVRScript which controls
+     * Constructs OvrMonoscopicViewManager object with GVRScript which controls
      * GL activities
      * 
      * @param gvrActivity
@@ -72,15 +72,15 @@ class GVRMonoscopicViewManager extends GVRViewManager {
      * @param distortionDataFileName
      *            distortion filename under assets folder
      */
-    GVRMonoscopicViewManager(GVRActivity gvrActivity, GVRScript gvrScript,
-            GVRXMLParser xmlParser) {
+    OvrMonoscopicViewManager(GVRActivity gvrActivity, GVRScript gvrScript,
+                             OvrXMLParser xmlParser) {
         super(gvrActivity, gvrScript, xmlParser);
 
         /*
          * Sets things with the numbers in the xml.
          */
 
-        mView = new GVRSurfaceView(gvrActivity, this, null);
+        mView = new OvrSurfaceView(gvrActivity, this, null);
         gvrActivity.setContentView(mView);
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -143,9 +143,9 @@ class GVRMonoscopicViewManager extends GVRViewManager {
 
     private void drawEyes() {
         // Log.d(TAG, "drawEyes()");
-        ((GVRCameraRigImpl)mMainScene.getMainCameraRig()).predict(3.5f / 60.0f);
-        GVRMonoscopicRenderer.cull(mMainScene, mMainScene.getMainCameraRig().getCenterCamera(), mRenderBundle);
-        GVRMonoscopicRenderer.renderCamera(mMainScene, mMainScene
+        ((OvrCameraRigImpl)mMainScene.getMainCameraRig()).predict(3.5f / 60.0f);
+        OvrMonoscopicRenderer.cull(mMainScene, mMainScene.getMainCameraRig().getCenterCamera(), mRenderBundle);
+        OvrMonoscopicRenderer.renderCamera(mMainScene, mMainScene
                 .getMainCameraRig().getLeftCamera(), mViewportX, mViewportY,
                 mViewportWidth, mViewportHeight, mRenderBundle);
 

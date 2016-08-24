@@ -18,22 +18,16 @@ package org.gearvrf;
 import android.app.Activity;
 
 import org.gearvrf.utility.DockEventReceiver;
-import org.gearvrf.utility.VrAppSettings;
 
 import java.lang.ref.WeakReference;
 
-final class GVRConfigurationManager {
+abstract class GVRConfigurationManager {
 
-    private WeakReference<GVRActivity> mActivity;
-    private static GVRConfigurationManager sInstance;
+    protected WeakReference<GVRActivity> mActivity;
     private boolean isDockListenerRequired = true;
 
-    private GVRConfigurationManager(GVRActivity gvrActivity) {
-        mActivity = new WeakReference<GVRActivity>(gvrActivity);
-    }
-
-    static void onInitialize(GVRActivity activity, VrAppSettings settings) {
-        sInstance = new GVRConfigurationManager(activity);
+    protected GVRConfigurationManager(GVRActivity gvrActivity) {
+        mActivity = new WeakReference<>(gvrActivity);
     }
 
     /**
@@ -57,33 +51,14 @@ final class GVRConfigurationManager {
     }
 
     /**
-     * Get the instance of this class
-     * 
-     * @return the Singleton instance of this class.
-     * */
-    public static GVRConfigurationManager getInstance() {
-        return sInstance;
-    }
-
-    /**
      * @return true if GearVR is connected, false otherwise
      */
-    public boolean isHmtConnected() {
-        final GVRActivity activity = mActivity.get();
-        if (null == activity) {
-            return false;
-        }
+    public abstract boolean isHmtConnected();
 
-        return nativeIsHmtConnected(activity.getNative());
-    }
-
-    private static native boolean nativeIsHmtConnected(long ptr);
-
-    public void invalidate() {
-    }
 
     DockEventReceiver makeDockEventReceiver(final Activity gvrActivity, final Runnable runOnDock,
                                             final Runnable runOnUndock) {
         return new DockEventReceiver(gvrActivity, runOnDock, runOnUndock);
     }
+
 }

@@ -2287,7 +2287,7 @@ public abstract class GVRContext implements IEventReceiver {
     /**
      * Get the current {@link GVRScene}, which contains the scene graph (a
      * hierarchy of {@linkplain GVRSceneObject scene objects}) and the
-     * {@linkplain GVRCameraRigImpl camera rig}
+     * {@linkplain GVRCameraRig camera rig}
      * 
      * @return A {@link GVRScene} instance, containing scene and camera
      *         information

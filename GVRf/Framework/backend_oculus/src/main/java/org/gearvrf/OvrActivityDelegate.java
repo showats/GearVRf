@@ -20,7 +20,6 @@ import android.content.res.Configuration;
 import android.view.KeyEvent;
 
 import org.gearvrf.utility.Log;
-import org.gearvrf.utility.OculusVrAppSettings;
 import org.gearvrf.utility.VrAppSettings;
 
 /**
@@ -28,18 +27,18 @@ import org.gearvrf.utility.VrAppSettings;
  */
 final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     private GVRActivity mActivity;
-    private GVRViewManager mActiveViewManager;
-    private GVRActivityNative mActivityNative;
+    private OvrViewManagerImpl mActiveViewManager;
+    private OVrActivityNative mActivityNative;
     private boolean mUseFallback;
 
     @Override
     public void onCreate(GVRActivity activity) {
         mActivity = activity;
 
-        mActivityNative = new GVRActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
+        mActivityNative = new OVrActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
 
         try {
-            mActivityHandler = new VrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
+            mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
         } catch (final Exception ignored) {
             // GVRf will fallback to GoogleVR in this case.
             mUseFallback = true;
@@ -47,29 +46,34 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
-    public GVRActivityNative getActivityNative() {
+    public OVrActivityNative getActivityNative() {
         return mActivityNative;
     }
 
     @Override
-    public GVRViewManagerBase makeViewManager(AssetManager assetManager, String dataFilename) {
-        final GVRXMLParser xmlParser = new GVRXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
+    public GVRViewManager makeViewManager(AssetManager assetManager, String dataFilename) {
+        final OvrXMLParser xmlParser = new OvrXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
         if (!mUseFallback) {
-            return new GVRViewManager(mActivity, mActivity.getScript(), xmlParser);
+            return new OvrViewManagerImpl(mActivity, mActivity.getScript(), xmlParser);
         } else {
-            return new GoogleVRViewManager(mActivity, mActivity.getScript(), xmlParser);
+            return new OvrGoogleVRViewManager(mActivity, mActivity.getScript(), xmlParser);
         }
     }
 
     @Override
-    public GVRMonoscopicViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename) {
-        final GVRXMLParser xmlParser = new GVRXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
-        return new GVRMonoscopicViewManager(mActivity, mActivity.getScript(), xmlParser);
+    public OvrMonoscopicViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename) {
+        final OvrXMLParser xmlParser = new OvrXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
+        return new OvrMonoscopicViewManager(mActivity, mActivity.getScript(), xmlParser);
     }
 
     @Override
     public GVRCameraRig makeCameraRig(GVRContext context) {
-        return new GVRCameraRigImpl(context);
+        return new OvrCameraRigImpl(context);
+    }
+
+    @Override
+    public GVRConfigurationManager makeConfigurationManager(GVRActivity activity) {
+        return new OvrConfigurationManager(activity);
     }
 
     @Override
@@ -100,8 +104,8 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     }
 
     @Override
-    public void setViewManager(GVRViewManagerBase viewManager) {
-        mActiveViewManager = (GVRViewManager)viewManager;
+    public void setViewManager(GVRViewManager viewManager) {
+        mActiveViewManager = (OvrViewManagerImpl)viewManager;
     }
 
     @Override
@@ -109,13 +113,13 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
         if(mUseFallback){
             // This is the only place where the setDockListenerRequired flag can be set before
             // the check in GVRActivityBase.
-            GVRConfigurationManager.getInstance().setDockListenerRequired(false);
+            mActivity.getConfigurationManager().setDockListenerRequired(false);
         }
     }
 
     @Override
     public VrAppSettings makeVrAppSettings() {
-        return new OculusVrAppSettings();
+        return new OvrVrAppSettings();
     }
 
     @Override
@@ -147,7 +151,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
         return false;
     }
 
-    private final ActivityHandlerRenderingCallbacks mRenderingCallbacks = new ActivityHandlerRenderingCallbacks() {
+    private final OvrActivityHandlerRenderingCallbacks mRenderingCallbacks = new OvrActivityHandlerRenderingCallbacks() {
         @Override
         public void onSurfaceCreated() {
             mActiveViewManager.onSurfaceCreated();
@@ -179,6 +183,6 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
         }
     };
 
-    private ActivityHandler mActivityHandler;
+    private OvrActivityHandler mActivityHandler;
     private final static String TAG = "OvrActivityDelegate";
 }

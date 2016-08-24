@@ -26,7 +26,7 @@ import org.gearvrf.utility.Exceptions;
  * A GVRSceneObject can have any number of components but only
  * one component of each type. Usually the component type loosely
  * corresponds to the base class of the component. For example,
- * GVRCamera and GVRCameraRigImpl have different component types.
+ * GVRCamera and OvrCameraRigImpl have different component types.
  * GVROrthographicCamera and GVRPerspectiveCamera both have the
  * same type. All of the light classes have the same type as well.
  * 

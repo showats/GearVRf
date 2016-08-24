@@ -1,6 +1,6 @@
 package org.gearvrf;
 
-interface ActivityHandler {
+interface OvrActivityHandler {
     public void onPause();
 
     public void onResume();

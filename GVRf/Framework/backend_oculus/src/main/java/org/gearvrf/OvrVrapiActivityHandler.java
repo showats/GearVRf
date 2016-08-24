@@ -27,7 +27,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.gearvrf.utility.Log;
 import org.gearvrf.utility.VrAppSettings;
-import org.joml.Vector2f;
 
 import android.graphics.PixelFormat;
 import android.opengl.EGL14;
@@ -45,18 +44,18 @@ import android.view.SurfaceHolder;
 /**
  * Keep Oculus-specifics here
  */
-class VrapiActivityHandler implements ActivityHandler {
+class OvrVrapiActivityHandler implements OvrActivityHandler {
 
     private final GVRActivity mActivity;
     private long mPtr;
     private GLSurfaceView mSurfaceView;
-    private final ActivityHandlerRenderingCallbacks mCallbacks;
+    private final OvrActivityHandlerRenderingCallbacks mCallbacks;
     private EGLSurface mPixelBuffer;
     private EGLSurface mMainSurface;
     boolean mVrApiInitialized;
 
-    VrapiActivityHandler(final GVRActivity activity, final GVRActivityNative activityNative,
-            final ActivityHandlerRenderingCallbacks callbacks) throws VrapiNotAvailableException {
+    OvrVrapiActivityHandler(final GVRActivity activity, final OVrActivityNative activityNative,
+                            final OvrActivityHandlerRenderingCallbacks callbacks) throws VrapiNotAvailableException {
         if (null == callbacks || null == activity) {
             throw new IllegalArgumentException();
         }
@@ -438,5 +437,5 @@ class VrapiActivityHandler implements ActivityHandler {
     private static final int VRAPI_INITIALIZE_UNKNOWN_ERROR = -1;
     private static final int VRAPI_INITIALIZE_PERMISSIONS_ERROR = -2;
 
-    private static final String TAG = "VrapiActivityHandler";
+    private static final String TAG = "OvrVrapiActivityHandler";
 }

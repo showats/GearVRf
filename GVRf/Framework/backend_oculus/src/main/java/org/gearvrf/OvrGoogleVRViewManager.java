@@ -28,11 +28,11 @@ import org.gearvrf.utility.VrAppSettings;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
-class GoogleVRViewManager extends GVRViewManager {
-    private static final String TAG = GoogleVRViewManager.class.getSimpleName();
+class OvrGoogleVRViewManager extends OvrViewManagerImpl {
+    private static final String TAG = OvrGoogleVRViewManager.class.getSimpleName();
     private final float[] headTransform;
 
-    GoogleVRViewManager(final GVRActivity gvrActivity, GVRScript gvrScript, GVRXMLParser
+    OvrGoogleVRViewManager(final GVRActivity gvrActivity, GVRScript gvrScript, OvrXMLParser
             xmlParser) {
         super(gvrActivity, gvrScript, xmlParser);
         GvrView gvrView = new GoogleVRView(gvrActivity, this, null);
@@ -50,7 +50,7 @@ class GoogleVRViewManager extends GVRViewManager {
 
     public void onDrawEye(Eye eye) {
         if (eye.getType() == Eye.Type.LEFT) {
-            GVRMonoscopicRenderer.cull(mMainScene, mMainScene.getMainCameraRig().getCenterCamera
+            OvrMonoscopicRenderer.cull(mMainScene, mMainScene.getMainCameraRig().getCenterCamera
                     (), mRenderBundle);
             renderCamera(mActivity.getNative(), mMainScene, mMainScene
                     .getMainCameraRig().getLeftCamera(), mRenderBundle);
@@ -61,13 +61,13 @@ class GoogleVRViewManager extends GVRViewManager {
     }
 
     private static class GoogleVRViewRenderer implements GvrView.StereoRenderer {
-        private GoogleVRViewManager mViewManager = null;
+        private OvrGoogleVRViewManager mViewManager = null;
 
-        public GoogleVRViewRenderer(GoogleVRViewManager viewManager) {
+        public GoogleVRViewRenderer(OvrGoogleVRViewManager viewManager) {
             mViewManager = viewManager;
         }
 
-        public void setViewManager(GoogleVRViewManager viewManager) {
+        public void setViewManager(OvrGoogleVRViewManager viewManager) {
             mViewManager = viewManager;
         }
 
@@ -103,13 +103,13 @@ class GoogleVRViewManager extends GVRViewManager {
     }
 
     private static class GoogleVRView extends GvrView {
-        private GoogleVRViewManager mViewManager = null;
+        private OvrGoogleVRViewManager mViewManager = null;
 
         public GoogleVRView(Context context) {
             super(context);
         }
 
-        public GoogleVRView(Context context, final GoogleVRViewManager viewManager,
+        public GoogleVRView(Context context, final OvrGoogleVRViewManager viewManager,
                             GoogleVRViewRenderer renderer) {
             super(context);
             mViewManager = viewManager;

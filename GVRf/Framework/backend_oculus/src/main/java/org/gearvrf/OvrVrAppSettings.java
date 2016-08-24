@@ -1,7 +1,9 @@
-package org.gearvrf.utility;
+package org.gearvrf;
 
-public final class OculusVrAppSettings extends VrAppSettings {
-    public OculusVrAppSettings() {
+import org.gearvrf.utility.VrAppSettings;
+
+public final class OvrVrAppSettings extends VrAppSettings {
+    public OvrVrAppSettings() {
         super();
         sceneParams = new SceneParams();
     }

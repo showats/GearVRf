@@ -16,10 +16,10 @@
 package org.gearvrf;
 
 /** Holds the GVRCameras. */
-class GVRCameraRigImpl extends GVRCameraRig {
+class OvrCameraRigImpl extends GVRCameraRig {
 
     /** Constructs a camera rig without cameras attached. */
-    GVRCameraRigImpl(GVRContext gvrContext) {
+    OvrCameraRigImpl(GVRContext gvrContext) {
         super(gvrContext, NativeCameraRigBase.ctor());
     }
 

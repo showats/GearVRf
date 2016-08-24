@@ -27,13 +27,13 @@ import android.hardware.SensorManager;
  * Wrapper class for rotation-related sensors. Combines handling a device's
  * internal {@link Sensor#TYPE_ROTATION_VECTOR rotation sensor} with the
  * GearVR's {@link KSensor}. When the {@link KSensor} is available, sensor
- * readings from it will be used; otherwise, {@link RotationSensor} will fall
+ * readings from it will be used; otherwise, {@link OvrRotationSensor} will fall
  * back to the device's internal sensor.
  */
-class RotationSensor {
-    private final RotationSensorListener mListener;
+class OvrRotationSensor {
+    private final OvrRotationSensorListener mListener;
 
-    private GVRInternalSensorListener mInternalSensorListener;
+    private OvrInternalSensorListener mInternalSensorListener;
     private final Context mApplicationContext;
     private boolean mUsingInternalSensor = true;
 
@@ -43,10 +43,10 @@ class RotationSensor {
      * @param context
      *            A {@link Context}.
      * @param listener
-     *            A {@link RotationSensorListener} implementation to receive
+     *            A {@link OvrRotationSensorListener} implementation to receive
      *            rotation data.
      */
-    RotationSensor(GVRActivity activity, RotationSensorListener listener) {
+    OvrRotationSensor(GVRActivity activity, OvrRotationSensorListener listener) {
         mListener = listener;
         mApplicationContext = activity.getApplicationContext();
 
@@ -95,8 +95,8 @@ class RotationSensor {
     /**
      * Implementation detail. Handles data from device's internal rotation
      * sensor. See
-     * {@link RotationSensorListener#onRotationSensor(long, float, float, float, float, float, float, float)
-     * RotationSensorListener.onRotationSensor()}.
+     * {@link OvrRotationSensorListener#onRotationSensor(long, float, float, float, float, float, float, float)
+     * OvrRotationSensorListener.onRotationSensor()}.
      */
     void onInternalRotationSensor(long timeStamp, float w, float x, float y,
             float z, float gyroX, float gyroY, float gyroZ) {
@@ -114,9 +114,9 @@ class RotationSensor {
             final SensorManager sensorManager = (SensorManager)mApplicationContext.getSystemService(Context.SENSOR_SERVICE);
             final Sensor internalSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
             if (internalSensor == null) {
-                Log.e("RotationSensor", "This phone does not have a rotation sensor - it cannot run GearVRF applications");
+                Log.e("OvrRotationSensor", "This phone does not have a rotation sensor - it cannot run GearVRF applications");
             }
-            mInternalSensorListener = new GVRInternalSensorListener(this);
+            mInternalSensorListener = new OvrInternalSensorListener(this);
             sensorManager.registerListener(mInternalSensorListener, internalSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
     }

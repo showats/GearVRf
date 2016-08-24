@@ -35,37 +35,37 @@ import android.view.SurfaceHolder;
  * This GVRSurfaceView class extends from {@link GLSurfaceView} which is used
  * for OpenGL rendering. In GVR, GVRSurfaceView acts the same way
  * {@link GLSurfaceView} does to render object and scene. GVRSurfaceView
- * requires a valid {@link GVRMonoscopicViewManager} which holds the main scene details to
+ * requires a valid {@link OvrMonoscopicViewManager} which holds the main scene details to
  * be rendered
  */
-class GVRSurfaceView extends GLSurfaceView implements
+class OvrSurfaceView extends GLSurfaceView implements
         android.view.Choreographer.FrameCallback {
-    private GVRMonoscopicViewManager mViewManager = null;
+    private OvrMonoscopicViewManager mViewManager = null;
 
     /**
      * Constructs a GVRSurfaceView given by current GVR context without
-     * GVRMonoscopicViewManager
+     * OvrMonoscopicViewManager
      * 
      * @param context
      *            current context
      */
-    public GVRSurfaceView(Context context) {
+    public OvrSurfaceView(Context context) {
         super(context);
     }
 
     /**
-     * Constructs a {@link GVRSurfaceView} given by current {@link GVRContext}
-     * with {@link GVRMonoscopicViewManager}
+     * Constructs a {@link OvrSurfaceView} given by current {@link GVRContext}
+     * with {@link OvrMonoscopicViewManager}
      * 
      * @param context
      *            current context
      * @param viewManager
-     *            a given {@link GVRMonoscopicViewManager} object to be used in
-     *            {@link GVRSurfaceView}
+     *            a given {@link OvrMonoscopicViewManager} object to be used in
+     *            {@link OvrSurfaceView}
      */
-    public GVRSurfaceView(Context context,
-            GVRMonoscopicViewManager viewManager,
-            GVRSurfaceViewRenderer renderer) {
+    public OvrSurfaceView(Context context,
+                          OvrMonoscopicViewManager viewManager,
+                          OvrSurfaceViewRenderer renderer) {
         super(context);
         mViewManager = viewManager;
         /*
@@ -78,13 +78,13 @@ class GVRSurfaceView extends GLSurfaceView implements
          */
         setEGLContextClientVersion(3);
         setPreserveEGLContextOnPause(true);
-        setEGLContextFactory(new GVRContextFactory());
-        setEGLConfigChooser(new GVRConfigChooser(8, 8, 8, 8, 24, 8));
+        setEGLContextFactory(new OvrContextFactory());
+        setEGLConfigChooser(new OvrConfigChooser(8, 8, 8, 8, 24, 8));
         if (renderer != null) {
             renderer.setViewManager(viewManager);
             setRenderer(renderer);
         } else {
-            setRenderer(new GVRSurfaceViewRenderer(viewManager));
+            setRenderer(new OvrSurfaceViewRenderer(viewManager));
         }
         /*
          * requestRender() will be called efficiently with VSync.
@@ -141,7 +141,7 @@ class GVRSurfaceView extends GLSurfaceView implements
  * the License.
  */
 
-class GVRContextFactory implements GLSurfaceView.EGLContextFactory {
+class OvrContextFactory implements GLSurfaceView.EGLContextFactory {
 
     private static final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
 
@@ -160,10 +160,10 @@ class GVRContextFactory implements GLSurfaceView.EGLContextFactory {
     }
 }
 
-class GVRConfigChooser implements GLSurfaceView.EGLConfigChooser {
+class OvrConfigChooser implements GLSurfaceView.EGLConfigChooser {
 
     /**
-     * Constructs a GVRConfigChooser class with initial set-ups for EGL
+     * Constructs a OvrConfigChooser class with initial set-ups for EGL
      * 
      * @param r
      *            size of red in bits
@@ -178,7 +178,7 @@ class GVRConfigChooser implements GLSurfaceView.EGLConfigChooser {
      * @param stencil
      *            size of stencil buffer in bits
      */
-    public GVRConfigChooser(int r, int g, int b, int a, int depth, int stencil) {
+    public OvrConfigChooser(int r, int g, int b, int a, int depth, int stencil) {
         mRedSize = r;
         mGreenSize = g;
         mBlueSize = b;

@@ -23,17 +23,17 @@ import android.os.Build;
 import org.joml.Quaternionf;
 
 /** A listener for a TYPE_ROTATION_VECTOR type sensor. */
-class GVRInternalSensorListener implements SensorEventListener {
+class OvrInternalSensorListener implements SensorEventListener {
     private static final float SQRT_OF_HALF = (float)Math.sqrt(0.5);
     private static final Quaternionf COORDINATE_QUATERNION = new Quaternionf(0.0f, 0.0f, -SQRT_OF_HALF, SQRT_OF_HALF);
     private static final Quaternionf OFFSET_QUATERNION = new Quaternionf(0.0f, SQRT_OF_HALF, 0.0f, SQRT_OF_HALF);
     private static final Quaternionf CONSTANT_EXPRESSION = new Quaternionf().set(COORDINATE_QUATERNION).invert()
             .mul(OFFSET_QUATERNION);
 
-    private RotationSensor mSensor;
+    private OvrRotationSensor mSensor;
     private final Quaternionf mQuaternion = new Quaternionf(); 
 
-    public GVRInternalSensorListener(RotationSensor sensor) {
+    public OvrInternalSensorListener(OvrRotationSensor sensor) {
         mSensor = sensor;
     }
 

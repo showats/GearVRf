@@ -19,14 +19,14 @@ import org.gearvrf.utility.VrAppSettings;
 
 import android.app.Activity;
 
-class GVRActivityNative implements IActivityBaseNative {
+class OVrActivityNative implements IActivityNative {
     static {
         System.loadLibrary("gvrf");
     }
 
     private final long mPtr;
 
-    GVRActivityNative(Activity act, VrAppSettings vrAppSettings, ActivityHandlerRenderingCallbacks callbacks) {
+    OVrActivityNative(Activity act, VrAppSettings vrAppSettings, OvrActivityHandlerRenderingCallbacks callbacks) {
         mPtr = onCreate(act, vrAppSettings, callbacks);
     }
 
@@ -65,5 +65,5 @@ class GVRActivityNative implements IActivityBaseNative {
 
     private static native void onDestroy(long appPtr);
 
-    private static native long onCreate(Activity act, VrAppSettings vrAppSettings, ActivityHandlerRenderingCallbacks callbacks);
+    private static native long onCreate(Activity act, VrAppSettings vrAppSettings, OvrActivityHandlerRenderingCallbacks callbacks);
 }

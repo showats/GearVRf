@@ -503,7 +503,7 @@ public class GVRSceneObject extends GVRHybridObject implements PrettyPrint, IScr
     }
 
     /**
-     * Attach a new {@linkplain GVRCameraRigImpl camera rig.}
+     * Attach a new {@linkplain GVRCameraRig camera rig.}
      * 
      * If another camera rig is currently attached, it is replaced with the new
      * one.
@@ -516,20 +516,20 @@ public class GVRSceneObject extends GVRHybridObject implements PrettyPrint, IScr
     }
 
     /**
-     * Detach the object's current {@link GVRCameraRigImpl camera rig}.
+     * Detach the object's current {@link GVRCameraRig camera rig}.
      */
     public void detachCameraRig() {
-        detachComponent(GVRCameraRigImpl.getComponentType());
+        detachComponent(GVRCameraRig.getComponentType());
     }
 
     /**
-     * Get the attached {@link GVRCameraRigImpl}
+     * Get the attached {@link GVRCameraRig}
      * 
-     * @return The {@link GVRCameraRigImpl camera rig} attached to the object. If no
+     * @return The {@link GVRCameraRig camera rig} attached to the object. If no
      *         camera rig is currently attached, returns {@code null}.
      */
-    public GVRCameraRigImpl getCameraRig() {
-        return (GVRCameraRigImpl) getComponent(GVRCameraRigImpl.getComponentType());
+    public GVRCameraRig getCameraRig() {
+        return (GVRCameraRig) getComponent(GVRCameraRig.getComponentType());
     }
 
     /**

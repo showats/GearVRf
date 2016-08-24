@@ -58,16 +58,8 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
 
     protected static final String TAG = "GVRActivity";
 
-    // these values are copy of enum KeyEventType in VrAppFramework/Native_Source/Input.h
-    public static final int KEY_EVENT_NONE = 0;
-    public static final int KEY_EVENT_SHORT_PRESS = 1;
-    public static final int KEY_EVENT_DOUBLE_TAP = 2;
-    public static final int KEY_EVENT_LONG_PRESS = 3;
-    public static final int KEY_EVENT_DOWN = 4;
-    public static final int KEY_EVENT_UP = 5;
-    public static final int KEY_EVENT_MAX = 6;
-
-    private GVRViewManagerBase mViewManager;
+    private GVRViewManager mViewManager;
+    private volatile GVRConfigurationManager mConfigurationManager;
     private GVRScript mGVRScript;
     private GVRMain mGVRMain;
     private VrAppSettings mAppSettings;
@@ -76,7 +68,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     // Group of views that are going to be drawn
     // by some GVRViewSceneObject to the scene.
     private ViewGroup mRenderableViewGroup = null;
-    private GVRActivityNative mActivityNative;
+    private IActivityNative mActivityNative;
     private boolean mPaused = true;
 
     // Send to listeners and scripts but not this object itself
@@ -142,18 +134,17 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     }
 
     private void onConfigure() {
-        GVRConfigurationManager.onInitialize(this, getAppSettings());
-        GVRConfigurationManager.getInstance().invalidate();
+        mConfigurationManager = mDelegate.makeConfigurationManager(this);
 
-        onInitAppSettings(mAppSettings);
         startDockEventReceiver();
+        onInitAppSettings(mAppSettings);
     }
 
     public final VrAppSettings getAppSettings() {
         return mAppSettings;
     }
 
-    final GVRViewManagerBase getViewManager() {
+    final GVRViewManager getViewManager() {
         return mViewManager;
     }
 
@@ -256,13 +247,13 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
                     this,
                     IActivityEvents.class,
                     "onSetScript", gvrScript);
-            final GVRConfigurationManager configurationManager = GVRConfigurationManager.getInstance();
-            if (null != mDockEventReceiver && !isMonoscopicMode && configurationManager
+            final GVRConfigurationManager localConfigurationManager = mConfigurationManager;
+            if (null != mDockEventReceiver && !isMonoscopicMode && localConfigurationManager
                     .isDockListenerRequired()) {
                 getGVRContext().registerDrawFrameListener(new GVRDrawFrameListener() {
                     @Override
                     public void onDrawFrame(float frameTime) {
-                        if (configurationManager.isHmtConnected()) {
+                        if (localConfigurationManager.isHmtConnected()) {
                             handleOnDock();
                             getGVRContext().unregisterDrawFrameListener(this);
                         }
@@ -339,7 +330,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
      * Sets whether to force rendering to be single-eye, monoscopic view.
      * 
      * @param force
-     *            If true, will create a GVRMonoscopicViewManager when
+     *            If true, will create a OvrMonoscopicViewManager when
      *            {@linkplain setMain setMain()} is called. If false, will
      *            proceed to auto-detect whether the device supports VR
      *            rendering and choose the appropriate ViewManager. This call
@@ -368,7 +359,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         return mActivityNative.getNative();
     }
 
-    final GVRActivityNative getActivityNative() {
+    final IActivityNative getActivityNative() {
         return mActivityNative;
     }
 
@@ -585,6 +576,10 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         runOnUiThread(r);
     }
 
+    public GVRConfigurationManager getConfigurationManager() {
+        return mConfigurationManager;
+    }
+
     static interface DockListener {
         void onDock();
         void onUndock();
@@ -599,7 +594,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     private DockEventReceiver mDockEventReceiver;
 
     private void startDockEventReceiver() {
-        mDockEventReceiver = GVRConfigurationManager.getInstance().makeDockEventReceiver(this,
+        mDockEventReceiver = mConfigurationManager.makeDockEventReceiver(this,
                 new Runnable() {
                     @Override
                     public void run() {
@@ -633,13 +628,14 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         boolean onKeyLongPress(int keyCode, KeyEvent event);
 
         void setScript(GVRScript gvrScript, String dataFileName);
-        void setViewManager(GVRViewManagerBase viewManager);
+        void setViewManager(GVRViewManager viewManager);
         void onInitAppSettings(VrAppSettings appSettings);
 
         VrAppSettings makeVrAppSettings();
-        GVRActivityNative getActivityNative();
-        GVRViewManagerBase makeViewManager(AssetManager assetManager, String dataFilename);
-        GVRMonoscopicViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename);
+        IActivityNative getActivityNative();
+        GVRViewManager makeViewManager(AssetManager assetManager, String dataFilename);
+        GVRViewManager makeMonoscopicViewManager(AssetManager assetManager, String dataFilename);
         GVRCameraRig makeCameraRig(GVRContext context);
+        GVRConfigurationManager makeConfigurationManager(GVRActivity activity);
     }
 }

@@ -16,10 +16,10 @@
 package org.gearvrf;
 
 /**
- * Notification interface for {@link RotationSensor rotation sensor} data
+ * Notification interface for {@link OvrRotationSensor rotation sensor} data
  * events.
  */
-interface RotationSensorListener {
+interface OvrRotationSensorListener {
     /**
      * Called when the active rotation sensor has generated data. Orientation is
      * passed as components of a quaternion. The angular velocity of the device

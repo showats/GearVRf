@@ -190,7 +190,7 @@ public class GVRScene extends GVRHybridObject implements PrettyPrint, IScriptabl
     }
 
     /**
-     * @return The {@link GVRCameraRigImpl camera rig} used for rendering the scene
+     * @return The {@link GVRCameraRig camera rig} used for rendering the scene
      *         on the screen.
      */
     public GVRCameraRig getMainCameraRig() {
@@ -198,11 +198,11 @@ public class GVRScene extends GVRHybridObject implements PrettyPrint, IScriptabl
     }
 
     /**
-     * Set the {@link GVRCameraRigImpl camera rig} used for rendering the scene on
+     * Set the {@link GVRCameraRig camera rig} used for rendering the scene on
      * the screen.
      * 
      * @param cameraRig
-     *            The {@link GVRCameraRigImpl camera rig} to render with.
+     *            The {@link GVRCameraRig camera rig} to render with.
      */
     public void setMainCameraRig(GVRCameraRig cameraRig) {
         mMainCameraRig = cameraRig;

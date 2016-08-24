@@ -19,7 +19,7 @@ import org.gearvrf.utility.VrAppSettings;
 
 /**
  * This class holds distortion parameters (from an XML file, read by
- * {@link GVRXMLParser}) and is used in {@link GVRViewManager}.
+ * {@link OvrXMLParser}) and is used in {@link OvrViewManagerImpl}.
  */
 class GVRLensInfo {
     private final VrAppSettings mAppSettings;
@@ -35,7 +35,7 @@ class GVRLensInfo {
 
     /**
      * Constructs a GVRLensInfo object with distortion data which requires a
-     * valid, pre-processed GVRXMLParser object
+     * valid, pre-processed OvrXMLParser object
      * 
      * @param screenWidthPixels
      *            the screen width in pixels
@@ -46,7 +46,7 @@ class GVRLensInfo {
      * @param screenHeightMeters
      *            the screen height in meters
      * @param xmlParser
-     *            other parameters holds in GVRXMLParser
+     *            other parameters holds in OvrXMLParser
      */
     public GVRLensInfo(int screenWidthPixels, int screenHeightPixels,
             float screenWidthMeters, float screenHeightMeters,

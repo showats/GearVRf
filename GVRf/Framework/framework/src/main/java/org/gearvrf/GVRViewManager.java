@@ -6,9 +6,9 @@ import android.view.MotionEvent;
 import org.gearvrf.io.GVRInputManager;
 import org.gearvrf.utility.Log;
 
-public abstract class GVRViewManagerBase extends GVRContext {
+public abstract class GVRViewManager extends GVRContext {
 
-    GVRViewManagerBase(GVRActivity activity) {
+    GVRViewManager(GVRActivity activity) {
         super(activity);
 
         mInputManager = new GVRInputManagerImpl(this, activity.getAppSettings().useGazeCursorController());
@@ -94,5 +94,5 @@ public abstract class GVRViewManagerBase extends GVRContext {
     private final GVREventManager mEventManager;
     private final GVRInputManagerImpl mInputManager;
 
-    private static final String TAG = "GVRViewManagerBase";
+    private static final String TAG = "GVRViewManager";
 }

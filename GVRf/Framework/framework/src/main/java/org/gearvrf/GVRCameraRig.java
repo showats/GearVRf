@@ -388,8 +388,8 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     /**
      * Sets the rotation and angular velocity data for the camera rig. This
      * should only be done in response to
-     * {@link RotationSensorListener#onRotationSensor(long, float, float, float, float, float, float, float)
-     * RotationSensorListener.onRotationSensor()}.
+     * {@link OvrRotationSensorListener#onRotationSensor(long, float, float, float, float, float, float, float)
+     * OvrRotationSensorListener.onRotationSensor()}.
      * 
      * @param timeStamp
      *            Clock-time when the data was received, in nanoseconds.
@@ -577,7 +577,7 @@ public abstract class GVRCameraRig extends GVRComponent implements PrettyPrint {
     }
 
     /**
-     * Prints the {@link GVRCameraRigImpl} object with indentation.
+     * Prints the {@link GVRCameraRig} object with indentation.
      *
      * @param sb
      *         The {@code StringBuffer} object to receive the output.

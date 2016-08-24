@@ -360,14 +360,14 @@ public class GVRPicker extends GVRBehavior {
      *            The {@link GVRSceneObject} to be tested.
      * 
      * @param cameraRig
-     *            The {@link GVRCameraRigImpl} to use for ray testing.
+     *            The {@link GVRCameraRig} to use for ray testing.
      * 
      * @return the distance from the camera rig. It returns positive infinity if
      *         the cameraRig is not pointing to the sceneObject.
      * 
      */
     public static final float pickSceneObject(GVRSceneObject sceneObject,
-            GVRCameraRigImpl cameraRig) {
+            GVRCameraRig cameraRig) {
         return NativePicker.pickSceneObject(sceneObject.getNative(),
                 cameraRig.getNative());
     }

@@ -29,38 +29,38 @@ import android.opengl.GLSurfaceView.Renderer;
  * {@link EGLConfig}, or the difference between
  * {@link Renderer#onSurfaceCreated(GL10, EGLConfig)} and
  * {@link Renderer#onSurfaceChanged(GL10, int, int)} really matters to you,
- * declare a class which {@code extends GVRSurfaceViewRenderer} and pass an
+ * declare a class which {@code extends OvrSurfaceViewRenderer} and pass an
  * instance to
- * {@link GVRActivity#setScript(GVRScript, String, GVRSurfaceViewRenderer)} .
+ * {@link GVRActivity#setScript(GVRScript, String, OvrSurfaceViewRenderer)} .
  */
-public class GVRSurfaceViewRenderer implements GLSurfaceView.Renderer {
-    private GVRMonoscopicViewManager mViewManager = null;
+public class OvrSurfaceViewRenderer implements GLSurfaceView.Renderer {
+    private OvrMonoscopicViewManager mViewManager = null;
 
     /**
-     * Constructs an empty GVRSurfaceViewRenderer
+     * Constructs an empty OvrSurfaceViewRenderer
      */
-    public GVRSurfaceViewRenderer() {
+    public OvrSurfaceViewRenderer() {
     }
 
     /**
-     * Constructs {@link GVRSurfaceViewRenderer} given by {@link GVRViewManager}
+     * Constructs {@link OvrSurfaceViewRenderer} given by {@link OvrViewManagerImpl}
      * 
      * @param viewManager
-     *            a {@link GVRMonoscopicViewManager} object to be used in
-     *            {@link GVRSurfaceViewRenderer}
+     *            a {@link OvrMonoscopicViewManager} object to be used in
+     *            {@link OvrSurfaceViewRenderer}
      */
-    public GVRSurfaceViewRenderer(GVRMonoscopicViewManager viewManager) {
+    public OvrSurfaceViewRenderer(OvrMonoscopicViewManager viewManager) {
         mViewManager = viewManager;
     }
 
     /**
-     * Sets {@link GVRMonoscopicViewManager} for the {@link GVRSurfaceViewRenderer}
+     * Sets {@link OvrMonoscopicViewManager} for the {@link OvrSurfaceViewRenderer}
      * 
      * @param viewManager
-     *            a {@link GVRMonoscopicViewManager} object to be used in
-     *            {@link GVRSurfaceViewRenderer}
+     *            a {@link OvrMonoscopicViewManager} object to be used in
+     *            {@link OvrSurfaceViewRenderer}
      */
-    public void setViewManager(GVRMonoscopicViewManager viewManager) {
+    public void setViewManager(OvrMonoscopicViewManager viewManager) {
         mViewManager = viewManager;
     }
 

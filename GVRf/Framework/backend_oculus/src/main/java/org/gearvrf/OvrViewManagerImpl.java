@@ -41,14 +41,12 @@ import org.gearvrf.utility.ImageUtils;
 import org.gearvrf.utility.Log;
 import org.gearvrf.utility.Threads;
 import org.gearvrf.utility.VrAppSettings;
-import org.gearvrf.io.GVRInputManager;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 
 /*
  * This is the most important part of gvrf.
@@ -83,9 +81,9 @@ import android.view.MotionEvent;
  * {@link #onRotationSensor(long, float, float, float, float, float, float, float)
  * onRotationSensor()} to draw the scene graph properly.
  */
-class GVRViewManager extends GVRViewManagerBase implements RotationSensorListener {
+class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorListener {
 
-    private static final String TAG = Log.tag(GVRViewManager.class);
+    private static final String TAG = Log.tag(OvrViewManagerImpl.class);
 
     protected final Queue<Runnable> mRunnables = new LinkedBlockingQueue<Runnable>();
     protected final Map<Runnable, Integer> mRunnablesPostRender = new HashMap<Runnable, Integer>();
@@ -93,10 +91,10 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
     protected List<GVRDrawFrameListener> mFrameListeners = new CopyOnWriteArrayList<GVRDrawFrameListener>();
 
     protected GVRScript mScript;
-    protected RotationSensor mRotationSensor;
+    protected OvrRotationSensor mRotationSensor;
 
     protected GVRLensInfo mLensInfo;
-    protected GVRRenderBundle mRenderBundle = null;
+    protected OvrRenderBundle mRenderBundle = null;
 
     protected long mPreviousTimeNanos = 0l;
     protected float mFrameTime = 0.0f;
@@ -134,7 +132,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
     private GVRMethodCallTracer mTracerDrawFrameGap;
 
     /**
-     * Constructs GVRViewManager object with GVRScript which controls GL
+     * Constructs OvrViewManagerImpl object with GVRScript which controls GL
      * activities
      * 
      * @param gvrActivity
@@ -144,7 +142,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
      * @param distortionDataFileName
      *            distortion filename under assets folder
      */
-    GVRViewManager(GVRActivity gvrActivity, GVRScript gvrScript, GVRXMLParser xmlParser) {
+    OvrViewManagerImpl(GVRActivity gvrActivity, GVRScript gvrScript, OvrXMLParser xmlParser) {
         super(gvrActivity);
 
         // Apply view manager preferences
@@ -172,7 +170,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
         /*
          * Starts listening to the sensor.
          */
-        mRotationSensor = new RotationSensor(gvrActivity, this);
+        mRotationSensor = new OvrRotationSensor(gvrActivity, this);
 
         /*
          * Sets things with the numbers in the xml.
@@ -293,11 +291,11 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
         /*
          * GL Initializations.
          */
-        mRenderBundle = new GVRRenderBundle(this, mLensInfo);
+        mRenderBundle = new OvrRenderBundle(this, mLensInfo);
         setMainScene(new GVRScene(this));
     }
 
-    protected void renderCamera(long activity_ptr, GVRScene scene, GVRCamera camera, GVRRenderBundle
+    protected void renderCamera(long activity_ptr, GVRScene scene, GVRCamera camera, OvrRenderBundle
             renderBundle) {
         renderCamera(activity_ptr, scene.getNative(), camera.getNative(),
                 renderBundle.getMaterialShaderManager().getNative(),
@@ -643,7 +641,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
 
         @Override
         public void beforeDrawEyes() {
-            mScript.setViewManager(GVRViewManager.this);
+            mScript.setViewManager(OvrViewManagerImpl.this);
 
             if (mActivity.getAppSettings().showLoadingIcon) {
                 mSplashScreen = mScript.createSplashScreen();
@@ -673,13 +671,13 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
                 @Override
                 public void run() {
                     try {
-                        GVRViewManager.this.getEventManager().sendEvent(
+                        OvrViewManagerImpl.this.getEventManager().sendEvent(
                                 mScript, IScriptEvents.class,
-                                "onEarlyInit", GVRViewManager.this);
+                                "onEarlyInit", OvrViewManagerImpl.this);
 
-                        GVRViewManager.this.getEventManager().sendEvent(
+                        OvrViewManagerImpl.this.getEventManager().sendEvent(
                                 mScript, IScriptEvents.class,
-                                "onInit", GVRViewManager.this);
+                                "onInit", OvrViewManagerImpl.this);
 
                         if (null != mSplashScreen && SplashMode.AUTOMATIC == mScript
                                 .getSplashMode() && mScript.getSplashDisplayTime() < 0f) {
@@ -691,7 +689,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
                         }
                     } catch (Throwable t) {
                         t.printStackTrace();
-                        GVRViewManager.this.runOnGlThread(new Runnable() {
+                        OvrViewManagerImpl.this.runOnGlThread(new Runnable() {
                             public void run() {
                                 mActivity.finish();
 
@@ -704,7 +702,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
 
                     // Trigger event "onAfterInit" for post-processing of scene
                     // graph after initialization.
-                    GVRViewManager.this.getEventManager().sendEvent(
+                    OvrViewManagerImpl.this.getEventManager().sendEvent(
                             mScript, IScriptEvents.class,
                             "onAfterInit");
                 }
@@ -712,7 +710,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
 
             if (mSplashScreen == null) {
                 // No splash screen, notify main scene now.
-                GVRViewManager.this.notifyMainSceneReady();
+                OvrViewManagerImpl.this.notifyMainSceneReady();
 
                 mFrameHandler = normalFrames;
                 firstFrame = splashFrames = null;
@@ -748,7 +746,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
                                         setMainScene(mNextMainScene);
                                         // Splash screen finishes. Notify main
                                         // scene it is ready.
-                                        GVRViewManager.this.notifyMainSceneReady();
+                                        OvrViewManagerImpl.this.notifyMainSceneReady();
                                     } else {
                                         getMainScene().removeSceneObject(splashScreen);
                                     }
@@ -784,7 +782,7 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
                         mScript.onStep();
 
                         // Issue "onStep" to the scene
-                        GVRViewManager.this.getEventManager().sendEvent(
+                        OvrViewManagerImpl.this.getEventManager().sendEvent(
                             mMainScene, ISceneEvents.class, "onStep");
                     } catch (final Exception exc) {
                         Log.e(TAG, "Exception from onStep: %s", exc.toString());
@@ -811,12 +809,12 @@ class GVRViewManager extends GVRViewManagerBase implements RotationSensorListene
             @Override
             public void run() {
                 // Initialize the main scene
-                GVRViewManager.this.getEventManager().sendEvent(
+                OvrViewManagerImpl.this.getEventManager().sendEvent(
                         mMainScene, ISceneEvents.class,
-                        "onInit", GVRViewManager.this, mMainScene);
+                        "onInit", OvrViewManagerImpl.this, mMainScene);
 
                 // Late-initialize the main scene
-                GVRViewManager.this.getEventManager().sendEvent(
+                OvrViewManagerImpl.this.getEventManager().sendEvent(
                         mMainScene, ISceneEvents.class,
                         "onAfterInit");
             }

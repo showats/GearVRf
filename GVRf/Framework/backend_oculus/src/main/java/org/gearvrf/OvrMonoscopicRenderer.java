@@ -21,7 +21,7 @@ package org.gearvrf;
  * <p>
  * Provides methods for rendering scenes
  */
-abstract class GVRMonoscopicRenderer {
+abstract class OvrMonoscopicRenderer {
     /**
      * Renders the given scene for the specified camera into the supplied
      * texture.
@@ -40,7 +40,7 @@ abstract class GVRMonoscopicRenderer {
      */
     static void renderCamera(GVRScene scene, GVRCamera camera, int viewportX,
             int viewportY, int viewportWidth, int viewportHeight,
-            GVRRenderBundle renderBundle) {
+            OvrRenderBundle renderBundle) {
 
         NativeMonoscopicRenderer.renderCamera(scene.getNative(), camera
                 .getNative(), viewportX, viewportY, viewportWidth,
@@ -51,7 +51,7 @@ abstract class GVRMonoscopicRenderer {
                 renderBundle.getPostEffectRenderTextureB().getNative());
     }
 
-    static void cull(GVRScene scene, GVRCamera camera, GVRRenderBundle renderBundle) {
+    static void cull(GVRScene scene, GVRCamera camera, OvrRenderBundle renderBundle) {
         NativeMonoscopicRenderer.cull(scene.getNative(), camera.getNative(), renderBundle.getMaterialShaderManager().getNative());
     }
 }

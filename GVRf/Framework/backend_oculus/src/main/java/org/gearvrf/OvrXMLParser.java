@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
-import org.gearvrf.utility.OculusVrAppSettings;
 import org.gearvrf.utility.VrAppSettings;
 import org.gearvrf.utility.VrAppSettings.EyeBufferParams.ColorFormat;
 import org.gearvrf.utility.VrAppSettings.EyeBufferParams.DepthFormat;
@@ -30,16 +29,16 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.res.AssetManager;
-import org.gearvrf.GVRHybridObject.*;
+
 /**
  * This class simply parses XML file for distortion stored in assets folder, and
  * allows users to read specific distortion value from the XML file.
- * {@link GVRViewManager} calls GVRXMLParser to initialize the distortion value
+ * {@link OvrViewManagerImpl} calls OvrXMLParser to initialize the distortion value
  * internally
  */
-class GVRXMLParser {
+class OvrXMLParser {
     /**
-     * Constructs a GVRXMLParser with current package assets manager and the
+     * Constructs a OvrXMLParser with current package assets manager and the
      * file name of the distortion xml file under assets folder
      * 
      * @param assets
@@ -47,8 +46,8 @@ class GVRXMLParser {
      * @param fileName
      *            the distortion file name under assets folder
      */
-    GVRXMLParser(AssetManager assets, String fileName, VrAppSettings baseSettings) {
-        final OculusVrAppSettings settings = (OculusVrAppSettings)baseSettings;
+    OvrXMLParser(AssetManager assets, String fileName, VrAppSettings baseSettings) {
+        final OvrVrAppSettings settings = (OvrVrAppSettings)baseSettings;
 
         try {
             StringBuilder buf = new StringBuilder();

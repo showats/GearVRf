@@ -1,6 +1,6 @@
 package org.gearvrf;
 
-interface ActivityHandlerRenderingCallbacks {
+interface OvrActivityHandlerRenderingCallbacks {
     public void onSurfaceCreated();
 
     public void onSurfaceChanged(int width, int height);

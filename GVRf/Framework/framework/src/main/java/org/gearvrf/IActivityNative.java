@@ -15,7 +15,7 @@
 
 package org.gearvrf;
 
-interface IActivityBaseNative {
+interface IActivityNative {
     void onDestroy();
     void setCamera(GVRCamera camera);
     void setCameraRig(GVRCameraRig cameraRig);
