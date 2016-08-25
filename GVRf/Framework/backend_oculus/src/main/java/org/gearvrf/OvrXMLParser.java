@@ -33,7 +33,7 @@ import android.content.res.AssetManager;
 /**
  * This class simply parses XML file for distortion stored in assets folder, and
  * allows users to read specific distortion value from the XML file.
- * {@link OvrViewManagerImpl} calls OvrXMLParser to initialize the distortion value
+ * {@link OvrViewManager} calls OvrXMLParser to initialize the distortion value
  * internally
  */
 class OvrXMLParser {

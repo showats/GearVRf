@@ -53,7 +53,7 @@ import android.util.DisplayMetrics;
  * {@link #onRotationSensor(long, float, float, float, float, float, float, float)
  * onRotationSensor()} to draw the scene graph properly.
  */
-class OvrMonoscopicViewManager extends OvrViewManagerImpl {
+class OvrMonoscopicViewManager extends OvrViewManager {
 
     // private static final String TAG =
     // Log.tag(OvrMonoscopicViewManager.class);

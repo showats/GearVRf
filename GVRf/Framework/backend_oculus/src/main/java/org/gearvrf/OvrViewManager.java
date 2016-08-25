@@ -81,9 +81,9 @@ import android.view.KeyEvent;
  * {@link #onRotationSensor(long, float, float, float, float, float, float, float)
  * onRotationSensor()} to draw the scene graph properly.
  */
-class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorListener {
+class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener {
 
-    private static final String TAG = Log.tag(OvrViewManagerImpl.class);
+    private static final String TAG = Log.tag(OvrViewManager.class);
 
     protected final Queue<Runnable> mRunnables = new LinkedBlockingQueue<Runnable>();
     protected final Map<Runnable, Integer> mRunnablesPostRender = new HashMap<Runnable, Integer>();
@@ -132,7 +132,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
     private GVRMethodCallTracer mTracerDrawFrameGap;
 
     /**
-     * Constructs OvrViewManagerImpl object with GVRScript which controls GL
+     * Constructs OvrViewManager object with GVRScript which controls GL
      * activities
      * 
      * @param gvrActivity
@@ -142,7 +142,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
      * @param distortionDataFileName
      *            distortion filename under assets folder
      */
-    OvrViewManagerImpl(GVRActivity gvrActivity, GVRScript gvrScript, OvrXMLParser xmlParser) {
+    OvrViewManager(GVRActivity gvrActivity, GVRScript gvrScript, OvrXMLParser xmlParser) {
         super(gvrActivity);
 
         // Apply view manager preferences
@@ -642,7 +642,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
 
         @Override
         public void beforeDrawEyes() {
-            mScript.setViewManager(OvrViewManagerImpl.this);
+            mScript.setViewManager(OvrViewManager.this);
 
             if (mActivity.getAppSettings().showLoadingIcon) {
                 mSplashScreen = mScript.createSplashScreen();
@@ -672,13 +672,13 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
                 @Override
                 public void run() {
                     try {
-                        OvrViewManagerImpl.this.getEventManager().sendEvent(
+                        OvrViewManager.this.getEventManager().sendEvent(
                                 mScript, IScriptEvents.class,
-                                "onEarlyInit", OvrViewManagerImpl.this);
+                                "onEarlyInit", OvrViewManager.this);
 
-                        OvrViewManagerImpl.this.getEventManager().sendEvent(
+                        OvrViewManager.this.getEventManager().sendEvent(
                                 mScript, IScriptEvents.class,
-                                "onInit", OvrViewManagerImpl.this);
+                                "onInit", OvrViewManager.this);
 
                         if (null != mSplashScreen && SplashMode.AUTOMATIC == mScript
                                 .getSplashMode() && mScript.getSplashDisplayTime() < 0f) {
@@ -690,7 +690,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
                         }
                     } catch (Throwable t) {
                         t.printStackTrace();
-                        OvrViewManagerImpl.this.runOnGlThread(new Runnable() {
+                        OvrViewManager.this.runOnGlThread(new Runnable() {
                             public void run() {
                                 mActivity.finish();
 
@@ -703,7 +703,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
 
                     // Trigger event "onAfterInit" for post-processing of scene
                     // graph after initialization.
-                    OvrViewManagerImpl.this.getEventManager().sendEvent(
+                    OvrViewManager.this.getEventManager().sendEvent(
                             mScript, IScriptEvents.class,
                             "onAfterInit");
                 }
@@ -711,7 +711,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
 
             if (mSplashScreen == null) {
                 // No splash screen, notify main scene now.
-                OvrViewManagerImpl.this.notifyMainSceneReady();
+                OvrViewManager.this.notifyMainSceneReady();
 
                 mFrameHandler = normalFrames;
                 firstFrame = splashFrames = null;
@@ -747,7 +747,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
                                         setMainScene(mNextMainScene);
                                         // Splash screen finishes. Notify main
                                         // scene it is ready.
-                                        OvrViewManagerImpl.this.notifyMainSceneReady();
+                                        OvrViewManager.this.notifyMainSceneReady();
                                     } else {
                                         getMainScene().removeSceneObject(splashScreen);
                                     }
@@ -783,7 +783,7 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
                         mScript.onStep();
 
                         // Issue "onStep" to the scene
-                        OvrViewManagerImpl.this.getEventManager().sendEvent(
+                        OvrViewManager.this.getEventManager().sendEvent(
                             mMainScene, ISceneEvents.class, "onStep");
                     } catch (final Exception exc) {
                         Log.e(TAG, "Exception from onStep: %s", exc.toString());
@@ -810,12 +810,12 @@ class OvrViewManagerImpl extends GVRViewManager implements OvrRotationSensorList
             @Override
             public void run() {
                 // Initialize the main scene
-                OvrViewManagerImpl.this.getEventManager().sendEvent(
+                OvrViewManager.this.getEventManager().sendEvent(
                         mMainScene, ISceneEvents.class,
-                        "onInit", OvrViewManagerImpl.this, mMainScene);
+                        "onInit", OvrViewManager.this, mMainScene);
 
                 // Late-initialize the main scene
-                OvrViewManagerImpl.this.getEventManager().sendEvent(
+                OvrViewManager.this.getEventManager().sendEvent(
                         mMainScene, ISceneEvents.class,
                         "onAfterInit");
             }

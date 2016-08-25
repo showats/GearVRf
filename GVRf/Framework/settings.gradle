@@ -1,4 +1,4 @@
 include ':framework'
 include ':backend_oculus'
-include ':gvr-eyepicking'
-project(':gvr-eyepicking').projectDir=new File('/home/mihail/git/vrtop-public/GearVRf-Demos/gvr-eyepicking/app')
+include ':gvr-tutorial-lesson4'
+project(':gvr-tutorial-lesson4').projectDir=new File('/home/mmarinov/git/vrtop_public/GearVRf-Demos/gvr-tutorial-lesson4/app')

@@ -15,11 +15,6 @@
  #
 LOCAL_PATH := $(call my-dir)
 
-#include $(CLEAR_VARS)
-#LOCAL_MODULE    := gvrf
-#LOCAL_SRC_FILES := ../../../../framework/src/main/libs/armeabi-v7a/libgvrf.so
-#include $(PREBUILT_SHARED_LIBRARY)
-
 
 include $(CLEAR_VARS)
 

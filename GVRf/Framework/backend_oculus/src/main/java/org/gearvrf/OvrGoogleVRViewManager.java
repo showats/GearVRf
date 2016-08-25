@@ -28,7 +28,7 @@ import org.gearvrf.utility.VrAppSettings;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
-class OvrGoogleVRViewManager extends OvrViewManagerImpl {
+class OvrGoogleVRViewManager extends OvrViewManager {
     private static final String TAG = OvrGoogleVRViewManager.class.getSimpleName();
     private final float[] headTransform;
 

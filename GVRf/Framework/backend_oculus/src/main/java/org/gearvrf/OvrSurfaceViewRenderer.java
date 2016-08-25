@@ -33,7 +33,7 @@ import android.opengl.GLSurfaceView.Renderer;
  * instance to
  * {@link GVRActivity#setScript(GVRScript, String, OvrSurfaceViewRenderer)} .
  */
-public class OvrSurfaceViewRenderer implements GLSurfaceView.Renderer {
+class OvrSurfaceViewRenderer implements GLSurfaceView.Renderer {
     private OvrMonoscopicViewManager mViewManager = null;
 
     /**
@@ -43,7 +43,7 @@ public class OvrSurfaceViewRenderer implements GLSurfaceView.Renderer {
     }
 
     /**
-     * Constructs {@link OvrSurfaceViewRenderer} given by {@link OvrViewManagerImpl}
+     * Constructs {@link OvrSurfaceViewRenderer} given by {@link OvrViewManager}
      * 
      * @param viewManager
      *            a {@link OvrMonoscopicViewManager} object to be used in

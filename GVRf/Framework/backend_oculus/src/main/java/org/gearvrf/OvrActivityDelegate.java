@@ -27,7 +27,7 @@ import org.gearvrf.utility.VrAppSettings;
  */
 final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     private GVRActivity mActivity;
-    private OvrViewManagerImpl mActiveViewManager;
+    private OvrViewManager mActiveViewManager;
     private OvrActivityNative mActivityNative;
     private boolean mUseFallback;
 
@@ -54,7 +54,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     public GVRViewManager makeViewManager(AssetManager assetManager, String dataFilename) {
         final OvrXMLParser xmlParser = new OvrXMLParser(assetManager, dataFilename, mActivity.getAppSettings());
         if (!mUseFallback) {
-            return new OvrViewManagerImpl(mActivity, mActivity.getScript(), xmlParser);
+            return new OvrViewManager(mActivity, mActivity.getScript(), xmlParser);
         } else {
             return new OvrGoogleVRViewManager(mActivity, mActivity.getScript(), xmlParser);
         }
@@ -105,7 +105,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public void setViewManager(GVRViewManager viewManager) {
-        mActiveViewManager = (OvrViewManagerImpl)viewManager;
+        mActiveViewManager = (OvrViewManager)viewManager;
     }
 
     @Override

@@ -2,7 +2,7 @@ package org.gearvrf;
 
 import org.gearvrf.utility.VrAppSettings;
 
-public final class OvrVrAppSettings extends VrAppSettings {
+final class OvrVrAppSettings extends VrAppSettings {
     public OvrVrAppSettings() {
         super();
         sceneParams = new SceneParams();

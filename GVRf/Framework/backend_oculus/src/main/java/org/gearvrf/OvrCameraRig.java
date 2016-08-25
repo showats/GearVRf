@@ -15,8 +15,6 @@
 
 package org.gearvrf;
 
-import android.util.Log;
-
 /** Holds the GVRCameras. */
 class OvrCameraRig extends GVRCameraRig {
 
