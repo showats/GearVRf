@@ -1,2 +1,2 @@
-include ':framework'
+include ':framework', ':OvrPlatformSupport'
 include ':backend_oculus'
