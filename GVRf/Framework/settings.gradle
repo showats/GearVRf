@@ -1,2 +1,4 @@
-include ':framework', ':OvrPlatformSupport'
+include ':framework', ':platformsdk_support'
 include ':backend_oculus'
+
+project(':platformsdk_support').projectDir=new File('../Extensions/platformsdk_support')
