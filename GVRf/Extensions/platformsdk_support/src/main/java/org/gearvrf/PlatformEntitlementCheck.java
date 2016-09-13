@@ -37,6 +37,7 @@ import org.gearvrf.utility.Log;
  * </pre>
  */
 public final class PlatformEntitlementCheck {
+
     public interface ResultListener {
         void onSuccess();
         void onFailure();
@@ -46,9 +47,10 @@ public final class PlatformEntitlementCheck {
      * Starts asynchronous check. Result will be delivered to the listener on the main thread.
      *
      * @param context
-     * @param appId application id from
+     * @param appId application id from the oculus dashboard
      * @param listener listener to invoke when the result is available
      * @throws IllegalStateException in case the platform sdk cannot be initialized
+     * @throws IllegalArgumentException if listener is null
      */
     public static void start(final GVRContext context, final String appId, final ResultListener listener) {
         if (null == listener) {
@@ -56,7 +58,7 @@ public final class PlatformEntitlementCheck {
         }
 
         final GVRActivity activity = context.getActivity();
-        final long result = create(context.getActivity(), appId);
+        final long result = create(activity, appId);
         if (0 != result) {
             throw new IllegalStateException("Could not initialize the platform sdk; error code: " + result);
         }
