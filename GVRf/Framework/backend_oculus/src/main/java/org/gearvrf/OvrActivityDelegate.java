@@ -55,7 +55,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
         if (!mUseFallback) {
             return new OvrViewManager(mActivity, mActivity.getScript(), mXmlParser);
         } else {
-            return new OvrGoogleVRViewManager(mActivity, mActivity.getScript(), mXmlParser);
+            return new OvrGoogleVRViewManager(mActivity, mActivity.getScript());
         }
     }
 

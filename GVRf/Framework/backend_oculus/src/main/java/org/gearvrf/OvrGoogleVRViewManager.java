@@ -28,34 +28,34 @@ import org.gearvrf.utility.VrAppSettings;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
-class OvrGoogleVRViewManager extends OvrViewManager {
+class OvrGoogleVRViewManager extends GVRViewManager {
     private static final String TAG = OvrGoogleVRViewManager.class.getSimpleName();
     private final float[] headTransform;
 
-    OvrGoogleVRViewManager(final GVRActivity gvrActivity, GVRScript gvrScript, OvrXMLParser
-            xmlParser) {
-        super(gvrActivity, gvrScript, xmlParser);
+    OvrGoogleVRViewManager(final GVRActivity gvrActivity, GVRScript gvrScript) {
+        super(gvrActivity, gvrScript);
         GvrView gvrView = new GoogleVRView(gvrActivity, this, null);
         gvrActivity.setContentView(gvrView);
         headTransform = new float[4];
-        mLensInfo.setFBOWidth(VrAppSettings.DEFAULT_FBO_RESOLUTION);
-        mLensInfo.setFBOHeight(VrAppSettings.DEFAULT_FBO_RESOLUTION);
+        mRenderBundle = new GVRRenderBundle(this);
+        //mLensInfo.setFBOWidth(VrAppSettings.DEFAULT_FBO_RESOLUTION);
+        //mLensInfo.setFBOHeight(VrAppSettings.DEFAULT_FBO_RESOLUTION);
     }
 
-    public void onNewFrame(HeadTransform headTransform) {
+    private void onNewFrame(HeadTransform headTransform) {
         headTransform.getQuaternion(this.headTransform, 0);
         mMainScene.getMainCameraRig().getHeadTransform().setRotation(this.headTransform[3],
                 this.headTransform[0], this.headTransform[1], this.headTransform[2]);
     }
 
-    public void onDrawEye(Eye eye) {
+    private void onDrawEye(Eye eye) {
         if (eye.getType() == Eye.Type.LEFT) {
             OvrMonoscopicRenderer.cull(mMainScene, mMainScene.getMainCameraRig().getCenterCamera
                     (), mRenderBundle);
-            renderCamera(mActivity.getNative(), mMainScene, mMainScene
+            renderCamera(getActivity().getNative(), mMainScene, mMainScene
                     .getMainCameraRig().getLeftCamera(), mRenderBundle);
         } else if (eye.getType() == Eye.Type.RIGHT) {
-            renderCamera(mActivity.getNative(), mMainScene, mMainScene
+            renderCamera(getActivity().getNative(), mMainScene, mMainScene
                     .getMainCameraRig().getRightCamera(), mRenderBundle);
         }
     }
@@ -73,7 +73,7 @@ class OvrGoogleVRViewManager extends OvrViewManager {
 
         @Override
         public void onSurfaceChanged(int width, int height) {
-            mViewManager.onSurfaceChanged(width, height);
+            //mViewManager.onSurfaceChanged(width, height);
         }
 
         @Override
