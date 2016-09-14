@@ -37,12 +37,12 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
         mActivityNative = new OvrActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
 
-//        try {
-//            mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
-//        } catch (final Exception ignored) {
+        try {
+            mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
+        } catch (final Exception ignored) {
             // GVRf will fallback to GoogleVR in this case.
             mUseFallback = true;
-//        }
+        }
     }
 
     @Override
@@ -55,7 +55,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
         if (!mUseFallback) {
             return new OvrViewManager(mActivity, mActivity.getScript(), mXmlParser);
         } else {
-            return new OvrGoogleVRViewManager(mActivity, mActivity.getScript());
+            return makeMonoscopicViewManager();
         }
     }
 

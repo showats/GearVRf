@@ -89,15 +89,22 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         InputStream inputStream = null;
         BufferedReader reader = null;
         try {
-            inputStream = getAssets().open("backends.txt");
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+            for (int i = 0; i < 10; ++i) {
+                try {
+                    inputStream = getAssets().open("backend_" + i + ".txt");
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            final String line = reader.readLine();
-            final Class<?> aClass = Class.forName(line);
-            mDelegate = (GVRActivityDelegate) aClass.newInstance();
-            mAppSettings = mDelegate.makeVrAppSettings();
-        } catch (final Exception e) {
-            throw new IllegalStateException("Fatal error: no backend available");
+                    final String line = reader.readLine();
+                    final Class<?> aClass = Class.forName(line);
+                    mDelegate = (GVRActivityDelegate) aClass.newInstance();
+                    mAppSettings = mDelegate.makeVrAppSettings();
+                } catch (final Exception exc) {
+                }
+            }
+
+            if (null == mDelegate) {
+                throw new IllegalStateException("Fatal error: no backend available");
+            }
         } finally {
             if (null != reader) {
                 try {

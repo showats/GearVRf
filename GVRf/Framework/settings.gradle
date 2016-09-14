@@ -1,5 +1,6 @@
 include ':framework'
 include ':backend_oculus'
-//
+include ':backend_daydream'
+
 //include ':backend_pure'
 //project(':backend_pure').projectDir=new File('/home/liahim/git/Gear-VR-Framework/GVRf/Framework/backend_pure')
