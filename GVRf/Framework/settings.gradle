@@ -1,5 +1,5 @@
 include ':framework'
 include ':backend_oculus'
-
-include ':backend_pure'
-project(':backend_pure').projectDir=new File('/home/mmarinov/git/vrtop_private/GearVRf/GVRf/Framework/backend_pure')
+//
+//include ':backend_pure'
+//project(':backend_pure').projectDir=new File('/home/liahim/git/Gear-VR-Framework/GVRf/Framework/backend_pure')

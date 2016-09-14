@@ -22,15 +22,35 @@ class GVRRenderBundle {
     private final GVRContext mGVRContext;
     private final GVRMaterialShaderManager mMaterialShaderManager;
     private final GVRPostEffectShaderManager mPostEffectShaderManager;
-    private GVRRenderTexture mPostEffectRenderTextureA = null;
-    private GVRRenderTexture mPostEffectRenderTextureB = null;
+    private final GVRRenderTexture mPostEffectRenderTextureA;
+    private final GVRRenderTexture mPostEffectRenderTextureB;
 
     GVRRenderBundle(GVRContext gvrContext) {
+        this(gvrContext, VrAppSettings.DEFAULT_FBO_RESOLUTION, VrAppSettings.DEFAULT_FBO_RESOLUTION);
+    }
+
+    GVRRenderBundle(GVRContext gvrContext, final int width, final int height) {
         mGVRContext = gvrContext;
         mMaterialShaderManager = new GVRMaterialShaderManager(gvrContext);
         mPostEffectShaderManager = new GVRPostEffectShaderManager(gvrContext);
 
-        update();
+        final VrAppSettings appSettings = mGVRContext.getActivity().getAppSettings();
+        int sampleCount = appSettings.getEyeBufferParams().getMultiSamples() < 0 ? 0
+                : appSettings.getEyeBufferParams().getMultiSamples();
+        if (sampleCount > 1) {
+            int maxSampleCount = GVRMSAA.getMaxSampleCount();
+            if (sampleCount > maxSampleCount) {
+                sampleCount = maxSampleCount;
+            }
+        }
+
+        if (sampleCount <= 1) {
+            mPostEffectRenderTextureA = new GVRRenderTexture(mGVRContext, width, height);
+            mPostEffectRenderTextureB = new GVRRenderTexture(mGVRContext, width, height);
+        } else {
+            mPostEffectRenderTextureA = new GVRRenderTexture(mGVRContext, width, height, sampleCount);
+            mPostEffectRenderTextureB = new GVRRenderTexture(mGVRContext, width, height, sampleCount);
+        }
     }
 
     GVRMaterialShaderManager getMaterialShaderManager() {
@@ -47,28 +67,5 @@ class GVRRenderBundle {
 
     GVRRenderTexture getPostEffectRenderTextureB() {
         return mPostEffectRenderTextureB;
-    }
-
-    private void update() {
-
-        final VrAppSettings appSettings = mGVRContext.getActivity().getAppSettings();
-        int sampleCount = appSettings.getEyeBufferParams().getMultiSamples() < 0 ? 0
-                : appSettings.getEyeBufferParams().getMultiSamples();
-        if (sampleCount > 1) {
-            int maxSampleCount = GVRMSAA.getMaxSampleCount();
-            if (sampleCount > maxSampleCount) {
-                sampleCount = maxSampleCount;
-            }
-        }
-
-        final int width = appSettings.getEyeBufferParams().getResolutionWidth();
-        final int height = appSettings.getEyeBufferParams().getResolutionHeight();
-        if (sampleCount <= 1) {
-            mPostEffectRenderTextureA = new GVRRenderTexture(mGVRContext, width, height);
-            mPostEffectRenderTextureB = new GVRRenderTexture(mGVRContext, width, height);
-        } else {
-            mPostEffectRenderTextureA = new GVRRenderTexture(mGVRContext, width, height, sampleCount);
-            mPostEffectRenderTextureB = new GVRRenderTexture(mGVRContext, width, height, sampleCount);
-        }
     }
 }

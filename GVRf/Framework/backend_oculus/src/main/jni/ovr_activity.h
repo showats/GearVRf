@@ -17,7 +17,6 @@
 #ifndef ACTIVITY_JNI_H
 #define ACTIVITY_JNI_H
 
-#include "ovr_view_manager.h"
 #include "ovr_framebufferobject.h"
 #include "objects/components/camera.h"
 #include "objects/components/camera_rig.h"
@@ -37,8 +36,6 @@ public:
 
     bool updateSensoredScene();
     void setCameraRig(jlong cameraRig);
-
-    GVRViewManager viewManager_;
 
     Camera* camera = nullptr;
     OvrCameraRig* cameraRig_ = nullptr;   // this needs a global ref on the java object; todo

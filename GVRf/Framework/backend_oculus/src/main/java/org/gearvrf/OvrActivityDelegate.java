@@ -27,7 +27,7 @@ import org.gearvrf.utility.VrAppSettings;
  */
 final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     private GVRActivity mActivity;
-    private OvrViewManager mActiveViewManager;
+    private GVRViewManager mActiveViewManager;
     private OvrActivityNative mActivityNative;
     private boolean mUseFallback;
 
@@ -37,12 +37,12 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
         mActivityNative = new OvrActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
 
-        try {
-            mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
-        } catch (final Exception ignored) {
+//        try {
+//            mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
+//        } catch (final Exception ignored) {
             // GVRf will fallback to GoogleVR in this case.
             mUseFallback = true;
-        }
+//        }
     }
 
     @Override
@@ -108,7 +108,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public void setViewManager(GVRViewManager viewManager) {
-        mActiveViewManager = (OvrViewManager)viewManager;
+        mActiveViewManager = viewManager;
     }
 
     @Override
@@ -183,7 +183,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
         @Override
         public void onSurfaceChanged(int width, int height) {
-            mActiveViewManager.onSurfaceChanged(width, height);
+            ((OvrViewManager)mActiveViewManager).onSurfaceChanged(width, height);
         }
 
         @Override
@@ -200,7 +200,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
         @Override
         public void onDrawEye(int eye) {
             try {
-                mActiveViewManager.onDrawEyeView(eye);
+                ((OvrViewManager)mActiveViewManager).onDrawEyeView(eye);
             } catch (final Exception e) {
                 Log.e(TAG, "error in onDrawEyeView", e);
             }

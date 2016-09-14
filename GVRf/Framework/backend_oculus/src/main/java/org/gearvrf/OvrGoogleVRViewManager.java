@@ -17,14 +17,11 @@
 package org.gearvrf;
 
 import android.content.Context;
-import android.view.KeyEvent;
 
 import com.google.vr.sdk.base.Eye;
 import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.HeadTransform;
 import com.google.vr.sdk.base.Viewport;
-
-import org.gearvrf.utility.VrAppSettings;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
@@ -37,9 +34,6 @@ class OvrGoogleVRViewManager extends GVRViewManager {
         GvrView gvrView = new GoogleVRView(gvrActivity, this, null);
         gvrActivity.setContentView(gvrView);
         headTransform = new float[4];
-        mRenderBundle = new GVRRenderBundle(this);
-        //mLensInfo.setFBOWidth(VrAppSettings.DEFAULT_FBO_RESOLUTION);
-        //mLensInfo.setFBOHeight(VrAppSettings.DEFAULT_FBO_RESOLUTION);
     }
 
     private void onNewFrame(HeadTransform headTransform) {
@@ -52,10 +46,10 @@ class OvrGoogleVRViewManager extends GVRViewManager {
         if (eye.getType() == Eye.Type.LEFT) {
             OvrMonoscopicRenderer.cull(mMainScene, mMainScene.getMainCameraRig().getCenterCamera
                     (), mRenderBundle);
-            renderCamera(getActivity().getNative(), mMainScene, mMainScene
+            renderCamera(mMainScene, mMainScene
                     .getMainCameraRig().getLeftCamera(), mRenderBundle);
         } else if (eye.getType() == Eye.Type.RIGHT) {
-            renderCamera(getActivity().getNative(), mMainScene, mMainScene
+            renderCamera(mMainScene, mMainScene
                     .getMainCameraRig().getRightCamera(), mRenderBundle);
         }
     }
@@ -73,7 +67,6 @@ class OvrGoogleVRViewManager extends GVRViewManager {
 
         @Override
         public void onSurfaceChanged(int width, int height) {
-            //mViewManager.onSurfaceChanged(width, height);
         }
 
         @Override
@@ -90,6 +83,7 @@ class OvrGoogleVRViewManager extends GVRViewManager {
         public void onNewFrame(HeadTransform headTransform) {
             mViewManager.beforeDrawEyes();
             mViewManager.onNewFrame(headTransform);
+            mViewManager.onDrawFrame();
         }
 
         @Override
@@ -129,12 +123,6 @@ class OvrGoogleVRViewManager extends GVRViewManager {
                             viewManager.getActivity().onBackPressed();
                         }
                     });
-        }
-
-        @Override
-        public boolean onKeyDown(int keyCode, KeyEvent event) {
-            mViewManager.onKeyDown(keyCode, event);
-            return super.onKeyDown(keyCode, event);
         }
     }
 }

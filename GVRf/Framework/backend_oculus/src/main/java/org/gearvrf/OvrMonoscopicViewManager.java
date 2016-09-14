@@ -134,7 +134,7 @@ class OvrMonoscopicViewManager extends OvrViewManager {
      * GL life cycle
      */
     @Override
-    void onDrawFrame() {
+    protected void onDrawFrame() {
         // Log.v(TAG, "onDrawFrame");
         beforeDrawEyes();
         drawEyes();

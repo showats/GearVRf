@@ -85,20 +85,12 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
     private static final String TAG = Log.tag(OvrViewManager.class);
 
     protected OvrRotationSensor mRotationSensor;
-
     protected OvrLensInfo mLensInfo;
 
-    protected final List<Integer> mDownKeys = new ArrayList<Integer>();
-
-    GVRActivity mActivity;
     protected int mCurrentEye;
 
     ByteBuffer mReadbackBuffer = null;
     int mReadbackBufferWidth = 0, mReadbackBufferHeight = 0;
-
-    private native void cull(long scene, long camera, long shader_manager);
-
-    private native void makeShadowMaps(long scene, long shader_manager, int width, int height);
 
     private native void readRenderResultNative(long renderTexture, Object readbackBuffer);
 
@@ -138,16 +130,6 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
             e.printStackTrace();
         }
 
-        // Clear singletons and per-run data structures
-        resetOnRestart();
-
-        GVRAsynchronousResourceLoader.setup(this);
-
-        /*
-         * Links with the script.
-         */
-        mActivity = gvrActivity;
-
         /*
          * Starts listening to the sensor.
          */
@@ -167,13 +149,6 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
         VrAppSettings vrAppSettings = gvrActivity.getAppSettings();
         mLensInfo = new OvrLensInfo(screenWidthPixels, screenHeightPixels, screenWidthMeters, screenHeightMeters,
                 vrAppSettings);
-
-        GVRPerspectiveCamera.setDefaultFovY(vrAppSettings.getEyeBufferParams().getFovY());
-        // Different width/height aspect ratio makes the rendered screen warped
-        // when the screen rotates
-        // GVRPerspectiveCamera.setDefaultAspectRatio(mLensInfo
-        // .getRealScreenWidthMeters()
-        // / mLensInfo.getRealScreenHeightMeters());
 
         // Debug statistics
         mStatsLine = new GVRStatsLine("gvrf-stats");
@@ -285,7 +260,7 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
 
     private void renderOneCameraAndAddToList(final GVRPerspectiveCamera centerCamera, byte[][] byteArrays, int index) {
 
-        renderCamera(mActivity.getNative(), mMainScene, centerCamera, mRenderBundle);
+        renderCamera(mMainScene, centerCamera, mRenderBundle);
         readRenderResult();
         byteArrays[index] = Arrays.copyOf(mReadbackBuffer.array(), mReadbackBuffer.array().length);
     }
@@ -395,14 +370,14 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
                 }
 
                 GVRCamera rightCamera = mainCameraRig.getRightCamera();
-                renderCamera(mActivity.getNative(), mMainScene, rightCamera, mRenderBundle);
+                renderCamera(mMainScene, rightCamera, mRenderBundle);
 
-                // if mScreenshotRightCallback is not null, capture right eye
-                if (mScreenshotRightCallback != null) {
-                    readRenderResult();
-                    returnScreenshotToCaller(mScreenshotRightCallback, mReadbackBufferWidth, mReadbackBufferHeight);
-                    mScreenshotRightCallback = null;
-                }
+//                // if mScreenshotRightCallback is not null, capture right eye
+//                if (mScreenshotRightCallback != null) {
+//                    readRenderResult();
+//                    returnScreenshotToCaller(mScreenshotRightCallback, mReadbackBufferWidth, mReadbackBufferHeight);
+//                    mScreenshotRightCallback = null;
+//                }
 
                 mActivity.getActivityNative().setCamera(rightCamera);
 
@@ -416,43 +391,43 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
                     mTracerDrawEyes2.enter();
                 }
 
-                // if mScreenshotCenterCallback is not null, capture center eye
-                if (mScreenshotCenterCallback != null) {
-                    GVRPerspectiveCamera centerCamera = mainCameraRig.getCenterCamera();
+//                // if mScreenshotCenterCallback is not null, capture center eye
+//                if (mScreenshotCenterCallback != null) {
+//                    GVRPerspectiveCamera centerCamera = mainCameraRig.getCenterCamera();
+//
+//                    renderCamera(mActivity.getNative(), mMainScene, centerCamera, mRenderBundle);
+//
+//                    readRenderResult();
+//                    returnScreenshotToCaller(mScreenshotCenterCallback, mReadbackBufferWidth, mReadbackBufferHeight);
+//
+//                    mScreenshotCenterCallback = null;
+//                }
 
-                    renderCamera(mActivity.getNative(), mMainScene, centerCamera, mRenderBundle);
-
-                    readRenderResult();
-                    returnScreenshotToCaller(mScreenshotCenterCallback, mReadbackBufferWidth, mReadbackBufferHeight);
-
-                    mScreenshotCenterCallback = null;
-                }
-
-                // if mScreenshot3DCallback is not null, capture 3D screenshot
-                if (mScreenshot3DCallback != null) {
-                    byte[][] byteArrays = new byte[6][];
-                    renderSixCamerasAndReadback(mainCameraRig, byteArrays);
-                    returnScreenshot3DToCaller(mScreenshot3DCallback, byteArrays, mReadbackBufferWidth,
-                            mReadbackBufferHeight);
-
-                    mScreenshot3DCallback = null;
-                }
+//                // if mScreenshot3DCallback is not null, capture 3D screenshot
+//                if (mScreenshot3DCallback != null) {
+//                    byte[][] byteArrays = new byte[6][];
+//                    renderSixCamerasAndReadback(mainCameraRig, byteArrays);
+//                    returnScreenshot3DToCaller(mScreenshot3DCallback, byteArrays, mReadbackBufferWidth,
+//                            mReadbackBufferHeight);
+//
+//                    mScreenshot3DCallback = null;
+//                }
 
                 GVRCamera leftCamera = mainCameraRig.getLeftCamera();
-                renderCamera(mActivity.getNative(), mMainScene, leftCamera, mRenderBundle);
+                renderCamera(mMainScene, leftCamera, mRenderBundle);
 
-                // if mScreenshotLeftCallback is not null, capture left eye
-                if (mScreenshotLeftCallback != null) {
-                    readRenderResult();
-                    returnScreenshotToCaller(mScreenshotLeftCallback, mReadbackBufferWidth, mReadbackBufferHeight);
-
-                    mScreenshotLeftCallback = null;
-                }
-
-                if (mScreenshotLeftCallback == null && mScreenshotRightCallback == null
-                        && mScreenshotCenterCallback == null && mScreenshot3DCallback == null) {
-                    mReadbackBuffer = null;
-                }
+//                // if mScreenshotLeftCallback is not null, capture left eye
+//                if (mScreenshotLeftCallback != null) {
+//                    readRenderResult();
+//                    returnScreenshotToCaller(mScreenshotLeftCallback, mReadbackBufferWidth, mReadbackBufferHeight);
+//
+//                    mScreenshotLeftCallback = null;
+//                }
+//
+//                if (mScreenshotLeftCallback == null && mScreenshotRightCallback == null
+//                        && mScreenshotCenterCallback == null && mScreenshot3DCallback == null) {
+//                    mReadbackBuffer = null;
+//                }
 
                 mActivity.getActivityNative().setCamera(leftCamera);
 
@@ -464,12 +439,9 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
     }
 
     /** Called once per frame, before {@link #onDrawEyeView(int, float)}. */
-    void onDrawFrame() {
-        GVRPerspectiveCamera centerCamera = mMainScene.getMainCameraRig().getCenterCamera();
-        makeShadowMaps(mMainScene.getNative(), mRenderBundle.getMaterialShaderManager().getNative(),
-                mRenderBundle.getPostEffectRenderTextureA().getWidth(),
-                mRenderBundle.getPostEffectRenderTextureB().getHeight());
-        cull(mMainScene.getNative(), centerCamera.getNative(), mRenderBundle.getMaterialShaderManager().getNative());
+    @Override
+    protected void onDrawFrame() {
+        super.onDrawFrame();
 
         if (mCurrentEye == 1) {
             mActivity.getActivityNative().setCamera(mMainScene.getMainCameraRig().getLeftCamera());

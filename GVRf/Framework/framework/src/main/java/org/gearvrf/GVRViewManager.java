@@ -7,10 +7,12 @@ import android.view.MotionEvent;
 import org.gearvrf.animation.GVRAnimation;
 import org.gearvrf.animation.GVROnFinish;
 import org.gearvrf.animation.GVROpacityAnimation;
+import org.gearvrf.asynchronous.GVRAsynchronousResourceLoader;
 import org.gearvrf.debug.GVRStatsLine;
 import org.gearvrf.io.GVRInputManager;
 import org.gearvrf.script.GVRScriptManager;
 import org.gearvrf.utility.Log;
+import org.gearvrf.utility.VrAppSettings;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,11 +27,20 @@ abstract class GVRViewManager extends GVRContext {
     GVRViewManager(GVRActivity activity, GVRScript main) {
         super(activity);
 
-        mScriptManager = new GVRScriptManager(this);
+        mActivity = activity;
+        mMain = main;
 
+        VrAppSettings vrAppSettings = activity.getAppSettings();
+        GVRPerspectiveCamera.setDefaultFovY(vrAppSettings.getEyeBufferParams().getFovY());
+
+        // Clear singletons and per-run data structures
+        resetOnRestart();
+
+        GVRAsynchronousResourceLoader.setup(this);
+
+        mScriptManager = new GVRScriptManager(this);
         mInputManager = new GVRInputManagerImpl(this, activity.getAppSettings().useGazeCursorController());
         mEventManager = new GVREventManager(this);
-        mMain = main;
     }
 
     void onPause() {}
@@ -157,7 +168,8 @@ abstract class GVRViewManager extends GVRContext {
         /*
          * GL Initializations.
          */
-        mRenderBundle = new GVRRenderBundle(this);
+        final VrAppSettings.EyeBufferParams eyeBufferParams = getActivity().getAppSettings().getEyeBufferParams();
+        mRenderBundle = new GVRRenderBundle(this, eyeBufferParams.getResolutionWidth(), eyeBufferParams.getResolutionHeight());
         setMainScene(new GVRScene(this));
     }
 
@@ -481,21 +493,28 @@ abstract class GVRViewManager extends GVRContext {
         mFrameHandler.afterDrawEyes();
     }
 
-    /*
-     * GL life cycle
-     */
+    /** Called once per frame, before {@link #onDrawEyeView(int, float)}. */
+    protected void onDrawFrame() {
+        GVRPerspectiveCamera centerCamera = mMainScene.getMainCameraRig().getCenterCamera();
+        makeShadowMaps(mMainScene.getNative(), mRenderBundle.getMaterialShaderManager().getNative(),
+                mRenderBundle.getPostEffectRenderTextureA().getWidth(),
+                mRenderBundle.getPostEffectRenderTextureB().getHeight());
+        cull(mMainScene.getNative(), centerCamera.getNative(), mRenderBundle.getMaterialShaderManager().getNative());
+    }
 
-    protected void renderCamera(long activity_ptr, GVRScene scene, GVRCamera camera, GVRRenderBundle
+    protected void renderCamera(GVRScene scene, GVRCamera camera, GVRRenderBundle
             renderBundle) {
-        renderCamera(activity_ptr, scene.getNative(), camera.getNative(),
+        renderCamera(scene.getNative(), camera.getNative(),
                 renderBundle.getMaterialShaderManager().getNative(),
                 renderBundle.getPostEffectShaderManager().getNative(),
                 renderBundle.getPostEffectRenderTextureA().getNative(),
                 renderBundle.getPostEffectRenderTextureB().getNative());
     }
 
-    protected native void renderCamera(long appPtr, long scene, long camera, long shaderManager,
+    protected native void renderCamera(long scene, long camera, long shaderManager,
                                      long postEffectShaderManager, long postEffectRenderTextureA, long postEffectRenderTextureB);
+    protected native void cull(long scene, long camera, long shader_manager);
+    protected native void makeShadowMaps(long scene, long shader_manager, int width, int height);
 
     private static final String TAG = "GVRViewManager";
 
@@ -554,4 +573,6 @@ abstract class GVRViewManager extends GVRContext {
     public void captureScreen3D(GVRScreenshot3DCallback callback) {
         mScreenshot3DCallback = callback;
     }
+
+    protected final GVRActivity mActivity;
 }
