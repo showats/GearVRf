@@ -534,6 +534,9 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
+    /**
+     * Called from C++
+     */
     final boolean updateSensoredScene() {
         return mViewManager.updateSensoredScene();
     }

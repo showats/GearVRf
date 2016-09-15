@@ -234,10 +234,9 @@ abstract class GVRViewManager extends GVRContext {
      * implementation instead of a state enum, we just call the handler
      * directly.
      */
-    protected interface FrameHandler {
-        void beforeDrawEyes();
-
-        void afterDrawEyes();
+    private static class FrameHandler {
+        void beforeDrawEyes() {}
+        void afterDrawEyes() {}
     }
 
     private FrameHandler firstFrame = new FrameHandler() {
@@ -318,14 +317,9 @@ abstract class GVRViewManager extends GVRContext {
                 firstFrame = null;
             }
         }
-
-        @Override
-        public void afterDrawEyes() {
-        }
     };
 
     private FrameHandler splashFrames = new FrameHandler() {
-
         @Override
         public void beforeDrawEyes() {
             // splash screen post-init animations
@@ -359,10 +353,6 @@ abstract class GVRViewManager extends GVRContext {
                     mSplashScreen = null;
                 }
             }
-        }
-
-        @Override
-        public void afterDrawEyes() {
         }
     };
 
