@@ -25,10 +25,6 @@ class GVRRenderBundle {
     private final GVRRenderTexture mPostEffectRenderTextureA;
     private final GVRRenderTexture mPostEffectRenderTextureB;
 
-    GVRRenderBundle(GVRContext gvrContext) {
-        this(gvrContext, VrAppSettings.DEFAULT_FBO_RESOLUTION, VrAppSettings.DEFAULT_FBO_RESOLUTION);
-    }
-
     GVRRenderBundle(GVRContext gvrContext, final int width, final int height) {
         mGVRContext = gvrContext;
         mMaterialShaderManager = new GVRMaterialShaderManager(gvrContext);

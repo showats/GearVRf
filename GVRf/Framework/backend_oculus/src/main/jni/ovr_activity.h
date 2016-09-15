@@ -26,7 +26,7 @@
 
 namespace gvr {
 
-class OvrCameraRig;
+class CameraRig;
 
 class GVRActivity
 {
@@ -38,7 +38,7 @@ public:
     void setCameraRig(jlong cameraRig);
 
     Camera* camera = nullptr;
-    OvrCameraRig* cameraRig_ = nullptr;   // this needs a global ref on the java object; todo
+    CameraRig* cameraRig_ = nullptr;   // this needs a global ref on the java object; todo
     bool sensoredSceneUpdated_ = false;
     HeadRotationProvider headRotationProvider_;
 

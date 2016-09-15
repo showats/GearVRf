@@ -95,9 +95,14 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
                     reader = new BufferedReader(new InputStreamReader(inputStream));
 
                     final String line = reader.readLine();
+                    Log.i(TAG, "trying backend " + line);
                     final Class<?> aClass = Class.forName(line);
+
                     mDelegate = (GVRActivityDelegate) aClass.newInstance();
                     mAppSettings = mDelegate.makeVrAppSettings();
+                    mDelegate.onCreate(this);
+
+                    break;
                 } catch (final Exception exc) {
                 }
             }
@@ -119,8 +124,6 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
                 }
             }
         }
-
-        mDelegate.onCreate(this);
 
         if (null != Threads.getThreadPool()) {
             Threads.getThreadPool().shutdownNow();
@@ -229,8 +232,10 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
             mDockEventReceiver.stop();
         }
 
-        mActivityNative.onDestroy();
-        mActivityNative = null;
+        if (null != mActivityNative) {
+            mActivityNative.onDestroy();
+            mActivityNative = null;
+        }
         super.onDestroy();
     }
 
@@ -381,7 +386,7 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     }
 
     final long getNative() {
-        return mActivityNative.getNative();
+        return null != mActivityNative ? mActivityNative.getNative() : 0;
     }
 
     final IActivityNative getActivityNative() {
@@ -389,7 +394,9 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
     }
 
     final void setCameraRig(GVRCameraRig cameraRig) {
-        mActivityNative.setCameraRig(cameraRig);
+        if (null != mActivityNative) {
+            mActivityNative.setCameraRig(cameraRig);
+        }
     }
 
     @Override

@@ -416,7 +416,7 @@ class OvrVrapiActivityHandler implements OvrActivityHandler {
 
 
     @SuppressWarnings("serial")
-    static final class VrapiNotAvailableException extends Exception {
+    static final class VrapiNotAvailableException extends RuntimeException {
     }
 
     private static native void nativeOnSurfaceCreated(long ptr);

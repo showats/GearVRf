@@ -104,7 +104,7 @@ bool GVRActivity::updateSensoredScene() {
 }
 
 void GVRActivity::setCameraRig(jlong cameraRig) {
-    cameraRig_ = reinterpret_cast<OvrCameraRig*>(cameraRig);
+    cameraRig_ = reinterpret_cast<CameraRig*>(cameraRig);
     sensoredSceneUpdated_ = false;
 }
 

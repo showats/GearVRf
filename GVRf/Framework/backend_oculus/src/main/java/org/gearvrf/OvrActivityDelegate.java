@@ -29,20 +29,13 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
     private GVRActivity mActivity;
     private GVRViewManager mActiveViewManager;
     private OvrActivityNative mActivityNative;
-    private boolean mUseFallback;
 
     @Override
     public void onCreate(GVRActivity activity) {
         mActivity = activity;
 
         mActivityNative = new OvrActivityNative(mActivity, mActivity.getAppSettings(), mRenderingCallbacks);
-
-        try {
-            mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
-        } catch (final Exception ignored) {
-            // GVRf will fallback to GoogleVR in this case.
-            mUseFallback = true;
-        }
+        mActivityHandler = new OvrVrapiActivityHandler(activity, mActivityNative, mRenderingCallbacks);
     }
 
     @Override
@@ -52,11 +45,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public GVRViewManager makeViewManager() {
-        if (!mUseFallback) {
-            return new OvrViewManager(mActivity, mActivity.getScript(), mXmlParser);
-        } else {
-            return makeMonoscopicViewManager();
-        }
+        return new OvrViewManager(mActivity, mActivity.getScript(), mXmlParser);
     }
 
     @Override
@@ -66,7 +55,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public GVRCameraRig makeCameraRig(GVRContext context) {
-        return new OvrCameraRig(context);
+        return new GVRCameraRig(context);
     }
 
     @Override
@@ -99,9 +88,7 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public void setScript(GVRScript gvrScript, String dataFileName) {
-        if (mUseFallback) {
-            mActivityHandler = null;
-        } else if (null != mActivityHandler) {
+        if (null != mActivityHandler) {
             mActivityHandler.onSetScript();
         }
     }
@@ -113,11 +100,6 @@ final class OvrActivityDelegate implements GVRActivity.GVRActivityDelegate {
 
     @Override
     public void onInitAppSettings(VrAppSettings appSettings) {
-        if(mUseFallback){
-            // This is the only place where the setDockListenerRequired flag can be set before
-            // the check in GVRActivity.
-            mActivity.getConfigurationManager().setDockListenerRequired(false);
-        }
     }
 
     @Override
