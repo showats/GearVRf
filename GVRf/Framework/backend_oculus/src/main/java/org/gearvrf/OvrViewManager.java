@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.gearvrf.GVRRenderData.GVRRenderMaskBit;
@@ -292,6 +291,8 @@ class OvrViewManager extends GVRViewManager implements OvrRotationSensorListener
         setMainScene(new GVRScene(this));
 
         mRotationSensor.onResume();
+
+        signalReady();
     }
 
     protected void renderCamera(long activity_ptr, GVRScene scene, GVRCamera camera, OvrRenderBundle

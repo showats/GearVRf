@@ -96,8 +96,6 @@ abstract class GVRConfigurationManager {
         }
 
         final float fovY;
-        final GVRViewManager viewManager = activity.getViewManager();
-
         //must determine the default fov
         if (model.contains("R323")) {
             fovY = 93;
@@ -109,7 +107,14 @@ abstract class GVRConfigurationManager {
         activity.getAppSettings().getEyeBufferParams().setFovY(fovY);
         GVRPerspectiveCamera.setDefaultFovY(fovY);
 
+        final GVRViewManager viewManager = activity.getViewManager();
         if (null != viewManager) {
+            try {
+                viewManager.waitReady();
+            } catch (final InterruptedException e) {
+                throw new IllegalStateException("This thread is not supposed to be interrupted!");
+            }
+
             final GVRCameraRig cameraRig = viewManager.getMainScene().getMainCameraRig();
             updatePerspectiveCameraFovY(cameraRig.getLeftCamera(), fovY);
             updatePerspectiveCameraFovY(cameraRig.getRightCamera(), fovY);

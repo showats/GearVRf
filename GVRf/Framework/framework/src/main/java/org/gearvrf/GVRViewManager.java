@@ -8,6 +8,7 @@ import org.gearvrf.utility.Log;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 
 abstract class GVRViewManager extends GVRContext {
 
@@ -36,6 +37,14 @@ abstract class GVRViewManager extends GVRContext {
 
     public boolean dispatchMotionEvent(MotionEvent event) {
         return mInputManager.dispatchMotionEvent(event);
+    }
+
+    private final CountDownLatch mReadyLatch = new CountDownLatch(1);
+    protected void signalReady() {
+        mReadyLatch.countDown();
+    }
+    void waitReady() throws InterruptedException {
+        mReadyLatch.await();
     }
 
     @Override
