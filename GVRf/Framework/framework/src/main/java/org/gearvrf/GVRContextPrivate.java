@@ -1,12 +1,14 @@
 package org.gearvrf;
 
 import org.gearvrf.GVRHybridObject.NativeCleanupHandler;
+import org.gearvrf.utility.Log;
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 
 final class GVRContextPrivate {
     /**
@@ -21,6 +23,11 @@ final class GVRContextPrivate {
      */
     private final Set<GVRReference> mReferenceSet = new HashSet<GVRReference>();
     private final GVRFinalizeThread mFinalizeThread = new GVRFinalizeThread();
+    private final Lock mRenderingLock;
+
+    GVRContextPrivate(Lock renderingLock) {
+        mRenderingLock = renderingLock;
+    }
 
     final class GVRFinalizeThread extends Thread {
         private GVRFinalizeThread() {
@@ -33,8 +40,14 @@ final class GVRContextPrivate {
         public void run() {
             try {
                 while (true) {
-                    GVRReference reference = (GVRReference)mReferenceQueue.remove();
-                    reference.close();
+                    GVRReference reference = (GVRReference) mReferenceQueue.remove();
+                    if (mRenderingLock.tryLock()) {
+                        try {
+                            reference.close();
+                        } finally {
+                            mRenderingLock.unlock();
+                        }
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.gearvrf.GVRAndroidResource.BitmapTextureCallback;
 import org.gearvrf.GVRAndroidResource.CompressedTextureCallback;
@@ -2698,7 +2700,8 @@ public abstract class GVRContext implements IEventReceiver {
      */
     public abstract void captureScreen3D(GVRScreenshot3DCallback callback);
 
-    private final GVRContextPrivate mContextPrivate = new GVRContextPrivate();
+    protected Lock mRenderingLock = new ReentrantLock();
+    private final GVRContextPrivate mContextPrivate = new GVRContextPrivate(mRenderingLock);
 
     final void releaseNative(final GVRHybridObject hybridObject) {
         mContextPrivate.releaseNative(hybridObject);

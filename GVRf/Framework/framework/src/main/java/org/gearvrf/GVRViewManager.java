@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 abstract class GVRViewManager extends GVRContext {
 
@@ -455,6 +457,8 @@ abstract class GVRViewManager extends GVRContext {
     }
 
     protected void beforeDrawEyes() {
+        mRenderingLock.lock();
+
         mFrameHandler.beforeDrawEyes();
 
         GVRPerspectiveCamera centerCamera = mMainScene.getMainCameraRig().getCenterCamera();
@@ -465,22 +469,26 @@ abstract class GVRViewManager extends GVRContext {
     }
 
     protected void afterDrawEyes() {
-        // Execute post-rendering tasks (after drawing eyes, but
-        // before afterDrawEyes handlers)
-        synchronized (mRunnablesPostRender) {
-            for (Iterator<Map.Entry<Runnable, Integer>> it = mRunnablesPostRender.entrySet().iterator(); it
-                    .hasNext();) {
-                Map.Entry<Runnable, Integer> entry = it.next();
-                if (entry.getValue() <= 0) {
-                    entry.getKey().run();
-                    it.remove();
-                } else {
-                    entry.setValue(entry.getValue() - 1);
+        try {
+            // Execute post-rendering tasks (after drawing eyes, but
+            // before afterDrawEyes handlers)
+            synchronized (mRunnablesPostRender) {
+                for (Iterator<Map.Entry<Runnable, Integer>> it = mRunnablesPostRender.entrySet().iterator(); it
+                        .hasNext(); ) {
+                    Map.Entry<Runnable, Integer> entry = it.next();
+                    if (entry.getValue() <= 0) {
+                        entry.getKey().run();
+                        it.remove();
+                    } else {
+                        entry.setValue(entry.getValue() - 1);
+                    }
                 }
             }
-        }
 
-        mFrameHandler.afterDrawEyes();
+            mFrameHandler.afterDrawEyes();
+        } finally {
+            mRenderingLock.unlock();
+        }
     }
 
     protected void renderCamera(GVRScene scene, GVRCamera camera, IRenderBundle
