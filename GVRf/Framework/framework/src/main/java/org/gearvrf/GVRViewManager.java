@@ -110,8 +110,6 @@ abstract class GVRViewManager extends GVRContext {
         }
     }
 
-    void setUseTheFrameworkThread(boolean b) {}
-
     protected boolean updateSensoredScene() {
         if (mSensoredScene != null && mMainScene.equals(mSensoredScene)) {
             return true;
