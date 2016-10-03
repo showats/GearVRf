@@ -26,6 +26,8 @@ import java.util.concurrent.Future;
 
 import org.gearvrf.GVRMaterial.GVRShaderType;
 import org.gearvrf.GVRMaterial.GVRShaderType.Texture;
+import org.gearvrf.physics.GVRRigidBody;
+import org.gearvrf.physics.GVRWorld;
 import org.gearvrf.script.IScriptable;
 import org.gearvrf.utility.Log;
 import org.joml.Vector3f;
@@ -620,14 +622,63 @@ public class GVRSceneObject extends GVRHybridObject implements PrettyPrint, IScr
     public GVRCollider getCollider() {
         return (GVRCollider) getComponent(GVRCollider.getComponentType());
     }
-    
+
     /**
      * Detach the object's current {@link GVRCollider}.
      */
     public void detachCollider() {
         detachComponent(GVRCollider.getComponentType());
     }
-    
+
+    /**
+     * Attach a new {@link org.gearvrf.physics.GVRRigidBody} to the object.
+     *
+     * If another {@link GVRCollider} is currently attached, it is
+     * replaced with the new one.
+     *
+     * @param rigidBody
+     *            New {@link GVRRigidBody}.
+     */
+    public void attachRigidBody(GVRRigidBody rigidBody) {
+        if(getCollider() != null)
+            attachComponent(rigidBody);
+        else
+            throw new RuntimeException("GVRSceneObject needs a Collider prior having a Body");
+    }
+
+    /**
+     * Detach the object's current {@link GVRRigidBody}.
+     */
+    public void detachRigidBody() {
+        detachComponent(GVRRigidBody.getComponentType());
+    }
+
+    /**
+     * Get the attached {@link GVRRigidBody}
+     *
+     * @return The {@link GVRRigidBody} attached to the object. If no
+     *         {@link GVRRigidBody} is currently attached, returns
+     *         {@code null}.
+     */
+    public GVRRigidBody getRigidBody() {
+        return (GVRRigidBody) getComponent(GVRRigidBody.getComponentType());
+    }
+
+    public GVRWorld getWorld() {
+        return getWorldFromAscendant(this);
+    }
+
+    private GVRWorld getWorldFromAscendant(GVRSceneObject worldOwner) {
+        GVRComponent world = null;
+
+        while (worldOwner != null && world == null) {
+            world = worldOwner.getComponent(GVRWorld.getComponentType());
+            worldOwner = worldOwner.getParent();
+        }
+
+        return (GVRWorld) world;
+    }
+
     /**
      * Attach a default {@link GVREyePointeeHolder} to the object.
      * 
@@ -643,7 +694,7 @@ public class GVRSceneObject extends GVRHybridObject implements PrettyPrint, IScr
      *         <em>and</em> you have called either
      *         {@link GVRRenderData#setMesh(GVRMesh)} or
      *         {@link GVRRenderData#setMesh(Future)}; {@code false}, otherwise.
-     * @deprecated use attachComponent(new GVRMeshCollider(GVRContext))       
+     * @deprecated use attachComponent(new GVRMeshCollider(GVRContext))
      */
     public boolean attachEyePointeeHolder() {
         GVREyePointeeHolder holder = new GVREyePointeeHolder(getGVRContext());
@@ -726,6 +777,34 @@ public class GVRSceneObject extends GVRHybridObject implements PrettyPrint, IScr
     }
 
     /**
+     * Convenience function to enable or disable the physics for this scene object.
+     * Before enable the physics for this scene object you must attach a {@link GVRCollider}.
+     *
+     * @param enabled Should be true to enable the physics, otherwise false.
+     */
+    public void setPhysicsEnabled(boolean enabled) {
+        if (enabled == getPhysicsEnabled()) {
+            return;
+        }
+
+        if (enabled) {
+            attachComponent(new GVRRigidBody(getGVRContext()));
+        } else {
+            detachComponent(GVRRigidBody.getComponentType());
+        }
+    }
+
+    /**
+     * Returns true if there is a {@link GVRRigidBody} component attached to it,
+     * otherwise returns false.
+     *
+     * @return If there a rigid body attached to it.
+     */
+    public boolean getPhysicsEnabled() {
+        return getComponent(GVRRigidBody.getComponentType()) != null;
+    }
+
+    /**
      * Get the {@linkplain GVRSceneObject parent object.}
      * 
      * If the object has been {@link #addChildObject(GVRSceneObject) added as a
@@ -771,6 +850,7 @@ public class GVRSceneObject extends GVRHybridObject implements PrettyPrint, IScr
         child.mParent = null;
         NativeSceneObject.removeChildObject(getNative(), child.getNative());
     }
+
     /**
      * Add the owner of {@code childComponent} as a child of this object. (owner object of the
      * Adding a child will increase the
