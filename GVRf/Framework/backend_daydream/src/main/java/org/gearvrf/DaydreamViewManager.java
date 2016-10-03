@@ -27,16 +27,14 @@ import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.HeadTransform;
 import com.google.vr.sdk.base.Viewport;
 
-import org.gearvrf.utility.VrAppSettings;
-
 import javax.microedition.khronos.egl.EGLConfig;
 
 class DaydreamViewManager extends GVRViewManager {
     private static final String TAG = DaydreamViewManager.class.getSimpleName();
     private final float[] headTransform;
 
-    DaydreamViewManager(final GVRActivity gvrActivity, GVRScript gvrScript) {
-        super(gvrActivity, gvrScript);
+    DaydreamViewManager(final GVRActivity gvrActivity, GVRMain gvrMain) {
+        super(gvrActivity, gvrMain);
         GvrView gvrView = new GoogleVRView(gvrActivity, this, null);
         gvrActivity.setContentView(gvrView);
         headTransform = new float[4];
