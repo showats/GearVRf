@@ -18,7 +18,6 @@ package org.gearvrf.io;
 import android.content.Context;
 import android.hardware.input.InputManager;
 import android.hardware.input.InputManager.InputDeviceListener;
-import android.util.LongSparseArray;
 import android.util.SparseArray;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -26,7 +25,6 @@ import android.view.MotionEvent;
 
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRCursorController;
-import org.gearvrf.GVRScript;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +99,7 @@ public abstract class GVRInputManager {
      * Get a list of the {@link GVRCursorController}s currently in the system.
      *
      * Ideally this call needs to be done inside
-     * {@link GVRScript#onInit(GVRContext)} so that all the cursor objects are
+     * {@link org.gearvrf.GVRMain#onInit(GVRContext)} so that all the cursor objects are
      * set up before the rendering starts.
      *
      * Remember to add a {@link CursorControllerListener} to receive

@@ -1,18 +1,5 @@
 package org.gearvrf.widgetplugin;
 
-import java.lang.reflect.Method;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLContext;
-
-import org.gearvrf.GVRActivity;
-import org.gearvrf.GVRContext;
-import org.gearvrf.GVREventListeners;
-import org.gearvrf.GVRSceneObject;
-import org.gearvrf.GVRScript;
-import org.gearvrf.IActivityEvents;
-import org.gearvrf.IScriptEvents;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -52,6 +39,19 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 
+import org.gearvrf.GVRActivity;
+import org.gearvrf.GVRContext;
+import org.gearvrf.GVREventListeners;
+import org.gearvrf.GVRMain;
+import org.gearvrf.GVRSceneObject;
+import org.gearvrf.IActivityEvents;
+import org.gearvrf.IScriptEvents;
+
+import java.lang.reflect.Method;
+
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLContext;
+
 /**
  * This provides GVR (libGDX) widget lifecycle and context management and brings
  * it together with GVR activity context. Base activity for GVR apps which use
@@ -74,7 +74,7 @@ public class GVRWidgetPlugin implements AndroidApplicationBase {
     protected AndroidAudio mAudio;
     protected AndroidFiles mFiles;
     protected AndroidNet mNet;
-    protected GVRScript mScript;
+    protected GVRMain mMain;
     protected GVRWidget mWidget;
 
     protected ApplicationListener mListener;
@@ -123,8 +123,8 @@ public class GVRWidgetPlugin implements AndroidApplicationBase {
         }
 
         @Override
-        public void onSetScript(GVRScript script) {
-            script.getEventReceiver().addListener(mScriptEventsListener);
+        public void onSetMain(GVRMain main) {
+            main.getEventReceiver().addListener(mScriptEventsListener);
         }
 
         @Override
@@ -561,16 +561,16 @@ public class GVRWidgetPlugin implements AndroidApplicationBase {
         return mWidget.isInitialised();
     }
 
-    public GVRScript getScript() {
-        return mScript;
+    public GVRMain getScript() {
+        return mMain;
     }
 
     public int getTextureId() {
         return mWidget.getTexId();
     }
 
-    public void setCurrentScript(GVRScript script) {
-        mScript = script;
+    public void setMain(GVRMain main) {
+        mMain = main;
     }
 
     public void setPickedObject(GVRSceneObject obj) {
@@ -640,19 +640,16 @@ public class GVRWidgetPlugin implements AndroidApplicationBase {
     }
 
     protected void syncNotify() {
-        // TODO Auto-generated method stub
         synchronized (mSync) {
             mSync.notifyAll();
         }
     }
 
     protected void syncWait() {
-        // TODO Auto-generated method stub
         synchronized (mSync) {
             try {
                 mSync.wait();
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -660,49 +657,35 @@ public class GVRWidgetPlugin implements AndroidApplicationBase {
 
     @Override
     public void debug(String arg0, String arg1) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void debug(String arg0, String arg1, Throwable arg2) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void error(String arg0, String arg1) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void error(String arg0, String arg1, Throwable arg2) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public int getLogLevel() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void log(String arg0, String arg1) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void log(String arg0, String arg1, Throwable arg2) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void setLogLevel(int arg0) {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -725,10 +708,8 @@ public class GVRWidgetPlugin implements AndroidApplicationBase {
     }
     
     public boolean dispatchTouchEvent(MotionEvent event) {
-    	return  mInputDispatcher.dispatchEvent(event, mWidgetView) ? true:
-    	 mActivity.onTouchEvent(event);
-    	
+        return mInputDispatcher.dispatchEvent(event, mWidgetView) ? true :
+                mActivity.onTouchEvent(event);
+
     }
-    
-   
 }

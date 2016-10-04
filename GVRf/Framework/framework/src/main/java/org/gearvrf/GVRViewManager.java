@@ -38,7 +38,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 abstract class GVRViewManager extends GVRContext {
 
-    GVRViewManager(GVRActivity activity, GVRScript main) {
+    GVRViewManager(GVRActivity activity, GVRMain main) {
         super(activity);
 
         mActivity = activity;
@@ -241,7 +241,7 @@ abstract class GVRViewManager extends GVRContext {
      * Efficient handling of the state machine.
      *
      * We want to be able to show an animated splash screen after
-     * {@link GVRScript#onInit(GVRContext) onInit().} That means our frame
+     * {@link GVRMain#onInit(GVRContext) onInit().} That means our frame
      * handler acts differently on the very first frame than it does during
      * splash screen animations, and differently again when we get to normal
      * mode. If we used a state enum and a switch statement, we'd have to keep
@@ -294,7 +294,7 @@ abstract class GVRViewManager extends GVRContext {
                         getEventManager().sendEvent(mMain, IScriptEvents.class,
                                 "onInit", GVRViewManager.this);
 
-                        if (null != mSplashScreen && GVRScript.SplashMode.AUTOMATIC == mMain
+                        if (null != mSplashScreen && GVRMain.SplashMode.AUTOMATIC == mMain
                                 .getSplashMode() && mMain.getSplashDisplayTime() < 0f) {
                             runOnGlThread(new Runnable() {
                                 public void run() {
@@ -343,7 +343,7 @@ abstract class GVRViewManager extends GVRContext {
 
             if (mSplashScreen != null && (currentTime >= mSplashScreen.mTimeout || mSplashScreen.closeRequested())) {
                 if (mSplashScreen.closeRequested()
-                        || mMain.getSplashMode() == GVRScript.SplashMode.AUTOMATIC) {
+                        || mMain.getSplashMode() == GVRMain.SplashMode.AUTOMATIC) {
 
                     final SplashScreen splashScreen = mSplashScreen;
                     new GVROpacityAnimation(mSplashScreen, mMain.getSplashFadeTime(), 0) //
@@ -564,7 +564,7 @@ abstract class GVRViewManager extends GVRContext {
     private final GVRInputManagerImpl mInputManager;
     protected IRenderBundle mRenderBundle;
 
-    protected GVRScript mMain;
+    protected GVRMain mMain;
 
     protected long mGlDeleterPtr;
 

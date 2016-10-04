@@ -28,10 +28,10 @@ import javax.script.ScriptEngine;
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVREventListeners;
+import org.gearvrf.GVRMain;
 import org.gearvrf.GVRResourceVolume;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
-import org.gearvrf.GVRScript;
 import org.gearvrf.IScriptEvents;
 import org.gearvrf.script.javascript.RhinoScriptEngineFactory;
 
@@ -75,7 +75,7 @@ public class GVRScriptManager {
             @Override
             public IScriptable getTarget(GVRContext gvrContext,
                     String name) {
-                return gvrContext.getActivity().getScript();
+                return gvrContext.getActivity().getMain();
             }
         });
 
@@ -226,9 +226,9 @@ public class GVRScriptManager {
 
     /**
      * Load a script bundle file. It defines bindings between scripts and GVRf objects
-     * (e.g., scene objects and the {@link GVRScript} object).
+     * (e.g., scene objects and the {@link org.gearvrf.GVRMain} object).
      *
-     * If {@linkplain GVRScriptEntry script entry} contains a {@code volume} attribute, the
+     * If {@linkplain GVRScriptBindingEntry script entry} contains a {@code volume} attribute, the
      * script is loaded from the specified volume. Otherwise, it is loaded from the volume
      * specified by the {@code volume} parameter.
      *
@@ -251,14 +251,14 @@ public class GVRScriptManager {
      *
      * @param scriptBundle
      *     The script bundle.
-     * @param gvrScript
-     *     The {@link GVRScript} to bind to.
+     * @param gvrMain
+     *     The {@link org.gearvrf.GVRMain} to bind to.
      * @param bindToMainScene
-     *     If {@code true}, also bind it to the main scene on the event {@link GVRScript#onAfterInit}.
+     *     If {@code true}, also bind it to the main scene on the event {@link org.gearvrf.GVRMain#onAfterInit}.
      * @throws GVRScriptException
      * @throws IOException
      */
-    public void bindScriptBundle(final GVRScriptBundle scriptBundle, final GVRScript gvrScript, boolean bindToMainScene)
+    public void bindScriptBundle(final GVRScriptBundle scriptBundle, final GVRMain gvrMain, boolean bindToMainScene)
             throws IOException, GVRScriptException {
         // Here, bind to all targets except SCENE_OBJECTS. Scene objects are bound when scene is set.
         bindHelper(scriptBundle, null, BIND_MASK_GVRSCRIPT | BIND_MASK_GVRACTIVITY);
@@ -282,13 +282,13 @@ public class GVRScriptManager {
                         mGvrContext.logError(e.getMessage(), this);
                     } finally {
                         // Remove the listener itself
-                        gvrScript.getEventReceiver().removeListener(this);
+                        gvrMain.getEventReceiver().removeListener(this);
                     }
                 }
             };
 
             // Add listener to bind to main scene when event "onAfterInit" is received
-            gvrScript.getEventReceiver().addListener(bindToSceneListener);
+            gvrMain.getEventReceiver().addListener(bindToSceneListener);
         }
     }
 
@@ -296,7 +296,7 @@ public class GVRScriptManager {
      * Binds a script bundle to a scene.
      * @param scriptBundle
      *         The {@code GVRScriptBundle} object containing script binding information.
-     * @param GVRScene
+     * @param scene
      *         The scene to bind to.
      * @throws GVRScriptException
      * @throws IOException
