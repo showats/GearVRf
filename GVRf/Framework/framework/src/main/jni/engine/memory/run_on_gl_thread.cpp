@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 
-#include "util/gvr_log.h"
-#include "gl_delete.h"
-#include "util/gvr_cpp_stack_trace.h"
+#include <algorithm>
+#include "run_on_gl_thread.h"
 
 //#define VERBOSE_LOGGING
 
@@ -23,12 +22,12 @@ namespace gvr {
 
 pthread_key_t deleter_key;
 
-void GlDelete::logInvalidParameter(const char *funcName) {
-    LOGW("GlDelete::%s is called with an invalid parameter", funcName);
+void RunOnGlThread::logInvalidParameter(const char *funcName) {
+    LOGW("RunOnGlThread::%s is called with an invalid parameter", funcName);
     printStackTrace();
 }
 
-void GlDelete::queueBuffer(GLuint buffer) {
+void RunOnGlThread::queueBuffer(GLuint buffer) {
     if (buffer == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -43,7 +42,7 @@ void GlDelete::queueBuffer(GLuint buffer) {
     unlock();
 }
 
-void GlDelete::queueFrameBuffer(GLuint buffer) {
+void RunOnGlThread::queueFrameBuffer(GLuint buffer) {
     if (buffer == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -59,7 +58,7 @@ void GlDelete::queueFrameBuffer(GLuint buffer) {
     unlock();
 }
 
-void GlDelete::queueProgram(GLuint program) {
+void RunOnGlThread::queueProgram(GLuint program) {
     if (program == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -74,7 +73,7 @@ void GlDelete::queueProgram(GLuint program) {
     unlock();
 }
 
-void GlDelete::queueRenderBuffer(GLuint buffer) {
+void RunOnGlThread::queueRenderBuffer(GLuint buffer) {
     if (buffer == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -90,7 +89,7 @@ void GlDelete::queueRenderBuffer(GLuint buffer) {
     unlock();
 }
 
-void GlDelete::queueShader(GLuint shader) {
+void RunOnGlThread::queueShader(GLuint shader) {
     if (shader == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -105,7 +104,7 @@ void GlDelete::queueShader(GLuint shader) {
     unlock();
 }
 
-void GlDelete::queueTexture(GLuint texture) {
+void RunOnGlThread::queueTexture(GLuint texture) {
     if (texture == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -120,7 +119,7 @@ void GlDelete::queueTexture(GLuint texture) {
     unlock();
 }
 
-void GlDelete::queueVertexArray(GLuint vertex_array) {
+void RunOnGlThread::queueVertexArray(GLuint vertex_array) {
     if (vertex_array == GVR_INVALID) {
         logInvalidParameter(__func__);
         return;
@@ -136,7 +135,7 @@ void GlDelete::queueVertexArray(GLuint vertex_array) {
     unlock();
 }
 
-void GlDelete::processQueues() {
+void RunOnGlThread::processQueues() {
     /*
      * Do an unsynchronized check of the dirty flag, so that we don't have to
      * call lock() on each and every frame. The consequences of 'just missing'
@@ -146,7 +145,7 @@ void GlDelete::processQueues() {
     if (dirty) {
         lock();
 #ifdef VERBOSE_LOGGING
-        LOGD("GlDelete::processQueues()");
+        LOGD("RunOnGlThread::processQueues()");
 #endif
         if (buffers_.size() > 0) {
             glDeleteBuffers(buffers_.size(), buffers_.data());
@@ -182,9 +181,42 @@ void GlDelete::processQueues() {
             glDeleteVertexArrays(vertex_arrays_.size(), vertex_arrays_.data());
             vertex_arrays_.clear();
         }
+
+        for (RunnableOnGlThread* runnable : runnables_) {
+            runnable->runOnGlThread();
+        }
+        runnables_.clear();
+
         dirty = false;
         unlock();
     }
+}
+
+void RunOnGlThread::cancelRunnable(RunnableOnGlThread* runnable) {
+    lock();
+    runnables_.erase(std::remove(runnables_.begin(), runnables_.end(), runnable), runnables_.end());
+    unlock();
+}
+
+void RunOnGlThread::queueRunnable(RunnableOnGlThread* runnable) {
+    lock();
+    runnables_.push_back(runnable);
+    dirty = true;
+    unlock();
+}
+
+/**
+ * The assumption is threads that do know they are supposed to have
+ * a deleter may only call this method.
+ */
+RunOnGlThread* RunOnGlThread::getInstance() {
+    RunOnGlThread* deleter = static_cast<RunOnGlThread*>(pthread_getspecific(deleter_key));
+    if (nullptr == deleter) {
+        printStackTrace();
+        LOGE("fatal error: no deleter associated with this thread!");
+        std::terminate();
+    }
+    return deleter;
 }
 
 }

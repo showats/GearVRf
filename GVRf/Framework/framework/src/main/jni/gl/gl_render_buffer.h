@@ -23,14 +23,14 @@
 
 #include "gl/gl_headers.h"
 
-#include "engine/memory/gl_delete.h"
+#include "engine/memory/run_on_gl_thread.h"
 
 namespace gvr {
 
 class GLRenderBuffer {
 public:
     GLRenderBuffer() {
-        deleter_ = getDeleterForThisThread();
+        deleter_ = RunOnGlThread::getInstance();
         glGenRenderbuffers(1, &id_);
     }
 
@@ -50,7 +50,7 @@ private:
 
 private:
     GLuint id_;
-    GlDelete* deleter_;
+    RunOnGlThread* deleter_;
 };
 
 }

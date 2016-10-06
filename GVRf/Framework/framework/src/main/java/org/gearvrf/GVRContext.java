@@ -302,7 +302,7 @@ public abstract class GVRContext implements IEventReceiver {
      * The asynchronous methods improve throughput in three ways. First, by
      * doing all the work on a background thread, then delivering the loaded
      * mesh to the GL thread on a {@link #runOnGlThread(Runnable)
-     * runOnGlThread()} callback. Second, they use a throttler to avoid
+     * runOnGlThread_()} callback. Second, they use a throttler to avoid
      * overloading the system and/or running out of memory. Third, they do
      * 'request consolidation' - if you issue any requests for a particular file
      * while there is still a pending request, the file will only be read once,
@@ -369,7 +369,7 @@ public abstract class GVRContext implements IEventReceiver {
      * The asynchronous methods improve throughput in three ways. First, by
      * doing all the work on a background thread, then delivering the loaded
      * mesh to the GL thread on a {@link #runOnGlThread(Runnable)
-     * runOnGlThread()} callback. Second, they use a throttler to avoid
+     * runOnGlThread_()} callback. Second, they use a throttler to avoid
      * overloading the system and/or running out of memory. Third, they do
      * 'request consolidation' - if you issue any requests for a particular file
      * while there is still a pending request, the file will only be read once,

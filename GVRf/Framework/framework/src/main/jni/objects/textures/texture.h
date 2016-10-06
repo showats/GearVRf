@@ -22,85 +22,32 @@
 
 #include "gl/gl_texture.h"
 #include "objects/hybrid_object.h"
-#include "objects/gl_pending_task.h"
 
 namespace gvr {
 
-class Texture: public HybridObject, GLPendingTask {
+class Texture: public HybridObject, RunnableOnGlThread {
 public:
-    virtual ~Texture() {
-        delete gl_texture_;
-    }
+    virtual ~Texture();
 
     // Should be called in GL context.
-    virtual GLuint getId() {
-        if (gl_texture_ == 0) {
-            // must be recycled already. The caller will handle error.
-            return 0;
-        }
-
-        // Before returning the ID makes sure nothing is pending
-        runPendingGL();
-
-        return gl_texture_->id();
-    }
-
-    virtual void updateTextureParameters(int* texture_parameters) {
-        // Sets the new MIN FILTER
-        GLenum min_filter_type_ = texture_parameters[0];
-
-        // Sets the MAG FILTER
-        GLenum mag_filter_type_ = texture_parameters[1];
-
-        // Sets the wrap parameter for texture coordinate S
-        GLenum wrap_s_type_ = texture_parameters[3];
-
-        // Sets the wrap parameter for texture coordinate S
-        GLenum wrap_t_type_ = texture_parameters[4];
-
-        glBindTexture(target, getId());
-
-        // Sets the anisotropic filtering if the value provided is greater than 1 because 1 is the default value
-        if (texture_parameters[2] > 1.0f) {
-            glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, texture_parameters[2]);
-        }
-
-        glTexParameteri(target, GL_TEXTURE_WRAP_S, wrap_s_type_);
-        glTexParameteri(target, GL_TEXTURE_WRAP_T, wrap_t_type_);
-        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, min_filter_type_);
-        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, mag_filter_type_);
-        glBindTexture(target, 0);
-    }
-
+    virtual GLuint getId();
+    virtual void updateTextureParameters(int* texture_parameters);
     virtual GLenum getTarget() const = 0;
+    virtual void runOnGlThread();
 
-    virtual void runPendingGL() {
-        if (gl_texture_) {
-            gl_texture_->runPendingGL();
-        }
-    }
-
-    bool isReady() {
-        return ready;
-    }
-
-    void setReady(bool ready) {
-        this->ready = ready;
-    }
+    bool isReady();
+    void setReady(bool ready);
 
 protected:
-    Texture(GLTexture* gl_texture) : HybridObject() {
-        gl_texture_ = gl_texture;
-    }
+    Texture(GLTexture* gl_texture);
 
     GLTexture* gl_texture_;
-    bool gl_texture_bound_;
 
 private:
-    Texture(const Texture& texture);
-    Texture(Texture&& texture);
-    Texture& operator=(const Texture& texture);
-    Texture& operator=(Texture&& texture);
+    Texture(const Texture& texture) = delete;
+    Texture(Texture&& texture) = delete;
+    Texture& operator=(const Texture& texture) = delete;
+    Texture& operator=(Texture&& texture) = delete;
 
 private:
     static const GLenum target = GL_TEXTURE_2D;

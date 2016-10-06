@@ -38,7 +38,7 @@
 #include "objects/bounding_volume.h"
 #include "objects/vertex_bone_data.h"
 
-#include "engine/memory/gl_delete.h"
+#include "engine/memory/run_on_gl_thread.h"
 #include "objects/components/event_handler.h"
 namespace gvr {
 class Mesh: public HybridObject {
@@ -333,7 +333,7 @@ public:
     //must be called by the thread on which the mesh cleanup should happen
     void obtainDeleter() {
         if (nullptr == deleter_) {
-            deleter_ = getDeleterForThisThread();
+            deleter_ = RunOnGlThread::getInstance();
         }
     }
      void getAttribNames(std::set<std::string> &attrib_names);
@@ -420,7 +420,7 @@ private:
 
     GLuint boneVboID_;
     bool bone_data_dirty_;
-    GlDelete* deleter_ = nullptr;
+    RunOnGlThread* deleter_ = nullptr;
     static std::vector<std::string> dynamicAttribute_Names_;
 };
 }

@@ -22,7 +22,7 @@
 
 #include "gl/gl_headers.h"
 
-#include "engine/memory/gl_delete.h"
+#include "engine/memory/run_on_gl_thread.h"
 
 #include "util/gvr_log.h"
 #include "util/gvr_gl.h"
@@ -32,7 +32,7 @@ class GLProgram {
 public:
     GLProgram(const char* pVertexSourceStrings,
             const char* pFragmentSourceStrings) {
-        deleter_ = getDeleterForThisThread();
+        deleter_ = RunOnGlThread::getInstance();
 
         GLint vertex_shader_string_lengths[1] = { (GLint) strlen(
                 pVertexSourceStrings) };
@@ -52,7 +52,7 @@ public:
                     createProgram(count, pVertexSourceStrings,
                             pVertexSourceStringLengths, pFragmentSourceStrings,
                             pFragmentSourceStringLengths)) {
-        deleter_ = getDeleterForThisThread();
+        deleter_ = RunOnGlThread::getInstance();
     }
 
     ~GLProgram() {
@@ -151,7 +151,7 @@ public:
 
 private:
     GLuint id_;
-    GlDelete* deleter_;
+    RunOnGlThread* deleter_;
 };
 
 }

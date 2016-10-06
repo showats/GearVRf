@@ -1,7 +1,7 @@
 apply plugin: 'com.android.model.application'
 
 System.setProperty("appName", "gvr-eyepicking")
-def demoAppDir = "../../../../../../GearVRf-Demos/gvr-eyepicking/"
+def demoAppDir = "../../../../../../GearVRf-Demos/gvr-accessibility/"
 
 model {
     android {

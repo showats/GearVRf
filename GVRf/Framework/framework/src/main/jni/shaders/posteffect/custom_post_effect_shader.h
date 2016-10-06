@@ -31,7 +31,7 @@
 
 #include "objects/hybrid_object.h"
 #include "objects/components/camera.h"
-#include "engine/memory/gl_delete.h"
+#include "engine/memory/run_on_gl_thread.h"
 
 namespace gvr {
 class GLProgram;
@@ -87,7 +87,7 @@ private:
 
     // add vertex array object
     GLuint vaoID_;
-    GlDelete* deleter_;
+    RunOnGlThread* deleter_;
 };
 
 }

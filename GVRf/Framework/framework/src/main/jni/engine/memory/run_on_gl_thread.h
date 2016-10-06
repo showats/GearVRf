@@ -23,6 +23,8 @@
 #include <vector>
 #include <pthread.h>
 #include <unistd.h>
+#include <objects/textures/texture.h>
+#include <objects/runnable_on_gl_thread.h>
 #include "gl/gl_headers.h"
 
 
@@ -32,7 +34,7 @@ namespace gvr {
 
 extern pthread_key_t deleter_key;
 
-class GlDelete {
+class RunOnGlThread {
 
 public:
     /**
@@ -49,7 +51,7 @@ public:
         }
     }
 
-    GlDelete() : dirty(false) {
+    RunOnGlThread() : dirty(false) {
         int err = pthread_mutex_init(&mutex, nullptr);
         if (0 != err) {
             LOGE("fatal error: pthread_mutex_init failed with %d!", err);
@@ -61,11 +63,11 @@ public:
             std::terminate();
         }
 
-        LOGV("GlDelete(): %p tid: %d", this, gettid());
+        LOGV("RunOnGlThread(): %p tid: %d", this, gettid());
     }
 
-    ~GlDelete() {
-        LOGV("~GlDelete(): %p tid: %d", this, gettid());
+    ~RunOnGlThread() {
+        LOGV("RunOnGlThreadhread(): %p tid: %d", this, gettid());
         int err = pthread_mutex_destroy(&mutex);
         if (0 != err) {
             LOGE("fatal error: pthread_mutex_destroy failed with %d!", err);
@@ -82,6 +84,11 @@ public:
     void queueVertexArray(GLuint vertex_array);
 
     void processQueues();
+
+    void queueRunnable(RunnableOnGlThread* runnable);
+    void cancelRunnable(RunnableOnGlThread* runnable);
+
+    static RunOnGlThread* getInstance();
 
 private:
 
@@ -104,21 +111,8 @@ private:
     std::vector<GLuint> shaders_;
     std::vector<GLuint> textures_;
     std::vector<GLuint> vertex_arrays_;
+    std::vector<RunnableOnGlThread*> runnables_;
 };
-
-/**
- * The assumption is threads that do know they are supposed to have
- * a deleter may only call this method.
- */
-static GlDelete* getDeleterForThisThread() {
-    GlDelete* deleter = static_cast<GlDelete*>(pthread_getspecific(deleter_key));
-    if (nullptr == deleter) {
-        printStackTrace();
-        LOGE("fatal error: no deleter associated with this thread!");
-        std::terminate();
-    }
-    return deleter;
-}
 
 }
 

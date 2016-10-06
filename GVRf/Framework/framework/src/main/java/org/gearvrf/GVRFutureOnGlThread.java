@@ -30,10 +30,10 @@ import java.util.concurrent.TimeoutException;
  * recommended to use this class for common Future use like
  * Thread.start(GVRFutureOnGlThread).
  * 
- * The most common use cases should be with GVRContext.runOnGlThread. You can
- * submit the call request through GVRContext.runOnGlThread(GVRFutureOnGlThread)
+ * The most common use cases should be with GVRContext.runOnGlThread_. You can
+ * submit the call request through GVRContext.runOnGlThread_(GVRFutureOnGlThread)
  * and get the result with get() method. Just be careful that it's best to call
- * GVRContext.runOnGlThread(GVRFutureOnGlThread) when
+ * GVRContext.runOnGlThread_(GVRFutureOnGlThread) when
  * GVRContext.isCurrentThreadGLThread() returns false since you can directly
  * call GVRFutureOnGlThread.run() while in GL thread.
  * 
@@ -59,7 +59,7 @@ public class GVRFutureOnGlThread<T> implements RunnableFuture<T> {
 
     /**
      * Where the call actually happens. If you submit the call through
-     * GVRContext.runOnGlThread(). This will be automatically called in GL
+     * GVRContext.runOnGlThread_(). This will be automatically called in GL
      * thread. You can also directly call this function while in GL thread.
      */
     @Override

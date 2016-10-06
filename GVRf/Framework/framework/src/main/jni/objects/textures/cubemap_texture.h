@@ -72,7 +72,7 @@ public:
     virtual ~CubemapTexture() {
         JNIEnv* env = getCurrentEnv(javaVm_);
         // Release global refs. Race condition does not occur because if
-        // the runPendingGL is running, the object won't be destructed.
+        // the runOnGlThread_ is running, the object won't be destructed.
         switch (pending_gl_task_) {
         case GL_TASK_INIT_BITMAP:
             for (int i = 0; i < 6; i++) {
@@ -96,7 +96,7 @@ public:
     }
 
     virtual void runPendingGL() {
-        Texture::runPendingGL();
+        Texture::runOnGlThread();
 
         switch (pending_gl_task_) {
         case GL_TASK_NONE:

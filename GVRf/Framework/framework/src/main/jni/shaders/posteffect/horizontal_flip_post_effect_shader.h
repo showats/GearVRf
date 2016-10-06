@@ -28,7 +28,7 @@
 #include "glm/glm.hpp"
 
 #include "objects/hybrid_object.h"
-#include "engine/memory/gl_delete.h"
+#include "engine/memory/run_on_gl_thread.h"
 
 namespace gvr {
 class GLProgram;
@@ -63,7 +63,7 @@ private:
     GLuint u_texture_;
     // add vertex array object
     GLuint vaoID_;
-    GlDelete* deleter_;
+    RunOnGlThread* runOnGlThread_;
 };
 }
 #endif

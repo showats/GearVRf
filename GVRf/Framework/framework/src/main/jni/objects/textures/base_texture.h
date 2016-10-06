@@ -69,7 +69,7 @@ public:
     }
 
     virtual void runPendingGL() {
-        Texture::runPendingGL();
+        Texture::runOnGlThread();
 
         if (nullptr != textureObjectWeak_) {
             JNIEnv* env = getCurrentEnv(javaVm_);

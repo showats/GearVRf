@@ -344,7 +344,7 @@ abstract class GVRViewManager extends GVRContext {
             if (mSplashScreen != null && (currentTime >= mSplashScreen.mTimeout || mSplashScreen.closeRequested())) {
                 if (mSplashScreen.closeRequested()
                         || mMain.getSplashMode() == GVRMain.SplashMode.AUTOMATIC) {
-
+                    android.util.Log.i("mmarinov", "splash start ");
                     final SplashScreen splashScreen = mSplashScreen;
                     new GVROpacityAnimation(mSplashScreen, mMain.getSplashFadeTime(), 0) //
                             .setOnFinish(new GVROnFinish() {
