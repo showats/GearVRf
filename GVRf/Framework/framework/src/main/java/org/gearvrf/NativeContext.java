@@ -1,4 +1,4 @@
-/* Copyright 2015 Samsung Electronics Co., LTD
+/* Copyright 2016 Samsung Electronics Co., LTD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,29 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.gearvrf;
 
-#ifndef SHARED_TEXTURE_H_
-#define SHARED_TEXTURE_H_
-
-#include "gl/gl_headers.h"
-
-#include "objects/textures/texture.h"
-
-namespace gvr {
-
-class SharedTexture: public Texture {
-public:
-    SharedTexture(Context& context, int id) :
-            Texture(new GLTexture(context, TARGET, id)) {
+class NativeContext extends GVRHybridObject {
+    protected NativeContext(GVRContext gvrContext) {
+        super(gvrContext, NativeContext.ctor());
     }
 
-    GLenum getTarget() const {
-        return TARGET;
+    void processQueues() {
+        processQueues(getNative());
     }
 
-private:
-    static const GLenum TARGET = GL_TEXTURE_2D;
-};
-
+    static native long ctor();
+    static native void processQueues(long ptr);
 }
-#endif
