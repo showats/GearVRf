@@ -233,7 +233,7 @@ public class GVRRigidBody extends GVRComponent implements ISceneObjectEvents {
 
         oldOwner.getEventReceiver().removeListener(this);
 
-        GVRWorld world = oldOwner.getWorld();
+        GVRWorld world = getWorld(oldOwner);
 
         if (world != null) {
             world.removeBody(this);
@@ -248,7 +248,7 @@ public class GVRRigidBody extends GVRComponent implements ISceneObjectEvents {
 
         Native3DRigidBody.onAttach(getNative());
 
-        GVRWorld world = sceneObject.getWorld();
+        GVRWorld world = getWorld(sceneObject);
 
         if (world != null) {
             world.addBody(this);
@@ -356,6 +356,21 @@ public class GVRRigidBody extends GVRComponent implements ISceneObjectEvents {
     @Override
     public void onStep() {
 
+    }
+
+    private static GVRWorld getWorld(GVRSceneObject owner) {
+        return getWorldFromAscendant(owner);
+    }
+
+    private static GVRWorld getWorldFromAscendant(GVRSceneObject worldOwner) {
+        GVRComponent world = null;
+
+        while (worldOwner != null && world == null) {
+            world = worldOwner.getComponent(GVRWorld.getComponentType());
+            worldOwner = worldOwner.getParent();
+        }
+
+        return (GVRWorld) world;
     }
 }
 

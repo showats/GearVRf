@@ -20,7 +20,6 @@ import android.os.Environment;
 import org.gearvrf.GVRCameraRig.GVRCameraRigType;
 import org.gearvrf.GVRRenderData.GVRRenderMaskBit;
 import org.gearvrf.debug.GVRConsole;
-import org.gearvrf.physics.GVRWorld;
 import org.gearvrf.script.GVRScriptBehavior;
 import org.gearvrf.script.IScriptable;
 import org.gearvrf.utility.Log;
@@ -273,33 +272,6 @@ public class GVRScene extends GVRHybridObject implements PrettyPrint, IScriptabl
      */
     public void setPickVisible(boolean flag) {
         NativeScene.setPickVisible(getNative(), flag);
-    }
-
-    /**
-     * Convenience function to enable or disable the physics for this scene.
-     *
-     * @param enabled Should be true to enable the physics, otherwise false.
-     */
-    public void setPhysicsEnabled(boolean enabled) {
-        if (enabled == getPhysicsEnabled()) {
-            return;
-        }
-
-        if (enabled) {
-            mSceneRoot.attachComponent(new GVRWorld(getGVRContext()));
-        } else {
-            mSceneRoot.detachComponent(GVRWorld.getComponentType());
-        }
-    }
-
-    /**
-     * Returns true if there is a {@link GVRWorld} component attached to its root scene object,
-     * otherwise returns false.
-     *
-     * @return If there a physics world attached to its root scene object.
-     */
-     public boolean getPhysicsEnabled() {
-         return  mSceneRoot.getComponent(GVRWorld.getComponentType()) != null;
     }
     
     public void inValidateShadowMap(){
