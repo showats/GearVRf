@@ -15,7 +15,7 @@
 
 #include "bullet_world.h"
 #include "bullet_rigidbody.h"
-#include "../../util/gvr_log.h"
+#include "util/gvr_log.h"
 
 #include <BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h>
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>

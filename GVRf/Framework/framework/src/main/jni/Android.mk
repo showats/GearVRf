@@ -26,12 +26,6 @@ LOCAL_SRC_FILES := ../prebuilt/$(TARGET_ARCH_ABI)/libjnlua.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE    := bullet3
-LOCAL_SRC_FILES := ../libs/libBullet.so
-include $(PREBUILT_SHARED_LIBRARY)
-
-
-include $(CLEAR_VARS)
 
 LOCAL_MODULE := gvrf
 
@@ -41,8 +35,6 @@ LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/contrib/assimp
 LOCAL_C_INCLUDES +=	$(LOCAL_PATH)/contrib/assimp/include
 LOCAL_C_INCLUDES +=	$(LOCAL_PATH)/contrib/assimp/include/Compiler
-
-LOCAL_C_INCLUDES +=	$(LOCAL_PATH)/contrib/bullet3/include
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/contrib/jassimp2
 # Uncomment for logs
@@ -72,10 +64,6 @@ FILE_LIST := $(wildcard $(LOCAL_PATH)/engine/exporter/*.cpp)
 LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
 FILE_LIST := $(wildcard $(LOCAL_PATH)/engine/picker/*.cpp)
 LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
-FILE_LIST := $(wildcard $(LOCAL_PATH)/engine/physics/*.cpp)
-LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
-FILE_LIST := $(wildcard $(LOCAL_PATH)/engine/physics/*/*.cpp)
-LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
 FILE_LIST := $(wildcard $(LOCAL_PATH)/engine/renderer/*.cpp)
 LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
 FILE_LIST := $(wildcard $(LOCAL_PATH)/engine/memory/*.cpp)
@@ -101,7 +89,6 @@ LOCAL_SRC_FILES += $(FILE_LIST:$(LOCAL_PATH)/%=%)
 
 LOCAL_SHARED_LIBRARIES += assimp
 LOCAL_SHARED_LIBRARIES += jnlua
-LOCAL_SHARED_LIBRARIES += bullet3
 
 LOCAL_ARM_NEON := true
 

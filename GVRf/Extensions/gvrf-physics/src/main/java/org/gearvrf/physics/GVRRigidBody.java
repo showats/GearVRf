@@ -31,6 +31,9 @@ import org.gearvrf.ISceneObjectEvents;
  * it has a {@link GVRRigidBody} component attached to.
  */
 public class GVRRigidBody extends GVRComponent implements ISceneObjectEvents {
+    static {
+        System.loadLibrary("gvrf-physics");
+    }
 
     public GVRRigidBody(GVRContext gvrContext) {
         super(gvrContext, Native3DRigidBody.ctor());

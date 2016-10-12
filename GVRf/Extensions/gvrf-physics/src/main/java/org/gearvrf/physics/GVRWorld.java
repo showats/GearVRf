@@ -29,6 +29,10 @@ import org.gearvrf.utility.Log;
  */
 public class GVRWorld extends GVRBehavior implements ISceneObjectEvents {
 
+    static {
+        System.loadLibrary("gvrf-physics");
+    }
+
     public GVRWorld(GVRContext gvrContext) {
         super(gvrContext, NativePhysics3DWorld.ctor());
 
