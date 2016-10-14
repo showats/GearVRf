@@ -36,6 +36,8 @@ import java.io.StringReader;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.gearvrf.GVRLodGroup;
+import org.gearvrf.GVRLodRange;
 import org.gearvrf.script.GVRJavascriptScriptFile;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -1049,8 +1051,13 @@ public class X3Dobject
         if (lodManager.isActive())
         {
           shapeLODSceneObject = AddGVRSceneObject();
-          shapeLODSceneObject.setLODRange(lodManager.getMinRange(),
-                  lodManager.getMaxRange());
+
+          final GVRSceneObject parent = shapeLODSceneObject.getParent();
+          if (null == parent.getComponent(GVRLodGroup.getComponentType())) {
+            parent.attachComponent(new GVRLodGroup(gvrContext));
+          }
+          shapeLODSceneObject.attachComponent(new GVRLodRange(gvrContext, lodManager.getMinRange(), lodManager.getMaxRange()));
+
           currentSceneObject = shapeLODSceneObject;
         }
 
@@ -2706,8 +2713,13 @@ public class X3Dobject
               inlineGVRSceneObject = AddGVRSceneObject();
               inlineGVRSceneObject.setName("inlineGVRSceneObject"
                       + lodManager.getCurrentRangeIndex());
-              inlineGVRSceneObject.setLODRange(lodManager.getMinRange(),
-                      lodManager.getMaxRange());
+
+              final GVRSceneObject parent = inlineGVRSceneObject.getParent();
+              if (null == parent.getComponent(GVRLodGroup.getComponentType())) {
+                parent.attachComponent(new GVRLodGroup(gvrContext));
+              }
+              inlineGVRSceneObject.attachComponent(new GVRLodRange(gvrContext, lodManager.getMinRange(), lodManager.getMaxRange()));
+
               lodManager.increment();
             }
             InlineObject inlineObject = new InlineObject(inlineGVRSceneObject,
