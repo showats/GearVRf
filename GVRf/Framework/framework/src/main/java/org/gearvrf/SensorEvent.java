@@ -37,7 +37,11 @@ public class SensorEvent {
     private boolean isOver;
     private GVRSceneObject object;
     private GVRCursorController controller;
+    private EventGroup eventGroup = EventGroup.SINGLE;
 
+    public enum EventGroup {
+        SINGLE, MULTI, MULTI_START, MULTI_STOP, GROUP_DISABLED
+    }
     // We take a leaf out of the MotionEvent book to implement linked
     // recycling of objects.
     private static final int MAX_RECYCLED = 10;
@@ -237,5 +241,13 @@ public class SensorEvent {
                 recyclerTop = this;
             }
         }
+    }
+
+    public EventGroup getEventGroup() {
+        return eventGroup;
+    }
+
+    void setEventGroup(EventGroup eventGroup) {
+        this.eventGroup = eventGroup;
     }
 }

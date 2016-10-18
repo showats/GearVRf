@@ -16,16 +16,18 @@
 
 package org.gearvrf.io.cursor3d;
 
-import android.opengl.Matrix;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRCursorController;
 import org.gearvrf.GVRCursorController.ControllerEventListener;
-import org.gearvrf.GVRMaterial;
-import org.gearvrf.GVRRenderData;
 import org.gearvrf.SensorEvent;
+import org.gearvrf.SensorEvent.EventGroup;
 import org.gearvrf.io.cursor3d.CursorAsset.Action;
-import org.joml.Vector3f;
+import org.gearvrf.utility.Log;
+
+import java.util.List;
 
 /**
  * Class that represents a laser type cursor.
@@ -52,7 +54,12 @@ class LaserCursor extends Cursor {
         cursorEvent.setCursor(this);
         cursorEvent.setObject(event.getObject());
         cursorEvent.setHitPoint(event.getHitX(), event.getHitY(), event.getHitZ());
-        cursorEvent.setKeyEvent(event.getCursorController().getKeyEvent());
+
+        GVRCursorController controller = event.getCursorController();
+        cursorEvent.setMotionEvents(controller.getMotionEvents());
+        cursorEvent.setKeyEvent(controller.getKeyEvent());
+        isControllerActive = event.isActive();
+        cursorEvent.setEventGroup(event.getEventGroup());
 
         if (event.isActive()) {
             checkAndSetAsset(Action.CLICK);
@@ -73,6 +80,9 @@ class LaserCursor extends Cursor {
 
     @Override
     void setScale(float scale) {
+        if(scale > MAX_CURSOR_SCALE) {
+            return;
+        }
         super.setScale(scale);
         /* the laser cursor does not use depth, set a fixed depth.*/
         cursorSceneObject.setScale(scale);
@@ -93,7 +103,10 @@ class LaserCursor extends Cursor {
 
         @Override
         public void onEvent(GVRCursorController controller) {
-            lookAt();
+            if(!controller.isEventHandledBySensor()) {
+                checkControllerActive(controller);
+            }
+            handleControllerEvent(controller, false);
         }
     };
 }

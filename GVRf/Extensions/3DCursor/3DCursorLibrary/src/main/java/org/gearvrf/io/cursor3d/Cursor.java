@@ -15,12 +15,16 @@
 
 package org.gearvrf.io.cursor3d;
 
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRCursorController;
 import org.gearvrf.GVRCursorController.ControllerEventListener;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.SensorEvent;
+import org.gearvrf.SensorEvent.EventGroup;
 import org.gearvrf.io.cursor3d.CursorAsset.Action;
 import org.gearvrf.utility.Log;
 import org.joml.Vector3f;
@@ -54,6 +58,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class Cursor {
     private static final String TAG = Cursor.class.getSimpleName();
+    protected static final float MAX_CURSOR_SCALE = 1000;
+
     private GVRContext context;
     protected GVRSceneObject cursor;
     private String name;
@@ -84,6 +90,7 @@ public abstract class Cursor {
     private CursorAudioManager audioManager;
     private CursorManager cursorManager;
     private Vector3f objectPosition, direction;
+    protected boolean isControllerActive;
 
     enum Position {
         CENTER,
@@ -513,6 +520,9 @@ public abstract class Cursor {
 
     void destroyIoDevice(IoDevice ioDevice) {
         if (ioDevice != null) {
+            if(isControllerActive) {
+                isControllerActive = false;
+            }
             ioDevice.setEnable(false);
             ioDevice.removeControllerEventListener(getControllerEventListener());
             ioDevice.resetSceneObject();
@@ -587,6 +597,7 @@ public abstract class Cursor {
                 state = State.BACK_RIGHT;
                 mouseDevice.setPosition(scale / SQRT_2, 0.0f, scale / SQRT_2);
             }
+            mouseDevice.getGvrCursorController().getKeyEvents();
         }
     }
 
@@ -644,6 +655,40 @@ public abstract class Cursor {
             return compatibleIoDevices.get(priorityLevel).getIoDevice();
         } else {
             return null;
+        }
+    }
+
+    protected void checkControllerActive(GVRCursorController controller) {
+        List<KeyEvent> keyEvents = controller.getKeyEvents();
+        if(keyEvents == null) {
+            return;
+        }
+        for(KeyEvent keyEvent: keyEvents) {
+            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                isControllerActive = true;
+            } else if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                isControllerActive = false;
+            }
+        }
+    }
+
+    protected void handleControllerEvent(GVRCursorController controller, boolean sentEvent) {
+        lookAt();
+        if (!controller.isEventHandledBySensor() && !sentEvent && (controller.getKeyEvent() !=
+                null || controller.getMotionEvents().size() > 0)) {
+            CursorEvent cursorEvent = CursorEvent.obtain();
+            cursorEvent.setOver(false);
+            cursorEvent.setColliding(false);
+            cursorEvent.setActive(isControllerActive);
+            cursorEvent.setCursor(Cursor.this);
+            cursorEvent.setObject(null);
+            cursorEvent.setHitPoint(0,0,0);
+
+            List<MotionEvent> motionEvents = controller.getMotionEvents();
+            cursorEvent.setMotionEvents(motionEvents);
+            cursorEvent.setEventGroup(EventGroup.SINGLE);
+            cursorEvent.setKeyEvent(controller.getKeyEvent());
+            dispatchCursorEvent(cursorEvent);
         }
     }
 

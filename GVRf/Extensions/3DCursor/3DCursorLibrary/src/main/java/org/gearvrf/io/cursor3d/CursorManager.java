@@ -15,6 +15,7 @@
 
 package org.gearvrf.io.cursor3d;
 
+
 import org.gearvrf.GVRBaseSensor;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRDrawFrameListener;
@@ -64,6 +65,7 @@ import java.util.Map;
 public class CursorManager {
     // Result of XML parsing in a package of all settings that need displaying.
     private static final String TAG = CursorManager.class.getSimpleName();
+    private static final float DEFAULT_CURSOR_SCALE = 15.0f;
     static String SETTINGS_SOURCE = "settings.xml";
 
     private GVRContext context;
@@ -157,6 +159,7 @@ public class CursorManager {
         unusedIoDevices = new ArrayList<IoDevice>();
         selectableBehaviors = new ArrayList<SelectableBehavior>();
         cursorSensor = new CursorSensor(context);
+        cursorScale = DEFAULT_CURSOR_SCALE;
 
         try {
             SettingsParser.parseSettings(context, this);
@@ -726,6 +729,10 @@ public class CursorManager {
         if (null == object) {
             throw new IllegalArgumentException("GVRSceneObject cannot be null");
         }
+        if(object.getSensor() == cursorSensor) {
+            return true;
+        }
+
         addSelectableBehavior(object);
 
         float scale = getDistance(object);
@@ -960,6 +967,14 @@ public class CursorManager {
         }
     };
 
+    public boolean isDepthOrderEnabled() {
+        return cursorSensor.isDepthOrderEnabled();
+    }
+
+    public void setDepthOrderEnabled(boolean depthOrderEnabled) {
+        cursorSensor.setDepthOrderEnabled(depthOrderEnabled);
+    }
+
     private class CursorSensor extends GVRBaseSensor implements ISensorEvents {
 
         public CursorSensor(GVRContext context) {
@@ -1037,7 +1052,8 @@ public class CursorManager {
         @Override
         public void onEvent(CursorEvent event) {
             GVRSceneObject sceneObject = event.getObject();
-            while (!callEventHandler(sceneObject, event) && sceneObject.getParent() != null) {
+            while (sceneObject != null && !callEventHandler(sceneObject, event) && sceneObject
+                    .getParent() != null) {
                 sceneObject = sceneObject.getParent();
             }
         }
