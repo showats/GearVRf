@@ -8,11 +8,11 @@ if (!hasProperty("ARM64")) {
 //project(':3DCursorLibrary').projectDir = file('3DCursorLibrary')
 //include ':gvr-3dcursor-simple'
 //project(':gvr-3dcursor-simple').projectDir = file('demos/gvr-3dcursor-simple')
-
-include ':gvr-eyepicking'
-project(':gvr-eyepicking').projectDir = file('demos/gvr-eyepicking')
-include ':gvr-cubemap'
-project(':gvr-cubemap').projectDir = file('demos/gvr-cubemap')
+//
+//include ':gvr-eyepicking'
+//project(':gvr-eyepicking').projectDir = file('demos/gvr-eyepicking')
+//include ':gvr-cubemap'
+//project(':gvr-cubemap').projectDir = file('demos/gvr-cubemap')
 
 include ':framework-tests'
 project(':framework-tests').projectDir = file('demos/framework-tests')
