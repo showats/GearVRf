@@ -108,6 +108,10 @@ bool compareRenderDataByOrderShaderDistance(RenderData *i, RenderData *j) {
             if (no_passes1 == no_passes2) {
 
                 //@todo what about the other passes
+
+                //this is pointer comparison; assumes batching is on; if the materials are not
+                //the same then comparing the pointers further is an arbitrary decision; hence
+                //falling back to camera distance.
                 if (i->material(0) == j->material(0)) {
                     if (i->cull_face(0) == j->cull_face(0)) {
                         if (i->getHashCode().compare(j->getHashCode()) == 0) {
@@ -118,7 +122,7 @@ bool compareRenderDataByOrderShaderDistance(RenderData *i, RenderData *j) {
                     }
                     return i->cull_face(0) < j->cull_face(0);
                 }
-                return i->material(0) < j->material(0);
+                return i->camera_distance() < j->camera_distance();
             }
             return no_passes1 < no_passes2;
         }
