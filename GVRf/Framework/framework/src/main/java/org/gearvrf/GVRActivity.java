@@ -86,6 +86,15 @@ public class GVRActivity extends Activity implements IEventReceiver, IScriptable
         android.util.Log.i(TAG, "onCreate " + Integer.toHexString(hashCode()));
         super.onCreate(savedInstanceState);
 
+        try {
+            final Class<?> aClass = Class.forName("org.gearvrf.SensorLoader");
+            android.util.Log.i("mmarinov", "GVRConfigurationManager " + aClass );
+            final String nativeLibraryDir = getApplicationInfo().nativeLibraryDir;
+            Log.i("mmarinov", "onCreate " + nativeLibraryDir);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         InputStream inputStream = null;
         BufferedReader reader = null;
         try {
