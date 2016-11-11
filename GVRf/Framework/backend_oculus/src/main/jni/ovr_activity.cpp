@@ -23,6 +23,7 @@
 #include "VrApi_Helpers.h"
 #include "SystemActivities.h"
 #include <cstring>
+#include <VrApi_Types.h>
 #include "engine/renderer/renderer.h"
 
 

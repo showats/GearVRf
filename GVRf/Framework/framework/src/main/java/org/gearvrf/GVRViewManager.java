@@ -36,7 +36,7 @@ import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-abstract class GVRViewManager extends GVRContext {
+public abstract class GVRViewManager extends GVRContext {
 
     GVRViewManager(GVRActivity activity, GVRScript main) {
         super(activity);
@@ -497,6 +497,14 @@ abstract class GVRViewManager extends GVRContext {
                 renderBundle.getPostEffectRenderTextureB().getNative());
     }
 
+    public void renderTexture(GVRScene scene, GVRCamera camera, GVRRenderTexture renderTexture) {
+        renderTexture(scene.getNative(), camera.getNative(), renderTexture.getNative(),
+                mRenderBundle.getMaterialShaderManager().getNative(),
+                mRenderBundle.getPostEffectShaderManager().getNative(),
+                mRenderBundle.getPostEffectRenderTextureA().getNative(),
+                mRenderBundle.getPostEffectRenderTextureB().getNative());
+    }
+
     @Override
     public GVRScriptManager getScriptManager() {
         return mScriptManager;
@@ -577,6 +585,8 @@ abstract class GVRViewManager extends GVRContext {
 
 
     protected native void renderCamera(long scene, long camera, long shaderManager,
+                                       long postEffectShaderManager, long postEffectRenderTextureA, long postEffectRenderTextureB);
+    public native void renderTexture(long scene, long camera, long renderTexture, long shaderManager,
                                        long postEffectShaderManager, long postEffectRenderTextureA, long postEffectRenderTextureB);
     protected native void cull(long scene, long camera, long shader_manager);
     protected native void makeShadowMaps(long scene, long shader_manager, int width, int height);
