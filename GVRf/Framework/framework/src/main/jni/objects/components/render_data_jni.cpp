@@ -105,6 +105,11 @@ Java_org_gearvrf_NativeRenderData_getDepthTest(JNIEnv * env,
 JNIEXPORT void JNICALL
 Java_org_gearvrf_NativeRenderData_setDepthTest(JNIEnv * env,
         jobject obj, jlong jrender_data, jboolean depth_test);
+
+JNIEXPORT void JNICALL Java_org_gearvrf_NativeRenderData_setStencilTest(JNIEnv *env, jobject obj,
+                                                                        jlong jrender_data,
+                                                                        jboolean stencilTest);
+
 JNIEXPORT jboolean JNICALL
 Java_org_gearvrf_NativeRenderData_getAlphaBlend(JNIEnv * env,
         jobject obj, jlong jrender_data);
@@ -304,6 +309,13 @@ Java_org_gearvrf_NativeRenderData_setDepthTest(JNIEnv * env,
     jobject obj, jlong jrender_data, jboolean depth_test) {
 RenderData* render_data = reinterpret_cast<RenderData*>(jrender_data);
 render_data->set_depth_test(static_cast<bool>(depth_test));
+}
+
+JNIEXPORT void JNICALL Java_org_gearvrf_NativeRenderData_setStencilTest(JNIEnv *env, jobject obj,
+                                                                        jlong jrender_data,
+                                                                        jboolean stencilTest) {
+    RenderData* render_data = reinterpret_cast<RenderData*>(jrender_data);
+    render_data->set_stencil_test(static_cast<bool>(stencilTest));
 }
 
 JNIEXPORT jboolean JNICALL

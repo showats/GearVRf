@@ -783,6 +783,10 @@ public class GVRRenderData extends GVRComponent implements PrettyPrint {
         NativeRenderData.setDepthTest(getNative(), depthTest);
     }
 
+    public void setStencilTest(boolean stencilTest) {
+        NativeRenderData.setStencilTest(getNative(), stencilTest);
+    }
+
     /**
      * @return {@code true} if {@code GL_BLEND} is enabled, {@code false} if
      *         not.
@@ -985,27 +989,29 @@ class NativeRenderData {
 
     static native boolean getAlphaBlend(long renderData);
 
-    public static native void setAlphaBlend(long renderData, boolean alphaBlend);
+    static native void setAlphaBlend(long renderData, boolean alphaBlend);
 
     static native boolean getAlphaToCoverage(long renderData);
 
-    public static native void setAlphaToCoverage(long renderData, boolean alphaToCoverage);    
+    static native void setAlphaToCoverage(long renderData, boolean alphaToCoverage);
 
     static native float getSampleCoverage(long renderData);
 
-    public static native void setSampleCoverage(long renderData,float sampleCoverage);
+    static native void setSampleCoverage(long renderData,float sampleCoverage);
     
     static native boolean getInvertCoverageMask(long renderData);
 
-    public static native void setInvertCoverageMask(long renderData,boolean invertCoverageMask);
+    static native void setInvertCoverageMask(long renderData,boolean invertCoverageMask);
 
-    public static native int getDrawMode(long renderData);
+    static native int getDrawMode(long renderData);
 
-    public static native void setDrawMode(long renderData, int draw_mode);
+    static native void setDrawMode(long renderData, int draw_mode);
 
-    public static native void setTextureCapturer(long renderData, long texture_capturer);
+    static native void setTextureCapturer(long renderData, long texture_capturer);
 
-    public static native void setCastShadows(long renderData, boolean castShadows);
+    static native void setCastShadows(long renderData, boolean castShadows);
 
-    public static native boolean getCastShadows(long renderData);
+    static native boolean getCastShadows(long renderData);
+
+    static native void setStencilTest(long aNative, boolean stencilTest);
 }

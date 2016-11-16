@@ -255,6 +255,15 @@ public:
         hash_code_dirty_ = true;
     }
 
+    bool stencil_test() const {
+        return stencil_test_;
+    }
+
+    void set_stencil_test(bool stencilTest) {
+        stencil_test_ = stencilTest;
+        hash_code_dirty_ = true;
+    }
+
     bool alpha_blend() const {
         return alpha_blend_;
     }
@@ -378,6 +387,7 @@ private:
     float offset_factor_;
     float offset_units_;
     bool depth_test_;
+    bool stencil_test_ = false;
     bool alpha_blend_;
     bool alpha_to_coverage_;
     bool cast_shadows_;
