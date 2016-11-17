@@ -4,6 +4,7 @@
 
 #ifndef _Included_jassimp_Jassimp
 #define _Included_jassimp_Jassimp
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -82,7 +82,7 @@ void GLRenderer::renderCamera(Scene* scene, Camera* camera, int framebufferId,
         GL(glClearColor(camera->background_color_r(),
                 camera->background_color_g(), camera->background_color_b(),
                 camera->background_color_a()));
-        GL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
+        GL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
         renderRenderDataVector(rstate);
     } else {
         RenderTexture* texture_render_texture = post_effect_render_texture_a;
@@ -95,7 +95,7 @@ void GLRenderer::renderCamera(Scene* scene, Camera* camera, int framebufferId,
 
         GL(glClearColor(camera->background_color_r(),
                 camera->background_color_g(), camera->background_color_b(), camera->background_color_a()));
-        GL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
+        GL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 
         for (auto it = render_data_vector.begin();
                 it != render_data_vector.end(); ++it) {
@@ -149,18 +149,20 @@ void GLRenderer::setRenderStates(RenderData* render_data, RenderState& rstate) {
     if (!render_data->depth_test()) {
         GL(glDisable (GL_DEPTH_TEST));
     }
-    if (render_data->stencil_test()) {
+
+    if (render_data->stencilTestFlag_) {
         GL(glEnable(GL_STENCIL_TEST));
 
-        GL(glStencilFunc(GL_ALWAYS, 1, 0xFF));
-        GL(glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE));
-        GL(glStencilMask(0xFF));
-
-        GL(glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE));
-        GL(glDepthMask(GL_FALSE));
-
-        GL(glClear(GL_STENCIL_BUFFER_BIT));
+        GL(glStencilFunc(render_data->stencilFuncFunc_, render_data->stencilFuncRef_, render_data->stencilFuncMask_));
+        GL(glStencilOp(render_data->stencilOpSfail_, render_data->stencilOpDpfail_, render_data->stencilOpDppass_));
+        GL(glStencilMask(render_data->stencilMaskMask_));
+//        GL(glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE));
     }
+
+    if (!render_data->depthMaskFlag_) {
+        GL(glDepthMask(GL_FALSE));
+    }
+
     if (!render_data->alpha_blend()) {
         GL(glDisable (GL_BLEND));
     }
@@ -186,9 +188,15 @@ void GLRenderer::restoreRenderStates(RenderData* render_data) {
     if (!render_data->depth_test()) {
         GL(glEnable (GL_DEPTH_TEST));
     }
-    if (render_data->stencil_test()) {
+
+    if (render_data->stencilTestFlag_) {
         GL(glDisable(GL_STENCIL_TEST));
     }
+
+    if (!render_data->depthMaskFlag_) {
+        GL(glDepthMask(GL_TRUE));
+    }
+
     if (!render_data->alpha_blend()) {
         GL(glEnable (GL_BLEND));
     }

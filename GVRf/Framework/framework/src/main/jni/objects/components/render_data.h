@@ -99,6 +99,17 @@ public:
         invert_coverage_mask_ = rdata.invert_coverage_mask_;
         draw_mode_ = rdata.draw_mode_;
         texture_capturer = rdata.texture_capturer;
+
+        stencilTestFlag_ = rdata.stencilTestFlag_;
+        stencilMaskMask_ = rdata.stencilMaskMask_;
+        stencilFuncFunc_ = rdata.stencilFuncFunc_;
+        stencilFuncRef_ = rdata.stencilFuncRef_;
+        stencilFuncMask_ = rdata.stencilFuncMask_;
+        stencilOpSfail_ = rdata.stencilOpSfail_;
+        stencilOpDpfail_ = rdata.stencilOpDpfail_;
+        stencilOpDppass_ = rdata.stencilOpDppass_;
+
+        depthMaskFlag_ = rdata.depthMaskFlag_;
     }
 
     RenderData(const RenderData& rdata) {
@@ -255,15 +266,6 @@ public:
         hash_code_dirty_ = true;
     }
 
-    bool stencil_test() const {
-        return stencil_test_;
-    }
-
-    void set_stencil_test(bool stencilTest) {
-        stencil_test_ = stencilTest;
-        hash_code_dirty_ = true;
-    }
-
     bool alpha_blend() const {
         return alpha_blend_;
     }
@@ -353,6 +355,16 @@ public:
             render_data_string.append(to_string(invert_coverage_mask_));
             render_data_string.append(to_string(draw_mode_));
 
+            render_data_string.append(to_string(stencilTestFlag_));
+            render_data_string.append(to_string(stencilMaskMask_));
+            render_data_string.append(to_string(stencilFuncFunc_));
+            render_data_string.append(to_string(stencilFuncRef_));
+            render_data_string.append(to_string(stencilFuncMask_));
+            render_data_string.append(to_string(stencilOpSfail_));
+            render_data_string.append(to_string(stencilOpDpfail_));
+            render_data_string.append(to_string(stencilOpDppass_));
+            render_data_string.append(to_string(depthMaskFlag_));
+
             hash_code = render_data_string;
             hash_code_dirty_ = false;
 
@@ -361,6 +373,14 @@ public:
     }
 
     void setCameraDistanceLambda(std::function<float()> func);
+
+    void setStencilFunc(int func, int ref, int mask);
+
+    void setStencilOp(int sfail, int dpfail, int dppass);
+
+    void setStencilMask(unsigned int mask);
+
+    void setDepthMask(bool flag);
 
 private:
     //  RenderData(const RenderData& render_data);
@@ -387,7 +407,6 @@ private:
     float offset_factor_;
     float offset_units_;
     bool depth_test_;
-    bool stencil_test_ = false;
     bool alpha_blend_;
     bool alpha_to_coverage_;
     bool cast_shadows_;
@@ -397,7 +416,20 @@ private:
     float camera_distance_;
     TextureCapturer *texture_capturer;
 
+public:
+    int stencilFuncFunc_ = 0;
+    int stencilFuncRef_ = 0;
+    int stencilFuncMask_ = 0;
+    int stencilOpSfail_ = 0;
+    int stencilOpDpfail_ = 0;
+    int stencilOpDppass_ = 0;
+    unsigned int stencilMaskMask_ = 0;
+    bool stencilTestFlag_ = false;
+    bool depthMaskFlag_ = true;
+
     std::function<float()> cameraDistanceLambda_ = nullptr;
+
+    void setStencilTest(bool flag);
 };
 
 static inline bool compareRenderDataWithFrustumCulling(RenderData* i, RenderData* j) {

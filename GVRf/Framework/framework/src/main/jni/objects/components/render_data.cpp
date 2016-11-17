@@ -74,6 +74,31 @@ void RenderData::setCameraDistanceLambda(std::function<float()> func) {
     cameraDistanceLambda_ = func;
 }
 
+void RenderData::setStencilFunc(int func, int ref, int mask) {
+    stencilFuncFunc_= func;
+    stencilFuncRef_ = ref;
+    stencilFuncMask_ = mask;
+}
+
+void RenderData::setStencilOp(int sfail, int dpfail, int dppass) {
+    stencilOpSfail_ = sfail;
+    stencilOpDpfail_ = dpfail;
+    stencilOpDppass_ = dppass;
+}
+
+void RenderData::setStencilMask(unsigned int mask) {
+    stencilMaskMask_ = mask;
+}
+
+void RenderData::setDepthMask(bool flag) {
+    depthMaskFlag_ = flag;
+}
+
+void RenderData::setStencilTest(bool flag) {
+    stencilTestFlag_ = flag;
+}
+
+
 bool compareRenderDataByShader(RenderData* i, RenderData* j) {
     // Compare renderData by their material's shader type
     // Note: multi-pass renderData is skipped for now and put to later position,

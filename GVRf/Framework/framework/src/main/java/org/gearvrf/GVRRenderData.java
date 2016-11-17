@@ -15,6 +15,8 @@
 
 package org.gearvrf;
 
+import android.opengl.GLES30;
+
 import org.gearvrf.GVRAndroidResource.MeshCallback;
 import org.gearvrf.GVRRenderPass.GVRCullFaceEnum;
 import org.gearvrf.asynchronous.GVRAsynchronousResourceLoader.FutureResource;
@@ -35,6 +37,7 @@ import static android.opengl.GLES30.GL_POINTS;
 import static android.opengl.GLES30.GL_TRIANGLES;
 import static android.opengl.GLES30.GL_TRIANGLE_FAN;
 import static android.opengl.GLES30.GL_TRIANGLE_STRIP;
+import static android.opengl.GLES30.glEndQuery;
 
 /**
  * Encapsulates the data associated with rendering a mesh.
@@ -74,6 +77,7 @@ public class GVRRenderData extends GVRComponent implements PrettyPrint {
      * {@link #TRANSPARENT} object.
      */
     public abstract static class GVRRenderingOrder {
+        public static final int STENCIL = -1000;
         /**
          * Rendered first, below any other objects at the same distance from the
          * camera
@@ -783,10 +787,6 @@ public class GVRRenderData extends GVRComponent implements PrettyPrint {
         NativeRenderData.setDepthTest(getNative(), depthTest);
     }
 
-    public void setStencilTest(boolean stencilTest) {
-        NativeRenderData.setStencilTest(getNative(), stencilTest);
-    }
-
     /**
      * @return {@code true} if {@code GL_BLEND} is enabled, {@code false} if
      *         not.
@@ -942,6 +942,25 @@ public class GVRRenderData extends GVRComponent implements PrettyPrint {
         return sb.toString();
     }
 
+    public void setStencilFunc(int func, int ref, int mask) {
+        NativeRenderData.setStencilFunc(getNative(), func, ref, mask);
+    }
+
+    public void setStencilOp(int fail, int zfail, int zpass) {
+        NativeRenderData.setStencilOp(getNative(), fail, zfail, zpass);
+    }
+
+    public void setStencilMask(int mask) {
+        NativeRenderData.setStencilMask(getNative(), mask);
+    }
+
+    public void setStencilTest(boolean flag) {
+        NativeRenderData.setStencilTest(getNative(), flag);
+    }
+
+    public void setDepthMask(boolean mask) {
+        NativeRenderData.setDepthMask(getNative(), mask);
+    }
 }
 
 class NativeRenderData {
@@ -1013,5 +1032,13 @@ class NativeRenderData {
 
     static native boolean getCastShadows(long renderData);
 
-    static native void setStencilTest(long aNative, boolean stencilTest);
+    static native void setStencilFunc(long renderData, int func, int ref, int mask);
+
+    static native void setStencilOp(long renderData, int fail, int zfail, int zpass);
+
+    static native void setStencilMask(long renderData, int mask);
+
+    static native void setStencilTest(long renderData, boolean flag);
+
+    static native void setDepthMask(long renderData, boolean mask);
 }
