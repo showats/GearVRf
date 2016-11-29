@@ -484,6 +484,10 @@ abstract class GVRViewManager extends GVRContext {
         }
 
         mFrameHandler.afterDrawEyes();
+        final int finalizedCount = finalizeUnreachableObjects();
+        if (0 != finalizedCount) {
+            Log.i("mmarinov", "afterDrawEyes finalized " + finalizedCount);
+        }
     }
 
     protected void renderCamera(GVRScene scene, GVRCamera camera, IRenderBundle

@@ -586,7 +586,7 @@ public abstract class GVRCursorController {
     /**
      * Process the input data.
      */
-    private void update() {
+    protected void update() {
 
         // set the newly received key and motion events.
         synchronized (eventLock) {

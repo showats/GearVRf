@@ -2706,6 +2706,10 @@ public abstract class GVRContext implements IEventReceiver {
         mContextPrivate.registerHybridObject(hybridObject, nativePointer, cleanupHandlers);
     }
 
+    protected final int finalizeUnreachableObjects() {
+        return mContextPrivate.finalizeUnreachableObjects();
+    }
+
     private Object mTag;
 
     /**

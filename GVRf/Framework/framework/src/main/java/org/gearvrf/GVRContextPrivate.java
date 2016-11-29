@@ -1,12 +1,17 @@
 package org.gearvrf;
 
 import org.gearvrf.GVRHybridObject.NativeCleanupHandler;
+import org.gearvrf.utility.Log;
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 final class GVRContextPrivate {
     /**
@@ -20,31 +25,23 @@ final class GVRContextPrivate {
      * objects) and never get enqueued.
      */
     private final Set<GVRReference> mReferenceSet = new HashSet<GVRReference>();
-    private final GVRFinalizeThread mFinalizeThread = new GVRFinalizeThread();
 
-    final class GVRFinalizeThread extends Thread {
-        private GVRFinalizeThread() {
-            setName("GVRF Finalize Thread-" + Integer.toHexString(hashCode()));
-            setPriority(MAX_PRIORITY);
-            start();
-        }
-
-        @Override
-        public void run() {
-            try {
-                while (true) {
-                    GVRReference reference = (GVRReference)mReferenceQueue.remove();
-                    reference.close();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    int finalizeUnreachableObjects() {
+        GVRReference reference;
+        int count = 0;
+        while (null != (reference = (GVRReference)mReferenceQueue.poll())) {
+            reference.close();
+            ++count;
+            if (count == 20) {
+//                return count;
             }
-            android.util.Log.i("GVRContextPrivate", getName() + " shutting down");
         }
+        return count;
     }
 
     final class GVRReference extends PhantomReference<GVRHybridObject> {
         private long mNativePointer;
+        private final Class clazz;
         private final List<NativeCleanupHandler> mCleanupHandlers;
 
         private GVRReference(GVRHybridObject object, long nativePointer,
@@ -53,6 +50,7 @@ final class GVRContextPrivate {
 
             mNativePointer = nativePointer;
             mCleanupHandlers = cleanupHandlers;
+            clazz = object.getClass();
         }
 
         private void close() {
@@ -67,7 +65,14 @@ final class GVRContextPrivate {
                             handler.nativeCleanup(mNativePointer);
                         }
                     }
-                    NativeHybridObject.delete(mNativePointer);
+//                    if (GVRRenderData.class != clazz) {
+//                    if (clazz == GVRMaterial.class || clazz == GVRMesh.class || clazz == GVRSceneObject.class
+//                || clazz == GVRTransform.class || GVREyePointeeHolder.class == clazz /*|| GVRRenderData.class == clazz*/) {
+//                        Log.i("mmarinov", "close " + clazz + ", " + Long.toHexString(mNativePointer));
+                        NativeHybridObject.delete(mNativePointer);
+//                    } else {
+//                        Log.i("mmarinov", "not closing " + clazz);
+//                    }
                     mNativePointer = 0;
                 }
 
@@ -107,16 +112,6 @@ final class GVRContextPrivate {
                     reference.close();
                 }
             }
-        }
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        try {
-            mFinalizeThread.interrupt();
-        } catch (final Exception ignored) {
-        } finally {
-            super.finalize();
         }
     }
 }
