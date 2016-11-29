@@ -38,8 +38,8 @@ class Light;
 class Batch;
 class TextureCapturer;
 class RenderPass;
-template<typename T>
-std::string to_string(T value) {
+
+template<typename T> std::string to_string(T value) {
     //create an output string stream
     std::ostringstream os;
 
@@ -49,6 +49,7 @@ std::string to_string(T value) {
     //convert the string stream into a string and return
     return os.str();
 }
+
 class RenderData: public Component {
 public:
     enum Queue {
@@ -85,8 +86,12 @@ public:
         render_mask_ = rdata.render_mask_;
         cast_shadows_ = rdata.cast_shadows_;
         batch_ = rdata.batch_;
-        for(int i=0;i<rdata.render_pass_list_.size();i++)
+        for(int i=0;i<rdata.render_pass_list_.size();i++) {
+            if (nullptr == rdata.render_pass_list_[i]) {
+                std::terminate();
+            }
             render_pass_list_.push_back((rdata.render_pass_list_)[i]);
+        }
         rendering_order_ = rdata.rendering_order_;
         hash_code_dirty_ = rdata.hash_code_dirty_;
         offset_ = rdata.offset_;
@@ -105,9 +110,7 @@ public:
         copy(rdata);
     }
 
-    ~RenderData() {
-        render_pass_list_.clear();
-    }
+    ~RenderData();
 
     static long long getComponentType() {
         return COMPONENT_TYPE_RENDER_DATA;
@@ -128,7 +131,6 @@ public:
 
     Material* material(int pass) const ;
 
-    void set_material(Material* material, int pass);
     void set_renderdata_dirty(bool dirty_);
     bool renderdata_dirty(){
         return renderdata_dirty_;
@@ -165,10 +167,6 @@ public:
     void disable_lightmap() {
         use_lightmap_ = false;
         hash_code_dirty_ = true;
-    }
-
-    bool lightmap_enabled() {
-        return use_lightmap_;
     }
 
     int render_mask() const {
@@ -218,7 +216,6 @@ public:
 
     bool cull_face(int pass=0) const ;
 
-    void set_cull_face(int cull_face, int pass);
     bool offset() const {
         return offset_;
     }
@@ -265,7 +262,7 @@ public:
     }
 
     bool alpha_to_coverage() const {
-    	return alpha_to_coverage_;
+        return alpha_to_coverage_;
     }
 
     void set_alpha_to_coverage(bool alpha_to_coverage) {
@@ -295,10 +292,6 @@ public:
         return draw_mode_;
     }
 
-    void set_camera_distance(float distance) {
-        camera_distance_ = distance;
-    }
-
     float camera_distance() {
         if (nullptr != cameraDistanceLambda_) {
             camera_distance_ = cameraDistanceLambda_();
@@ -315,9 +308,7 @@ public:
     bool isHashCodeDirty()  {
         return hash_code_dirty_;
     }
-    void setHashCodeDirty(bool dirty){
-        hash_code_dirty_ = dirty;
-    }
+
     void set_texture_capturer(TextureCapturer *capturer) {
         texture_capturer = capturer;
     }
@@ -390,42 +381,6 @@ private:
     std::function<float()> cameraDistanceLambda_ = nullptr;
 };
 
-static inline bool compareRenderDataWithFrustumCulling(RenderData* i, RenderData* j) {
-    // if either i or j is a transparent object or an overlay object
-    if (i->rendering_order() >= RenderData::Transparent
-            || j->rendering_order() >= RenderData::Transparent) {
-        if (i->rendering_order() == j->rendering_order()) {
-            // if both are either transparent or both are overlays
-            // place them in reverse camera order from back to front
-            return i->camera_distance() > j->camera_distance();
-        } else {
-            // if one of them is a transparent or an overlay draw by rendering order
-            return i->rendering_order() < j->rendering_order();
-        }
-    }
-
-    // if both are neither transparent nor overlays, place them in camera order front to back
-    return i->camera_distance() < j->camera_distance();
-}
-
-static inline bool compareRenderDataByOrder(RenderData* i, RenderData* j) {
-    return i->rendering_order() < j->rendering_order();
-}
-
-  bool compareRenderDataByShader(RenderData* i, RenderData* j);
-
-static inline bool compareRenderDataByOrderDistance(RenderData* i, RenderData* j) {
-    // if it is a transparent object, sort by camera distance.
-    if (i->rendering_order() == j->rendering_order()
-            && i->rendering_order() >= RenderData::Transparent
-            && i->rendering_order() < RenderData::Overlay) {
-        return i->camera_distance() > j->camera_distance();
-    }
-
-    return i->rendering_order() < j->rendering_order();
-}
-
- bool compareRenderDataByOrderShaderDistance(RenderData* i,
-        RenderData* j);
+bool compareRenderDataByOrderShaderDistance(RenderData* i, RenderData* j);
 }
 #endif

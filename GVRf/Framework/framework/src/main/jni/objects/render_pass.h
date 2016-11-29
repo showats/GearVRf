@@ -54,6 +54,8 @@ public:
 
     void add_listener(RenderData* render_data);
 
+    void remove_listener(RenderData* render_data);
+
 private:
     Listener* listener_;
     static const int DEFAULT_CULL_FACE = CullBack;

@@ -305,10 +305,6 @@ public:
         return numTriangles_;
     }
 
-    bool hasBoundingVolume() {
-    	return have_bounding_volume_;
-    }
-
     const BoundingVolume& getBoundingVolume();
 
     bool hasBones() const {
@@ -319,15 +315,11 @@ public:
         vertexBoneData_.setBones(std::move(bones));
         bone_data_dirty_ = true;
     }
+
     VertexBoneData &getVertexBoneData() {
         return vertexBoneData_;
     }
-    bool isVaoDirty() const {
-    	return regenerate_vao_;
-    }
-    void unSetVaoDirty() {
-    	regenerate_vao_ = false;
-    }
+
     void generateBoneArrayBuffers(GLuint programId);
 
     //must be called by the thread on which the mesh cleanup should happen
@@ -336,26 +328,24 @@ public:
             deleter_ = getDeleterForThisThread();
         }
     }
-     void getAttribNames(std::set<std::string> &attrib_names);
 
-     void forceShouldReset() { // one time, then false
-         vao_dirty_ = true;
-         bone_data_dirty_ = true;
-     }
+    void getAttribNames(std::set<std::string> &attrib_names);
 
-     // generate VAO
-     void generateVAO(int programId);
+    void forceShouldReset() { // one time, then false
+        vao_dirty_ = true;
+        bone_data_dirty_ = true;
+    }
 
+    void generateVAO(int programId);
 
-    void add_listener(RenderData* render_data){
-        if(render_data)
+    void add_listener(RenderData *render_data) {
+        if (render_data) {
             listener_->add_listener(render_data);
+        }
     }
-    void remove_listener(RenderData* render_data){
+
+    void remove_listener(RenderData *render_data) {
         listener_->remove_listener(render_data);
-    }
-    void notify_listener(bool dirty){
-        listener_->notify_listeners(dirty);
     }
 
 private:

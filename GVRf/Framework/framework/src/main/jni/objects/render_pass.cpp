@@ -15,15 +15,23 @@
 
 #include "objects/hybrid_object.h"
 #include "objects/components/render_data.h"
-#include "objects/render_pass.h"
 
 namespace gvr {
 
 void RenderPass::add_listener(RenderData* render_data){
     if(render_data){
         listener_->add_listener(render_data);
-        if(material_)
+        if(material_) {
             material_->add_listener(render_data);
+        }
+    }
+}
+
+void RenderPass::remove_listener(RenderData *render_data) {
+    LOGI("mmarinov listener_ %p %p", listener_, render_data);
+    listener_->remove_listener(render_data);
+    if(material_) {
+        material_->remove_listener(render_data);
     }
 }
 

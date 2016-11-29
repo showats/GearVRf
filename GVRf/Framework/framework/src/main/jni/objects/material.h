@@ -241,6 +241,9 @@ public:
     void remove_listener(Listener* listener){
         listener_->remove_listener(listener);
     }
+    void remove_listener(RenderData* listener){
+        listener_->remove_listener(listener);
+    }
     void notify_listener(bool dirty){
         listener_->notify_listeners(dirty);
     }

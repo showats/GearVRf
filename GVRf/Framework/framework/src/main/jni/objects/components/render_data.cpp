@@ -16,11 +16,22 @@
 
 #include "objects/hybrid_object.h"
 #include "objects/components/render_data.h"
-#include "objects/render_pass.h"
 
 namespace gvr {
 
+RenderData::~RenderData() {
+    if (nullptr != mesh_) {
+        mesh_->remove_listener(this);
+    }
+    for (auto pass : render_pass_list_) {
+        pass->remove_listener(this);
+    }
+}
+
 void RenderData::add_pass(RenderPass* render_pass) {
+    if (nullptr == render_pass) {
+        std::terminate();
+    }
     render_pass_list_.push_back(render_pass);
     render_pass->add_listener(this);
     renderdata_dirty_ = true;
@@ -50,12 +61,6 @@ bool RenderData::cull_face(int pass) const {
     return nullptr;
 }
 
-void RenderData::set_cull_face(int cull_face, int pass) {
-    if (pass >= 0 && pass < render_pass_list_.size()) {
-        render_pass_list_[pass]->set_cull_face(cull_face);
-        renderdata_dirty_ = true;
-    }
-}
 Material* RenderData::material(int pass) const {
     if (pass >= 0 && pass < render_pass_list_.size()) {
         return render_pass_list_[pass]->material();
@@ -63,31 +68,8 @@ Material* RenderData::material(int pass) const {
     return nullptr;
 }
 
-void RenderData::set_material(Material* material, int pass) {
-    if (pass >= 0 && pass < render_pass_list_.size()) {
-        render_pass_list_[pass]->set_material(material);
-        renderdata_dirty_ = true;
-    }
-}
-
 void RenderData::setCameraDistanceLambda(std::function<float()> func) {
     cameraDistanceLambda_ = func;
-}
-
-bool compareRenderDataByShader(RenderData* i, RenderData* j) {
-    // Compare renderData by their material's shader type
-    // Note: multi-pass renderData is skipped for now and put to later position,
-    // since each of the passes has a separate material (and shader as well).
-    // An advanced sorting may be added later to take multi-pass into account
-    if (j->pass_count() > 1) {
-        return true;
-    }
-
-    if (i->pass_count() > 1) {
-        return false;
-    }
-
-    return i->material(0)->shader_type() < j->material(0)->shader_type();
 }
 
 bool compareRenderDataByOrderShaderDistance(RenderData *i, RenderData *j) {
