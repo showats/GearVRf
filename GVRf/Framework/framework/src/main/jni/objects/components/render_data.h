@@ -72,7 +72,7 @@ public:
                     offset_(false), offset_factor_(0.0f), offset_units_(0.0f),
                     depth_test_(true), alpha_blend_(true), alpha_to_coverage_(false),
                     sample_coverage_(1.0f), invert_coverage_mask_(GL_FALSE), draw_mode_(GL_TRIANGLES),
-                    texture_capturer(0), cast_shadows_(true), renderdata_dirty_(true) {
+                    texture_capturer(0), cast_shadows_(true), renderdata_dirty_(std::make_shared<bool>(true)) {
     }
 
     void copy(const RenderData& rdata) {
@@ -101,6 +101,7 @@ public:
         invert_coverage_mask_ = rdata.invert_coverage_mask_;
         draw_mode_ = rdata.draw_mode_;
         texture_capturer = rdata.texture_capturer;
+        renderdata_dirty_ = rdata.renderdata_dirty_;
     }
 
     RenderData(const RenderData& rdata) {
@@ -130,7 +131,7 @@ public:
 
     void set_renderdata_dirty(bool dirty_);
     bool renderdata_dirty(){
-        return renderdata_dirty_;
+        return *renderdata_dirty_;
     }
     Light* light() const {
         return light_;
@@ -273,7 +274,7 @@ public:
     }
    
     float sample_coverage() const {
-    	return sample_coverage_;
+        return sample_coverage_;
     }
 
     void set_invert_coverage_mask(GLboolean invert_coverage_mask) {
@@ -282,7 +283,7 @@ public:
     }
 
     GLboolean invert_coverage_mask() const {
-    	return invert_coverage_mask_;
+        return invert_coverage_mask_;
     }
 
     GLenum draw_mode() const {
@@ -356,7 +357,7 @@ private:
     std::string hash_code;
     std::vector<RenderPass*> render_pass_list_;
     Light* light_;
-    bool renderdata_dirty_;
+    std::shared_ptr<bool> renderdata_dirty_;
     bool use_light_;
     bool batching_;
     bool use_lightmap_;

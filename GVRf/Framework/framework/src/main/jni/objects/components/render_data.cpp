@@ -20,18 +20,12 @@
 namespace gvr {
 
 RenderData::~RenderData() {
-    if (nullptr != mesh_) {
-        mesh_->remove_listener(this);
-    }
-    for (auto pass : render_pass_list_) {
-        pass->remove_listener(this);
-    }
 }
 
 void RenderData::add_pass(RenderPass* render_pass) {
     render_pass_list_.push_back(render_pass);
-    render_pass->add_listener(this);
-    renderdata_dirty_ = true;
+    render_pass->set_dirty_flag(renderdata_dirty_);
+    *renderdata_dirty_ = true;
 }
 
 const RenderPass* RenderData::pass(int pass) const {
@@ -42,15 +36,15 @@ const RenderPass* RenderData::pass(int pass) const {
 }
 
 void RenderData::set_mesh(Mesh* mesh) {
-    if(mesh_)
-        mesh_->remove_listener(this);
     mesh_ = mesh;
-    mesh->add_listener(this);
-    renderdata_dirty_ = true;
+    mesh->set_dirty_flag(renderdata_dirty_);
+    *renderdata_dirty_ = true;
 }
+
 void RenderData::set_renderdata_dirty(bool dirty_){
-    renderdata_dirty_ = dirty_;
+    *renderdata_dirty_ = dirty_;
 }
+
 bool RenderData::cull_face(int pass) const {
     if (pass >= 0 && pass < render_pass_list_.size()) {
         return render_pass_list_[pass]->cull_face();
