@@ -87,9 +87,6 @@ public:
         cast_shadows_ = rdata.cast_shadows_;
         batch_ = rdata.batch_;
         for(int i=0;i<rdata.render_pass_list_.size();i++) {
-            if (nullptr == rdata.render_pass_list_[i]) {
-                std::terminate();
-            }
             render_pass_list_.push_back((rdata.render_pass_list_)[i]);
         }
         rendering_order_ = rdata.rendering_order_;

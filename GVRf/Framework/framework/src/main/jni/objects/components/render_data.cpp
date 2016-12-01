@@ -29,9 +29,6 @@ RenderData::~RenderData() {
 }
 
 void RenderData::add_pass(RenderPass* render_pass) {
-    if (nullptr == render_pass) {
-        std::terminate();
-    }
     render_pass_list_.push_back(render_pass);
     render_pass->add_listener(this);
     renderdata_dirty_ = true;
